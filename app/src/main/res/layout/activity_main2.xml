@@ -9,6 +9,7 @@
     tools:context=".Main2Activity">
 
     <CalendarView
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5">
@@ -19,25 +20,23 @@
         android:layout_height="0dp"
         android:layout_weight="0.5">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
         <ListView
+            android:id="@+id/peopleList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll">
         </ListView>
-        </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="bottom|end"
-            android:layout_margin="30dp"
+            android:layout_margin="60sp"
             android:clickable = "true"
             android:focusable = "true">
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
     </FrameLayout>
 
 </LinearLayout>
