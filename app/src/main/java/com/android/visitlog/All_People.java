@@ -41,17 +41,18 @@ public class All_People extends AppCompatActivity {
         addName = (Button) findViewById(R.id.add);
         lv = (ListView) findViewById(R.id.AllPeopleList);
 
+        final SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = people.get(i);
                 Main2Activity.people.add(new People(name,"-"));
+                //InsertData(sqLiteDatabase);
                 Log.d(LOG_TAG,name);
             }
         });
-
-        final SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
 
         FindAllPeople(sqLiteDatabase);
 
@@ -77,7 +78,7 @@ public class All_People extends AppCompatActivity {
                 else{
                     people.add(Name);
                     cv.put(db.FULL_NAME,Name);
-                    long rowID = sqLiteDatabase.insert(db.TABLE_PEOPLE,
+                    long rowID = sqLiteDatabase.insert(db.PEOPLE,
                             null,
                             cv);
                     Log.d(LOG_TAG,
@@ -96,7 +97,7 @@ public class All_People extends AppCompatActivity {
 
     //Проверка наличия имен в БД и их вывод на экран
     private void FindAllPeople(SQLiteDatabase sqLiteDatabase){
-        Cursor c = sqLiteDatabase.query(db.TABLE_PEOPLE,
+        Cursor c = sqLiteDatabase.query(db.PEOPLE,
                 null,
                 null,
                 null,
@@ -123,5 +124,22 @@ public class All_People extends AppCompatActivity {
         else
             Log.d(LOG_TAG, "0 rows");
         c.close();
+    }
+
+    private void InsertData(SQLiteDatabase sqLiteDatabase){
+        ContentValues cv = new ContentValues();
+
+        cv.put(db.YEAR,Main2Activity.YEAR);
+        sqLiteDatabase.insert(db.DATA_PEOPLE ,
+                null,
+                cv);
+        cv.put(db.MONTH,Main2Activity.MONTH);
+        sqLiteDatabase.insert(db.DATA_PEOPLE ,
+                null,
+                cv);
+        cv.put(db.DAY,Main2Activity.DAY);
+        sqLiteDatabase.insert(db.DATA_PEOPLE ,
+                null,
+                cv);
     }
 }
