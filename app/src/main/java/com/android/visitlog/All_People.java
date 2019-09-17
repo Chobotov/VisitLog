@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ListView;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -24,15 +24,10 @@ import java.util.ArrayList;
 
 public class All_People extends AppCompatActivity {
 
-    public ListView listView;
+
     public FloatingActionButton floatingActionButton;
-    public ArrayList<String> people_list;
+    public ArrayList<People> people_list;
     public ArrayList<String> groups_list;
-
-
-
-    public ArrayAdapter<String> arrayAdapter;
-    public Filter filter;
 
     public TabLayout tableLayout;
     public MenuItem search;
@@ -40,7 +35,10 @@ public class All_People extends AppCompatActivity {
 
     public DBHelper dbHelper;
 
-    public int AddActivityKey = 1;
+    public RecyclerView recyclerView;
+    public PeopleAdapter peopleAdapter;
+
+    public int AddAllpeopleActivityKey = 1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -55,35 +53,23 @@ public class All_People extends AppCompatActivity {
 
         //---------------------------Опасная зона, кончилась ---------------------------------------------------
 
-        dbHelper = new DBHelper(this);
-
-        listView = (ListView)findViewById(R.id.listView);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(All_People.this,i+ " твоё число ?", Toast.LENGTH_SHORT).show();
-
-            }
-
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(All_People.this,i+ " твоё долгое число ?", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-
-
         people_list = new ArrayList<>();
         groups_list = new ArrayList<>();
 
-        tableLayout = findViewById(R.id.tabs);
 
+
+        recyclerView = findViewById(R.id.all_people_recyclerView);
+
+        peopleAdapter = new PeopleAdapter(this,view -> new PeopleAdapter.OnLongItemClickListener(){
+            @Override
+            public void onLongItemClick(People item) {
+
+            }
+        }, people_list );
+
+        recyclerView.setAdapter(peopleAdapter);
+
+        tableLayout = findViewById(R.id.tabs);
 
         floatingActionButton = (FloatingActionButton)findViewById(R.id.add_float_button_all_people);
 
@@ -96,13 +82,13 @@ public class All_People extends AppCompatActivity {
 
                 Intent questionIntent = new Intent(All_People.this,
                         AddPeopleActivity.class);
-                startActivityForResult(questionIntent, AddActivityKey);
+                startActivityForResult(questionIntent, AddAllpeopleActivityKey);
             }
 
         });
 
-        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, people_list);
-        listView.setAdapter(arrayAdapter);
+
+
 
         toolbar = findViewById(R.id.toolbar_all_people);
         setSupportActionBar(toolbar);
@@ -115,12 +101,10 @@ public class All_People extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == AddActivityKey) {
+        if (requestCode == AddAllpeopleActivityKey) {
             if (resultCode == RESULT_OK) {
-                people_list.add(data.getStringExtra("name"));
-                arrayAdapter.notifyDataSetChanged();
-                arrayAdapter.notifyDataSetInvalidated();
-                listView.setAdapter(arrayAdapter);
+                people_list.add(new People(people_list.size(),data.getStringExtra("name")));
+
             }
 
         }
@@ -143,8 +127,7 @@ public class All_People extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                    arrayAdapter.getFilter().filter(newText);
-                    listView.setAdapter(arrayAdapter);
+
                 return false;
             }
         });
