@@ -1,20 +1,19 @@
 package com.android.visitlog;
 
-import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Filter;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,18 +28,20 @@ public class All_People extends AppCompatActivity {
     public ArrayList<People> people_list;
     public ArrayList<String> groups_list;
 
-    public TabLayout tableLayout;
+    public TabLayout tabLayout;
     public MenuItem search;
     private Toolbar toolbar;
 
-    public DBHelper dbHelper;
-
     public RecyclerView recyclerView;
-    public PeopleAdapter peopleAdapter;
+    public RecyclerView.Adapter peopleAdapter;
+    public RecyclerView.LayoutManager manager;
 
-    public int AddAllpeopleActivityKey = 1;
+    DBHelper dbHelper;
 
-    @SuppressLint("ClickableViewAccessibility")
+
+    public int AddAllPeopleActivityKey = 1;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,23 +54,32 @@ public class All_People extends AppCompatActivity {
 
         //---------------------------Опасная зона, кончилась ---------------------------------------------------
 
-        people_list = new ArrayList<>();
-        groups_list = new ArrayList<>();
+
+        dbHelper = new DBHelper(this);
+        people_list = setAllPeople();
+        //groups_list = setAllGroups();
 
 
 
-        recyclerView = findViewById(R.id.all_people_recyclerView);
 
-        peopleAdapter = new PeopleAdapter(this,view -> new PeopleAdapter.OnLongItemClickListener(){
+
+        PeopleAdapter.OnLongItemClickListener onLongItemClickListener = new PeopleAdapter.OnLongItemClickListener() {
             @Override
             public void onLongItemClick(People item) {
-
+                Toast.makeText(All_People.this,"И в чём прикол ?",Toast.LENGTH_SHORT).show();
             }
-        }, people_list );
+        };
 
+        recyclerView = findViewById(R.id.all_people_recyclerView);
+        recyclerView.setHasFixedSize(true);
+        manager = new LinearLayoutManager(this);
+        peopleAdapter = new PeopleAdapter(this,onLongItemClickListener, people_list );
+        recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(peopleAdapter);
 
-        tableLayout = findViewById(R.id.tabs);
+
+
+        tabLayout = findViewById(R.id.tabs);
 
         floatingActionButton = (FloatingActionButton)findViewById(R.id.add_float_button_all_people);
 
@@ -77,12 +87,24 @@ public class All_People extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                String add = people_list.size()+"";
-                Toast.makeText(All_People.this, add, Toast.LENGTH_SHORT).show();
+//                String add = people_list.size()+"";
+////                Toast.makeText(All_People.this, add, Toast.LENGTH_SHORT).show();
+////
+////                Intent questionIntent = new Intent(All_People.this,
+////                        AddPeopleActivity.class);
+////                startActivityForResult(questionIntent, AddAllPeopleActivityKey);
+                AlertDialog.Builder builder = new AlertDialog.Builder(All_People.this);
+                builder.setCancelable(true);
+               
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(All_People.this,"ssssssss",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
 
-                Intent questionIntent = new Intent(All_People.this,
-                        AddPeopleActivity.class);
-                startActivityForResult(questionIntent, AddAllpeopleActivityKey);
             }
 
         });
@@ -97,14 +119,25 @@ public class All_People extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
 
     }
+
+    //private ArrayList<Groups> setAllGroups() {
+        //ArrayList<Groups> groups = new ArrayList<>();
+        //return groups;
+    //}
+
+    private ArrayList<People> setAllPeople() {
+        ArrayList<People> people = new ArrayList<>();
+        return people;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == AddAllpeopleActivityKey) {
+        if (requestCode == AddAllPeopleActivityKey) {
             if (resultCode == RESULT_OK) {
                 people_list.add(new People(people_list.size(),data.getStringExtra("name")));
-
+                peopleAdapter.notifyDataSetChanged();
             }
 
         }

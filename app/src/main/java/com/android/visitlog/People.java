@@ -1,9 +1,12 @@
 package com.android.visitlog;
 
 public class People {
-    People(int Id,String Name){
-
-    }
     public int Id;
     public String Name;
+
+    People(int Id,String Name){
+        this.Id = Id;
+        this.Name = Name;
+
+    }
 }

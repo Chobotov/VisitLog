@@ -9,7 +9,6 @@
     android:background="@color/bg"
     >
 
-
     <androidx.core.widget.NestedScrollView
 
         android:id="@+id/Scroll_all_people"
@@ -19,23 +18,13 @@
         android:fillViewport="true"
         >
 
-        <LinearLayout
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/all_people_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="true"
-            android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingTop="10dp"
-            android:paddingRight="16dp" >
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/all_people_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:nestedScrollingEnabled="true" />
-
-        </LinearLayout>
+            android:paddingTop="20dp"
+            android:paddingRight="16dp" />
 
     </androidx.core.widget.NestedScrollView>
 

@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/textView_item_people_peopleActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="25sp"/>
-</LinearLayout>
+        android:layout_alignParentBottom="false"
+        android:layout_marginBottom="0dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/textColor"
+        android:textSize="25sp"
+        tools:text=" Иванов Иван Иванович" />
+</RelativeLayout>
