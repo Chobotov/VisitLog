@@ -23,18 +23,18 @@
             android:id="@+id/textName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/add"
+            android:layout_above="@+id/addNewName"
             android:background="@android:color/darker_gray"
             android:textSize="40sp"
             android:text="">
         </EditText>
         <Button
-            android:id="@+id/add"
+            android:id="@+id/addNewName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:textSize="30sp"
-            android:text="Add">
+            android:text="@string/add">
         </Button>
     </RelativeLayout>
 

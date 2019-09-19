@@ -21,13 +21,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class All_People extends AppCompatActivity {
+public class All_People extends AppCompatActivity{
 
     DBHelper db;
     EditText editText;
-    Button addName;
     ArrayList<String>people;
     ListView lv;
+    private Button addName;
 
     final String LOG_TAG = "myLogs";
 
@@ -38,35 +38,35 @@ public class All_People extends AppCompatActivity {
         db = new DBHelper(this);
         people = new ArrayList<String>();
         editText = (EditText) findViewById(R.id.textName);
-        addName = (Button) findViewById(R.id.add);
         lv = (ListView) findViewById(R.id.AllPeopleList);
+        addName = findViewById(R.id.addNewName);
 
         final SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String name = people.get(i);
-                Main2Activity.people.add(new People(name,"-"));
-                //InsertData(sqLiteDatabase);
-                Log.d(LOG_TAG,name);
-            }
-        });
-
-        FindAllPeople(sqLiteDatabase);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 people);
         lv.setAdapter(adapter);
 
+        db.ReadAllTable(db);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d(LOG_TAG,String.valueOf(i));
+                String name = people.get(i);
+                people.remove(i);
+                db.DeleteNameFromPeopleTable(db, name);
+                db.ReadAllTable(db);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         addName.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 String Name = editText.getText().toString();
-
-                ContentValues cv = new ContentValues();
 
                 if (Name.equals("")) {
                     Toast toast = Toast.makeText(getApplicationContext(),
@@ -77,69 +77,25 @@ public class All_People extends AppCompatActivity {
                 }
                 else{
                     people.add(Name);
-                    cv.put(db.FULL_NAME,Name);
-                    long rowID = sqLiteDatabase.insert(db.PEOPLE,
-                            null,
-                            cv);
-                    Log.d(LOG_TAG,
-                            "row inserted, ID = " + rowID);
-
-                    for(String s : people){
-                        Log.d("Name",s);
-                    }
-                    lv.invalidateViews();
+                    db.SetNewName(db,Name);
+                    adapter.notifyDataSetChanged();
                     editText.setText("");
                 }
                 db.close();
-        }
+            }
         });
+
+        InsertFullNamesIntoList(db, sqLiteDatabase, people);
     }
 
-    //Проверка наличия имен в БД и их вывод на экран
-    private void FindAllPeople(SQLiteDatabase sqLiteDatabase){
-        Cursor c = sqLiteDatabase.query(db.PEOPLE,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
 
-        if(c.moveToFirst()){
-            int idColIndex = c.getColumnIndex(db.KEY_ID);
-            int nameColIndex = c.getColumnIndex(db.FULL_NAME);
-
-            do {
-                String Name = c.getString(nameColIndex);
-                people.add(Name);
-                // получаем значения по номерам столбцов и пишем все в лог
-                Log.d(LOG_TAG,
-                        "ID = " + c.getInt(idColIndex) +
-                                ", name = " + c.getString(nameColIndex));
-                // переход на следующую строку
-                // а если следующей нет (текущая - последняя),
-                // то false - выходим из цикла
-            } while (c.moveToNext());
+    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase db, ArrayList<String> people){
+        Cursor cursor = db.rawQuery("SELECT " + dbHelper.FULL_NAME +" FROM " + dbHelper.PEOPLE,null);
+        people.clear();
+        while (cursor.moveToNext()){
+            String Name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
+            people.add(Name);
         }
-        else
-            Log.d(LOG_TAG, "0 rows");
-        c.close();
-    }
-
-    private void InsertData(SQLiteDatabase sqLiteDatabase){
-        ContentValues cv = new ContentValues();
-
-        cv.put(db.YEAR,Main2Activity.YEAR);
-        sqLiteDatabase.insert(db.DATA_PEOPLE ,
-                null,
-                cv);
-        cv.put(db.MONTH,Main2Activity.MONTH);
-        sqLiteDatabase.insert(db.DATA_PEOPLE ,
-                null,
-                cv);
-        cv.put(db.DAY,Main2Activity.DAY);
-        sqLiteDatabase.insert(db.DATA_PEOPLE ,
-                null,
-                cv);
+        cursor.close();
     }
 }
