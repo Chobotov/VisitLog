@@ -3,12 +3,16 @@ package com.android.visitlog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +20,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.load.engine.Resource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -49,7 +54,7 @@ public class All_People extends AppCompatActivity {
 
         //---------------------Опаснаязона, не трож пока работает ---------------------------------------------
 
-        final NestedScrollView nestedScrollView = (NestedScrollView)findViewById(R.id.Scroll_all_people);
+        final NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.Scroll_all_people);
         nestedScrollView.setNestedScrollingEnabled(true);
 
         //---------------------------Опасная зона, кончилась ---------------------------------------------------
@@ -60,56 +65,51 @@ public class All_People extends AppCompatActivity {
         //groups_list = setAllGroups();
 
 
-
-
-
         PeopleAdapter.OnLongItemClickListener onLongItemClickListener = new PeopleAdapter.OnLongItemClickListener() {
             @Override
             public void onLongItemClick(People item) {
-                Toast.makeText(All_People.this,"И в чём прикол ?",Toast.LENGTH_SHORT).show();
+                Toast.makeText(All_People.this, "И в чём прикол ?", Toast.LENGTH_SHORT).show();
             }
         };
 
         recyclerView = findViewById(R.id.all_people_recyclerView);
         recyclerView.setHasFixedSize(true);
         manager = new LinearLayoutManager(this);
-        peopleAdapter = new PeopleAdapter(this,onLongItemClickListener, people_list );
+        peopleAdapter = new PeopleAdapter(this, onLongItemClickListener, people_list);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(peopleAdapter);
 
 
-
         tabLayout = findViewById(R.id.tabs);
 
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.add_float_button_all_people);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.add_float_button_all_people);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(view -> {
 
-            @Override
-            public void onClick(View view) {
-//                String add = people_list.size()+"";
-////                Toast.makeText(All_People.this, add, Toast.LENGTH_SHORT).show();
-////
-////                Intent questionIntent = new Intent(All_People.this,
-////                        AddPeopleActivity.class);
-////                startActivityForResult(questionIntent, AddAllPeopleActivityKey);
-                AlertDialog.Builder builder = new AlertDialog.Builder(All_People.this);
-                builder.setCancelable(true);
-               
-                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(All_People.this,"ssssssss",Toast.LENGTH_SHORT).show();
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
 
-            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(All_People.this);
+
+            builder.setCancelable(true);
+
+            View view1 = LayoutInflater.from(All_People.this).inflate(R.layout.add_custom_alert_view, null);
+
+            builder.setView(view1);
+
+
+
+            builder.setPositiveButton(R.string.Add, (dialogInterface, i) ->{
+
+                    EditText editText = view1.findViewById(R.id.text_edit_alertview);
+                    people_list.add(new People(people_list.size(), editText.getText().toString()));
+
+
+                    });
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
 
         });
-
-
 
 
         toolbar = findViewById(R.id.toolbar_all_people);
@@ -120,10 +120,6 @@ public class All_People extends AppCompatActivity {
 
     }
 
-    //private ArrayList<Groups> setAllGroups() {
-        //ArrayList<Groups> groups = new ArrayList<>();
-        //return groups;
-    //}
 
     private ArrayList<People> setAllPeople() {
         ArrayList<People> people = new ArrayList<>();
@@ -136,7 +132,7 @@ public class All_People extends AppCompatActivity {
 
         if (requestCode == AddAllPeopleActivityKey) {
             if (resultCode == RESULT_OK) {
-                people_list.add(new People(people_list.size(),data.getStringExtra("name")));
+                people_list.add(new People(people_list.size(), data.getStringExtra("name")));
                 peopleAdapter.notifyDataSetChanged();
             }
 
