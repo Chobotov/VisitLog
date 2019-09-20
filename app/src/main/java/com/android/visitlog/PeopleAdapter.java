@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class PeopleAdapter extends  RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
+public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
     private OnLongItemClickListener onLongClickListener;
     private LayoutInflater inflater;
@@ -27,7 +27,7 @@ public class PeopleAdapter extends  RecyclerView.Adapter<PeopleAdapter.ViewHolde
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.item_people_all_peopleactivity, parent, false);
+        View view = inflater.inflate(R.layout.item_people_activity, parent, false);
         return new ViewHolder(view);
     }
 
@@ -37,11 +37,12 @@ public class PeopleAdapter extends  RecyclerView.Adapter<PeopleAdapter.ViewHolde
         People people = peoples.get(position);
 
         holder.itemView.setOnLongClickListener(view -> {
-            onLongClickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
+            if (onLongClickListener != null)
+                onLongClickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
             return false;
         });
 
-        holder.name.setText(people.Name);
+        holder.name.setText(people.getName());
 
     }
 
@@ -51,18 +52,28 @@ public class PeopleAdapter extends  RecyclerView.Adapter<PeopleAdapter.ViewHolde
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
+    public void setPeoples(ArrayList<People> peoples) {
+        this.peoples = peoples;
+    }
+
+    public ArrayList<People> getPeoples() {
+        return peoples;
+    }
+
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView name;
 
         ViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.textView_item_people_peopleActivity);
+            name = view.findViewById(R.id.item_people_text);
         }
 
         public TextView getTextView() {
             return name;
         }
     }
+
     interface OnLongItemClickListener {
         void onLongItemClick(People item);
     }

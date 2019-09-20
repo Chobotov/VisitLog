@@ -9,24 +9,16 @@
     android:background="@color/bg"
     >
 
-    <androidx.core.widget.NestedScrollView
-
-        android:id="@+id/Scroll_all_people"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_scrollFlags="scroll|enterAlways"
         android:fillViewport="true"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/all_people_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingTop="20dp"
-            android:paddingRight="16dp" />
-
-    </androidx.core.widget.NestedScrollView>
+    </androidx.viewpager.widget.ViewPager>
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -52,21 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:tabMode="fixed">
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/people_tabItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/People" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/groups_tabItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/Groups" />
-
-        </com.google.android.material.tabs.TabLayout>
+            app:tabMode="fixed"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

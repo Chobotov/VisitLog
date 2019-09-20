@@ -8,7 +8,7 @@
     android:paddingTop="5dp">
 
     <TextView
-        android:id="@+id/textView_item_people_peopleActivity"
+        android:id="@+id/item_people_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
