@@ -1,6 +1,7 @@
 package com.android.visitlog;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,7 +22,6 @@ public class Main2Activity extends AppCompatActivity{
     CalendarView calendarView;
     FloatingActionButton fab;
     public int YEAR,MONTH,DAY;
-    public static ListView productList;
     public static ArrayList<People> people = new ArrayList<People>();
 
     final String LOG_TAG = "myLogs";
@@ -38,9 +38,11 @@ public class Main2Activity extends AppCompatActivity{
         calendarView = findViewById(R.id.calendarView);
 
         FindIDPeopleByData();
-        productList = findViewById(R.id.peopleList);
-        final ItemAdapter adapter = new ItemAdapter(this, R.layout.list_item, people);
-        productList.setAdapter(adapter);
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
+
+        final ItemAdapter adapter = new ItemAdapter(this,people);
+        recyclerView.setAdapter(adapter);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -94,13 +95,6 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
     }
 
-    //Удаление имени из таблиц
-    public void DeleteNameFromPeopleTable(DBHelper dbHelper, String name){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
-
-        sqLiteDatabase.delete(dbHelper.PEOPLE,dbHelper.FULL_NAME + " = ?" , new String[]{name});
-    }
-
     public String GetIdByName(DBHelper dbHelper, String name){
         String id = "0";
 
@@ -120,7 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
         else
             cursor.close();
 
-        //Log.d(LOG_TAG,id);
+        Log.d(LOG_TAG,id);
 
         return id;
     }
@@ -157,5 +151,26 @@ public class DBHelper extends SQLiteOpenHelper {
         else
            //Log.d(LOG_TAG,"0 rows");
         cursor.close();
+        sqLiteDatabase.close();
+    }
+
+    //Удаление имени из таблиц
+    public void DeleteNameFromPeopleTable(DBHelper dbHelper, String name){
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+
+        sqLiteDatabase.delete(dbHelper.PEOPLE,dbHelper.FULL_NAME + " = ?" , new String[]{name});
+    }
+
+    public void DeleteDataByName(DBHelper dbHelper,String Name){
+
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+
+        String id = dbHelper.GetIdByName(dbHelper,Name);
+
+        sqLiteDatabase.delete(dbHelper.DATA_PEOPLE,
+                dbHelper.ID_PEOPLE + "= ?",
+                new String[]{id});
+
+        sqLiteDatabase.close();
     }
 }

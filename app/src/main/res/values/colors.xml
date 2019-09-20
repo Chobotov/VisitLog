@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#D33030</color>
+    <color name="came">#1DC82E</color>
+    <color name="leave">#DB4437</color>
+    <color name="floatingActionButton">#A3A3A3</color>
 </resources>

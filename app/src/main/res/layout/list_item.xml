@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="wrap_content"
+    android:padding="30dp">
 
     <TextView
         android:id="@+id/group"
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:textSize="20sp"
-        android:text="">
+        android:text="БВТ-31">
     </TextView>
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_below="@+id/group"
         android:textSize="25sp"
         android:textColor="@android:color/black"
-        android:text="">
+        android:text="Чеботов Никита">
     </TextView>
 
     <Button
@@ -31,32 +31,36 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="X"
-        android:textSize="20sp">
+        android:textSize="40sp"
+        android:background="@color/cardview_light_background"
+        android:textColor="@android:color/darker_gray">
     </Button>
 
     <Button
        android:id="@+id/came"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
+       android:layout_width="120dp"
+       android:layout_height="50dp"
        android:layout_below="@+id/name"
        android:layout_alignParentStart="true"
        android:layout_alignParentLeft="true"
         android:layout_marginTop="30dp"
-       android:background="@android:color/holo_green_light"
-       android:textSize="20sp"
+       android:background="@drawable/button_came"
+       android:textColor="@android:color/white"
+        android:textSize="19sp"
        android:text="Пришел">
    </Button>
 
     <Button
         android:id="@+id/leave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/name"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="30dp"
-        android:background="@android:color/holo_red_dark"
-        android:textSize="20dp"
+        android:background="@drawable/button_leave"
+        android:textColor="@android:color/white"
+        android:textSize="19dp"
         android:text="Ушел">
     </Button>
 
