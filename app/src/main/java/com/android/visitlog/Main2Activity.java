@@ -47,10 +47,15 @@ public class Main2Activity extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("Error:","ТУТ");
                 Intent intent = new Intent(Main2Activity.this,All_People.class);
+                Log.d("Error:","интент");
                 intent.putExtra("year",String.valueOf(YEAR));
+                Log.d("Error:","Год");
                 intent.putExtra("month",String.valueOf(MONTH));
+                Log.d("Error:","Месяц");
                 intent.putExtra("day",String.valueOf(DAY));
+                Log.d("Error:","День");
                 startActivity(intent);
             }
         });
@@ -90,7 +95,6 @@ public class Main2Activity extends AppCompatActivity{
             Log.d(LOG_TAG, "Cursor is null");
         c.close();
         FindNamePeopleById(id);
-        c.close();
         dbHelper.close();
     }
 
@@ -114,5 +118,6 @@ public class Main2Activity extends AppCompatActivity{
             else
                 Log.d(LOG_TAG,"Cursor is null");
         }
+        sqLiteDatabase.close();
     }
 }

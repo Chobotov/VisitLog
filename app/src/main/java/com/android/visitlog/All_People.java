@@ -74,6 +74,17 @@ public class All_People extends AppCompatActivity{
             }
         });
 
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = people.get(position);
+                people.remove(position);
+                dbHelper.DeleteNameFromPeopleTable(dbHelper,name);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         addName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,9 +111,9 @@ public class All_People extends AppCompatActivity{
     }
 
 
-    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase db,
+    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase sqLiteDatabase,
                                          ArrayList<String> people){
-        Cursor cursor = db.rawQuery("SELECT " +
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
                 dbHelper.FULL_NAME +" FROM " +
                 dbHelper.PEOPLE,null);
         people.clear();

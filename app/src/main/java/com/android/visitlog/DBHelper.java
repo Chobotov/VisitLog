@@ -92,7 +92,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         cv.put(dbHelper.FULL_NAME,name);
         sqLiteDatabase.insert(dbHelper.PEOPLE, null, cv);
-        sqLiteDatabase.close();
     }
 
     public String GetIdByName(DBHelper dbHelper, String name){
@@ -134,7 +133,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(dbHelper.DAY,DAY);
 
         sqLiteDatabase.insert(dbHelper.DATA_PEOPLE,null,cv);
-        sqLiteDatabase.close();
     }
 
     public void ReadAllTable(DBHelper dbHelper){
@@ -151,7 +149,6 @@ public class DBHelper extends SQLiteOpenHelper {
         else
            //Log.d(LOG_TAG,"0 rows");
         cursor.close();
-        sqLiteDatabase.close();
     }
 
     //Удаление имени из таблиц
@@ -171,6 +168,5 @@ public class DBHelper extends SQLiteOpenHelper {
                 dbHelper.ID_PEOPLE + "= ?",
                 new String[]{id});
 
-        sqLiteDatabase.close();
     }
 }
