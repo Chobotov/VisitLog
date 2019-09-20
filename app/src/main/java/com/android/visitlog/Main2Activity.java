@@ -2,7 +2,6 @@ package com.android.visitlog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,7 +13,6 @@ import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -32,11 +30,15 @@ public class Main2Activity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-        calendarView = (CalendarView) findViewById(R.id.calendarView);
+        YEAR = Calendar.getInstance().get(Calendar.YEAR);
+        MONTH = Calendar.getInstance().get(Calendar.MONTH)+1;
+        DAY = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        Log.d("Date",YEAR + " " + MONTH + " " + DAY );
+        fab = findViewById(R.id.floatingActionButton);
+        calendarView = findViewById(R.id.calendarView);
 
         FindIDPeopleByData();
-        productList = (ListView) findViewById(R.id.peopleList);
+        productList = findViewById(R.id.peopleList);
         final ItemAdapter adapter = new ItemAdapter(this, R.layout.list_item, people);
         productList.setAdapter(adapter);
 
@@ -65,6 +67,7 @@ public class Main2Activity extends AppCompatActivity{
         });
 
     }
+
     private void FindIDPeopleByData(){
         people.clear();
         ArrayList<String> id = new ArrayList<>();
@@ -79,7 +82,6 @@ public class Main2Activity extends AppCompatActivity{
         if (c.moveToFirst()) {
             do {
                 String index = c.getString(c.getColumnIndex(dbHelper.ID_PEOPLE));
-                Log.d("ID:",index);
                 id.add(index);
             } while (c.moveToNext());
         } else
@@ -108,7 +110,7 @@ public class Main2Activity extends AppCompatActivity{
                 }while(cursor.moveToNext());
             }
             else
-                Log.d(LOG_TAG,"ERROR");
+                Log.d(LOG_TAG,"Cursor is null");
         }
     }
 }

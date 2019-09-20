@@ -41,8 +41,8 @@ public class All_People extends AppCompatActivity{
         setContentView(R.layout.activity_all__people);
         dbHelper = new DBHelper(this);
         people = new ArrayList<String>();
-        editText = (EditText) findViewById(R.id.textName);
-        lv = (ListView) findViewById(R.id.AllPeopleList);
+        editText = findViewById(R.id.textName);
+        lv = findViewById(R.id.AllPeopleList);
         addName = findViewById(R.id.addNewName);
 
         Intent intent = getIntent();
@@ -51,9 +51,6 @@ public class All_People extends AppCompatActivity{
         month = intent.getStringExtra("month");
         day = intent.getStringExtra("day");
 
-        Log.d("DATA:",year);
-        Log.d("DATA:",month);
-        Log.d("DATA:",day);
 
         final SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
@@ -68,12 +65,8 @@ public class All_People extends AppCompatActivity{
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Log.d(LOG_TAG,String.valueOf(i));
                 String name = people.get(i);
-                //people.remove(i);
-                //db.DeleteNameFromPeopleTable(db, name);
                 dbHelper.SetDataInDataTable(dbHelper,name,year,month,day);
-                //dbHelper.GetIdByName(dbHelper,name);
                 dbHelper.ReadAllTable(dbHelper);
                 adapter.notifyDataSetChanged();
                 Intent intent = new Intent(All_People.this,Main2Activity.class);
@@ -107,8 +100,11 @@ public class All_People extends AppCompatActivity{
     }
 
 
-    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase db, ArrayList<String> people){
-        Cursor cursor = db.rawQuery("SELECT " + dbHelper.FULL_NAME +" FROM " + dbHelper.PEOPLE,null);
+    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase db,
+                                         ArrayList<String> people){
+        Cursor cursor = db.rawQuery("SELECT " +
+                dbHelper.FULL_NAME +" FROM " +
+                dbHelper.PEOPLE,null);
         people.clear();
         while (cursor.moveToNext()){
             String Name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
