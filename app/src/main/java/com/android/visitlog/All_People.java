@@ -3,6 +3,7 @@ package com.android.visitlog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,10 +24,13 @@ import java.util.ArrayList;
 
 public class All_People extends AppCompatActivity{
 
-    DBHelper db;
+    DBHelper dbHelper;
     EditText editText;
     ArrayList<String>people;
     ListView lv;
+    String year;
+    String month;
+    String day;
     private Button addName;
 
     final String LOG_TAG = "myLogs";
@@ -35,31 +39,45 @@ public class All_People extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all__people);
-        db = new DBHelper(this);
+        dbHelper = new DBHelper(this);
         people = new ArrayList<String>();
         editText = (EditText) findViewById(R.id.textName);
         lv = (ListView) findViewById(R.id.AllPeopleList);
         addName = findViewById(R.id.addNewName);
 
-        final SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        Intent intent = getIntent();
+
+        year = intent.getStringExtra("year");
+        month = intent.getStringExtra("month");
+        day = intent.getStringExtra("day");
+
+        Log.d("DATA:",year);
+        Log.d("DATA:",month);
+        Log.d("DATA:",day);
+
+        final SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 people);
         lv.setAdapter(adapter);
 
-        db.ReadAllTable(db);
+        dbHelper.ReadAllTable(dbHelper);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(LOG_TAG,String.valueOf(i));
+                //Log.d(LOG_TAG,String.valueOf(i));
                 String name = people.get(i);
-                people.remove(i);
-                db.DeleteNameFromPeopleTable(db, name);
-                db.ReadAllTable(db);
+                //people.remove(i);
+                //db.DeleteNameFromPeopleTable(db, name);
+                dbHelper.SetDataInDataTable(dbHelper,name,year,month,day);
+                //dbHelper.GetIdByName(dbHelper,name);
+                dbHelper.ReadAllTable(dbHelper);
                 adapter.notifyDataSetChanged();
+                Intent intent = new Intent(All_People.this,Main2Activity.class);
+                startActivity(intent);
             }
         });
 
@@ -77,15 +95,15 @@ public class All_People extends AppCompatActivity{
                 }
                 else{
                     people.add(Name);
-                    db.SetNewName(db,Name);
+                    dbHelper.SetNewName(dbHelper,Name);
                     adapter.notifyDataSetChanged();
                     editText.setText("");
                 }
-                db.close();
+                dbHelper.close();
             }
         });
 
-        InsertFullNamesIntoList(db, sqLiteDatabase, people);
+        InsertFullNamesIntoList(dbHelper, sqLiteDatabase, people);
     }
 
 

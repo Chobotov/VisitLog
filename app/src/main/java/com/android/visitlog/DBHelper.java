@@ -76,58 +76,87 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists " + PEOPLE);
-        db.execSQL("drop table if exists " + DATA_PEOPLE);
-        db.execSQL("drop table if exists " + PEOPLES_GROUP);
-        db.execSQL("drop table if exists " + GROUPS);
-        onCreate(db);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        sqLiteDatabase.execSQL("drop table if exists " + PEOPLE);
+        sqLiteDatabase.execSQL("drop table if exists " + DATA_PEOPLE);
+        sqLiteDatabase.execSQL("drop table if exists " + PEOPLES_GROUP);
+        sqLiteDatabase.execSQL("drop table if exists " + GROUPS);
+        onCreate(sqLiteDatabase);
     }
 
     //Запись нового имени
     public void SetNewName(DBHelper dbHelper, String name){
         ContentValues cv = new ContentValues();
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
         cv.put(dbHelper.FULL_NAME,name);
-        db.insert(dbHelper.PEOPLE, null, cv);
-        db.close();
+        sqLiteDatabase.insert(dbHelper.PEOPLE, null, cv);
+        sqLiteDatabase.close();
     }
 
     //Удаление имени из таблиц
     public void DeleteNameFromPeopleTable(DBHelper dbHelper, String name){
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
-        db.delete(dbHelper.PEOPLE,dbHelper.FULL_NAME + " = ?" , new String[]{name});
+        sqLiteDatabase.delete(dbHelper.PEOPLE,dbHelper.FULL_NAME + " = ?" , new String[]{name});
     }
 
-    public int GetID(DBHelper dbHelper,String value){
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    public String GetIdByName(DBHelper dbHelper, String name){
+        String id = "0";
 
-        String s = "SELECT " + dbHelper.KEY_ID + " FROM " + dbHelper.PEOPLE + " WHERE " + dbHelper.FULL_NAME + " = ?";
+        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
 
-        Cursor c = db.rawQuery(s,new String[]{value});
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.KEY_ID +
+                " FROM " + dbHelper.PEOPLE +
+                " WHERE " + dbHelper.FULL_NAME +
+                " = ?",new String[]{name});
+        if(cursor.moveToFirst())
+        {
+            int index = cursor.getColumnIndex(dbHelper.KEY_ID);
+            do {
+                id = cursor.getString(index);
+            }while (cursor.moveToNext());
+        }
+        else
+            cursor.close();
 
-        int id = c.getColumnIndex(DBHelper.KEY_ID);
-        c.close();
+        //Log.d(LOG_TAG,id);
 
         return id;
     }
 
-    public void ReadAllTable(DBHelper dbHelper){
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    public void SetDataInDataTable(DBHelper dbHelper,String name,String YEAR,String MONTH,String DAY){
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
-        Cursor cursor = db.query(DBHelper.PEOPLE,null,null,null,null,null,null);
+        ContentValues cv = new ContentValues();
+
+        String id = GetIdByName(dbHelper,name);
+
+        Log.d("idbyName",id);
+
+        cv.put(dbHelper.ID_PEOPLE,id);
+        cv.put(dbHelper.YEAR,YEAR);
+        cv.put(dbHelper.MONTH,MONTH);
+        cv.put(dbHelper.DAY,DAY);
+
+        sqLiteDatabase.insert(dbHelper.DATA_PEOPLE,null,cv);
+        sqLiteDatabase.close();
+    }
+
+    public void ReadAllTable(DBHelper dbHelper){
+        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.query(DBHelper.PEOPLE,null,null,null,null,null,null);
 
         if(cursor.moveToFirst()) {
             int nameindex = cursor.getColumnIndex(DBHelper.FULL_NAME);
             do {
-                Log.d(LOG_TAG, "name = " + cursor.getString(nameindex));
+                //Log.d(LOG_TAG, "name = " + cursor.getString(nameindex));
             } while (cursor.moveToNext());
         }
         else
-            Log.d(LOG_TAG,"0 rows");
+           //Log.d(LOG_TAG,"0 rows");
         cursor.close();
     }
 }

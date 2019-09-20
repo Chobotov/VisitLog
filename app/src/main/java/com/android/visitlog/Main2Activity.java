@@ -18,11 +18,11 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
+public class Main2Activity extends AppCompatActivity{
 
     CalendarView calendarView;
     FloatingActionButton fab;
-    public static int YEAR,MONTH,DAY;
+    public int YEAR,MONTH,DAY;
     public static ListView productList;
     public static ArrayList<People> people = new ArrayList<People>();
 
@@ -34,60 +34,81 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_main2);
         fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         calendarView = (CalendarView) findViewById(R.id.calendarView);
-        fab.setOnClickListener(this);
+
+        FindIDPeopleByData();
+        productList = (ListView) findViewById(R.id.peopleList);
+        final ItemAdapter adapter = new ItemAdapter(this, R.layout.list_item, people);
+        productList.setAdapter(adapter);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Main2Activity.this,All_People.class);
+                intent.putExtra("year",String.valueOf(YEAR));
+                intent.putExtra("month",String.valueOf(MONTH));
+                intent.putExtra("day",String.valueOf(DAY));
+                startActivity(intent);
+            }
+        });
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
                 YEAR = year;
-                MONTH = month;
+                MONTH = month+1;
                 DAY = dayOfMonth;
-                Log.d("Date",dayOfMonth + " " + month + " " + year );
+                FindIDPeopleByData();
+                adapter.notifyDataSetChanged();
+                //Log.d("Date",dayOfMonth + " " + month + " " + year );
             }
         });
-        FindPeopleByData();
-        productList = (ListView) findViewById(R.id.peopleList);
-        ItemAdapter adapter = new ItemAdapter(this, R.layout.list_item, people);
-        productList.setAdapter(adapter);
 
     }
-
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(Main2Activity.this,All_People.class);
-        startActivity(intent);
-    }
-
-    private void FindPeopleByData(){
-        DBHelper db = new DBHelper(this);
-        final SQLiteDatabase sqLiteDatabase = db.getReadableDatabase();
-
-        Cursor c = sqLiteDatabase.rawQuery("SELECT " + db.ID_PEOPLE
-                +" FROM " + db.DATA_PEOPLE +
-                " WHERE " + db.YEAR + " = ?" +
-                " AND " + db.MONTH + " = ? " +
-                " AND " + db.DAY + " = ?"
+    private void FindIDPeopleByData(){
+        people.clear();
+        ArrayList<String> id = new ArrayList<>();
+        DBHelper dbHelper = new DBHelper(this);
+        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+        Cursor c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.ID_PEOPLE
+                +" FROM " + dbHelper.DATA_PEOPLE +
+                " WHERE " + dbHelper.YEAR + " = ?" +
+                " AND " + dbHelper.MONTH + " = ?" +
+                " AND " + dbHelper.DAY + " = ?"
                 ,new String[]{String.valueOf(YEAR),String.valueOf(MONTH),String.valueOf(DAY)});
-        logCursor(c);
-        c.close();
-        db.close();
-    }
-
-   private void logCursor(Cursor c) {
-        if (c != null) {
-            if (c.moveToFirst()) {
-                String str;
-                do {
-                    str = "";
-                    for (String cn : c.getColumnNames()) {
-                        str = str.concat(cn + " = " + c.getString(c.getColumnIndex(cn)) + "; ");
-                    }
-                    Log.d(LOG_TAG, str);
-                } while (c.moveToNext());
-            }
+        if (c.moveToFirst()) {
+            do {
+                String index = c.getString(c.getColumnIndex(dbHelper.ID_PEOPLE));
+                Log.d("ID:",index);
+                id.add(index);
+            } while (c.moveToNext());
         } else
             Log.d(LOG_TAG, "Cursor is null");
+        c.close();
+        FindNamePeopleById(id);
+        c.close();
+        dbHelper.close();
     }
 
+    private void FindNamePeopleById(ArrayList<String> id) {
+        DBHelper dbHelper =  new DBHelper(this);
+
+        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+
+        for(String s : id)
+        {
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.FULL_NAME
+                    + " FROM " + dbHelper.PEOPLE
+                    + " WHERE " + dbHelper.KEY_ID + " = ?",new String[]{s});
+            if(cursor.moveToFirst())
+            {
+                do{
+                    String name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
+                    people.add(new People(name,"-"));
+                }while(cursor.moveToNext());
+            }
+            else
+                Log.d(LOG_TAG,"ERROR");
+        }
+    }
 }

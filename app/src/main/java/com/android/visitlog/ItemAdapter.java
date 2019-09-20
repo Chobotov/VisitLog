@@ -1,6 +1,7 @@
 package com.android.visitlog;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ public class ItemAdapter extends ArrayAdapter<People> {
         this.inflater = LayoutInflater.from(context);
     }
 
-    public View getView(int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
 
         final ViewHolder viewHolder;
         if (convertView == null) {
@@ -69,8 +70,7 @@ public class ItemAdapter extends ArrayAdapter<People> {
             @Override
             public void onClick(View v) {
                 Log.d("delete","delete");
-                peopleList.remove(0);
-                Main2Activity.productList.invalidateViews();
+                //peopleList.remove();
             }
         });
 
