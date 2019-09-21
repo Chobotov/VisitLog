@@ -15,9 +15,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     private OnLongItemClickListener onLongClickListener;
     private LayoutInflater inflater;
-    private ArrayList<People> peoples;
+    private ArrayList<Item> peoples;
 
-    public PeopleAdapter(Context context, OnLongItemClickListener onLongClickListener, ArrayList<People> arrayList) {
+    public PeopleAdapter(Context context, OnLongItemClickListener onLongClickListener, ArrayList<Item> arrayList) {
         peoples = arrayList;
         this.onLongClickListener = onLongClickListener;
         this.inflater = LayoutInflater.from(context);
@@ -34,7 +34,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        People people = peoples.get(position);
+        Item people = peoples.get(position);
 
         holder.itemView.setOnLongClickListener(view -> {
             if (onLongClickListener != null)
@@ -52,11 +52,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
 
-    public void setPeoples(ArrayList<People> peoples) {
+    public void setPeoples(ArrayList<Item> peoples) {
         this.peoples = peoples;
     }
 
-    public ArrayList<People> getPeoples() {
+    public ArrayList<Item> getPeoples() {
         return peoples;
     }
 
@@ -75,6 +75,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
     interface OnLongItemClickListener {
-        void onLongItemClick(People item);
+        void onLongItemClick(Item item);
     }
 }

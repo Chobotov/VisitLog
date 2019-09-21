@@ -1,10 +1,10 @@
 package com.android.visitlog;
 
-public class People {
+public class Item {
     private int Id;
     private String Name;
 
-    public People(int Id, String Name){
+    public Item(int Id, String Name){
         this.Id = Id;
         this.Name = Name;
 

@@ -23,7 +23,9 @@ public class PeopleActivity extends AppCompatActivity {
 
 
     FloatingActionButton floatingActionButton;
-    public static ArrayList<People> people_list;
+    public static ArrayList<Item> people_list;
+    public static ArrayList<Item> groups_list;
+
 
     TabLayout tabLayout;
     MenuItem search;
@@ -109,7 +111,7 @@ public class PeopleActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
 
                 EditText editText = view1.findViewById(R.id.text_edit_alertview);
-                people_list.add(new People(people_list.size(), editText.getText().toString()));
+                people_list.add(new Item(people_list.size(), editText.getText().toString()));
 
             });
             AlertDialog alertDialog = builder.create();
@@ -127,10 +129,10 @@ public class PeopleActivity extends AppCompatActivity {
     }
 
 
-    private ArrayList<People> setAllPeople() {
-        ArrayList<People> people = new ArrayList<>();
+    private ArrayList<Item> setAllPeople() {
+        ArrayList<Item> people = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            people.add(new People(people.size(), "Name" + people.size()));
+            people.add(new Item(people.size(), "Name" + people.size()));
         }
         return people;
     }
@@ -153,7 +155,7 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 people_list.clear();
-                people_list.add(new People(1,"ewfwef"));
+                people_list.add(new Item(1,"ewfwef"));
                 return false;
             }
         });
