@@ -2,12 +2,10 @@ package com.android.visitlog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,10 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -59,7 +54,6 @@ public class All_People extends AppCompatActivity{
                 people);
         lv.setAdapter(adapter);
 
-        dbHelper.ReadAllTable(dbHelper);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -67,7 +61,6 @@ public class All_People extends AppCompatActivity{
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = people.get(i);
                 dbHelper.SetDataInDataTable(dbHelper,name,year,month,day);
-                dbHelper.ReadAllTable(dbHelper);
                 adapter.notifyDataSetChanged();
                 Intent intent = new Intent(All_People.this,Main2Activity.class);
                 startActivity(intent);
@@ -80,6 +73,7 @@ public class All_People extends AppCompatActivity{
                 String name = people.get(position);
                 people.remove(position);
                 dbHelper.DeleteNameFromPeopleTable(dbHelper,name);
+                dbHelper.DeleteDataFromDataTable(dbHelper,name,year,month,day);
                 adapter.notifyDataSetChanged();
                 return true;
             }

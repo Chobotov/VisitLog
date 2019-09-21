@@ -30,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static String MONTH = "month";
     public static String DAY = "day";
     public static String CAME_TIME = "cameTime";
-    public static String OUT_TIME = "outTime";
+    public static String LEAVE_TIME = "leaveTime";
 
 
     public DBHelper(Context context) {
@@ -40,38 +40,39 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("create table " + PEOPLE +
-                "(" +
-                KEY_ID + " integer primary key," +
-                FULL_NAME + " text" +
-                ")");
+        db.execSQL("create table " + PEOPLE
+                + "("
+                + KEY_ID + " integer primary key,"
+                + FULL_NAME + " text"
+                + ")");
 
-        db.execSQL("create table " + DATA_PEOPLE +
-                "(" +
-                ID_PEOPLE + " integer," +
-                YEAR + " integer," +
-                MONTH + " integer," +
-                DAY + " integer," +
-                CAME_TIME + " numeric," +
-                OUT_TIME + " numeric," +
-                "FOREIGN KEY (" + ID_PEOPLE + ") REFERENCES " +
-                PEOPLE + " (" + KEY_ID + ")" +
-                ")");
+        db.execSQL("create table " + DATA_PEOPLE
+                + "("
+                + ID_PEOPLE + " integer,"
+                + YEAR + " integer,"
+                + MONTH + " integer,"
+                + DAY + " integer,"
+                + CAME_TIME + " text,"
+                + LEAVE_TIME + " text,"
+                + "FOREIGN KEY (" + ID_PEOPLE + ") REFERENCES "
+                + PEOPLE + " (" + KEY_ID + ")"
+                + ")");
 
         db.execSQL("create table " + PEOPLES_GROUP +
                 "(" +
-                ID_PEOPLE + " integer,"+
-                ID_GROUP + " integer," +
-                "FOREIGN KEY (" + ID_PEOPLE + ") REFERENCES " +
-                PEOPLE + " (" + KEY_ID + ")," +
-                "FOREIGN KEY (" + ID_GROUP + ") REFERENCES " +
-                GROUPS + " ( " + KEY_ID + ")" +
-                ")");
+                ID_PEOPLE + " integer,"
+                + ID_GROUP + " integer,"
+                + "FOREIGN KEY (" + ID_PEOPLE + ") REFERENCES "
+                + PEOPLE + " (" + KEY_ID + "),"
+                + "FOREIGN KEY (" + ID_GROUP + ") REFERENCES "
+                + GROUPS + " ( " + KEY_ID + ")"
+                + ")");
 
         db.execSQL("create table " + GROUPS +
-                "(" +
-                KEY_ID + " integer primary key," +
-                GROUP_NAME + " text" +
+                "("
+                + KEY_ID + " integer primary key,"
+                + GROUP_NAME + " text"
+                +
                 ")");
     }
 
@@ -99,10 +100,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
 
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.KEY_ID +
-                " FROM " + dbHelper.PEOPLE +
-                " WHERE " + dbHelper.FULL_NAME +
-                " = ?",new String[]{name});
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
+                + dbHelper.KEY_ID
+                + " FROM " + dbHelper.PEOPLE
+                + " WHERE " + dbHelper.FULL_NAME
+                + " = ?",new String[]{name});
         if(cursor.moveToFirst())
         {
             int index = cursor.getColumnIndex(dbHelper.KEY_ID);
@@ -125,48 +127,68 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String id = GetIdByName(dbHelper,name);
 
-        //Log.d("idbyName",id);
-
         cv.put(dbHelper.ID_PEOPLE,id);
         cv.put(dbHelper.YEAR,YEAR);
         cv.put(dbHelper.MONTH,MONTH);
         cv.put(dbHelper.DAY,DAY);
+        cv.put(dbHelper.CAME_TIME,"Пришел");
+        cv.put(dbHelper.LEAVE_TIME,"Ушел");
 
         sqLiteDatabase.insert(dbHelper.DATA_PEOPLE,null,cv);
     }
 
-    public void ReadAllTable(DBHelper dbHelper){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
-
-        Cursor cursor = sqLiteDatabase.query(DBHelper.PEOPLE,null,null,null,null,null,null);
-
-        if(cursor.moveToFirst()) {
-            int nameindex = cursor.getColumnIndex(DBHelper.FULL_NAME);
-            do {
-                //Log.d(LOG_TAG, "name = " + cursor.getString(nameindex));
-            } while (cursor.moveToNext());
-        }
-        else
-           //Log.d(LOG_TAG,"0 rows");
-        cursor.close();
-    }
-
-    //Удаление имени из таблиц
+    //Удаление имени из таблицы PEOPLE
     public void DeleteNameFromPeopleTable(DBHelper dbHelper, String name){
         SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
         sqLiteDatabase.delete(dbHelper.PEOPLE,dbHelper.FULL_NAME + " = ?" , new String[]{name});
     }
 
-    public void DeleteDataByName(DBHelper dbHelper,String Name){
-
+    //Удаление даты из таблицы DATA_PEOPLE
+    public void DeleteDataFromDataTable(DBHelper dbHelper,String Name,String YEAR,String MONTH,String DAY){
         SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
-        String id = dbHelper.GetIdByName(dbHelper,Name);
+        String id  = dbHelper.GetIdByName(dbHelper,Name);
 
         sqLiteDatabase.delete(dbHelper.DATA_PEOPLE,
-                dbHelper.ID_PEOPLE + "= ?",
-                new String[]{id});
+                 dbHelper.ID_PEOPLE + "= ?"
+                         + " AND " + dbHelper.YEAR + "= ?"
+                         + " AND " + dbHelper.MONTH + "= ?"
+                         + " AND " + dbHelper.DAY + "= ?",
+                new String[]{id,YEAR,MONTH,DAY});
+    }
 
+    //Добавление время Пришел в DATA_PEOPLE
+    public void InsertComeTime(DBHelper dbHelper,String name,String time,String year,String month,String day){
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+
+        String id = dbHelper.GetIdByName(dbHelper,name);
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.CAME_TIME,time);
+
+        sqLiteDatabase.update(dbHelper.DATA_PEOPLE,cv,dbHelper.ID_PEOPLE
+                + "=? "
+                + "AND " + dbHelper.YEAR + "=? "
+                + "AND " +  dbHelper.MONTH + "=? "
+                + "AND " +  dbHelper.DAY + "=? ",new String[]{id,year,month,day});
+    }
+
+    //Добавление время Ушел в DATA_PEOPLE
+    public void InsertLeaveTime(DBHelper dbHelper,String name,String time,String year,String month,String day){
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+
+        String id = dbHelper.GetIdByName(dbHelper,name);
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(dbHelper.LEAVE_TIME,time);
+
+        sqLiteDatabase.update(dbHelper.DATA_PEOPLE,cv,dbHelper.ID_PEOPLE
+                + "=? "
+                + "AND " + dbHelper.YEAR + "=? "
+                + "AND " +  dbHelper.MONTH + "=? "
+                + "AND " +  dbHelper.DAY + "=? ",new String[]{id,year,month,day});
     }
 }

@@ -10,10 +10,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
-import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -21,8 +22,9 @@ public class Main2Activity extends AppCompatActivity{
 
     CalendarView calendarView;
     FloatingActionButton fab;
-    public int YEAR,MONTH,DAY;
-    public static ArrayList<People> people = new ArrayList<People>();
+    ItemAdapter adapter;
+    public String YEAR,MONTH,DAY;
+    public static ArrayList<People> peopleList=new ArrayList<People>();
 
     final String LOG_TAG = "myLogs";
 
@@ -30,32 +32,96 @@ public class Main2Activity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        YEAR = Calendar.getInstance().get(Calendar.YEAR);
-        MONTH = Calendar.getInstance().get(Calendar.MONTH)+1;
-        DAY = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        Log.d("Date",YEAR + " " + MONTH + " " + DAY );
+        YEAR = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+        MONTH = String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+1);
+        DAY = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         fab = findViewById(R.id.floatingActionButton);
         calendarView = findViewById(R.id.calendarView);
 
         FindIDPeopleByData();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
+        RecyclerView recyclerView = findViewById(R.id.list);
 
-        final ItemAdapter adapter = new ItemAdapter(this,people);
+        adapter = new ItemAdapter(this, peopleList, new ItemAdapter.ComeLeaveRemove() {
+            @Override
+            public void RemovePeopleData(People people,int position) {
+                DBHelper dbHelper = new DBHelper(Main2Activity.this);
+                dbHelper.DeleteDataFromDataTable(dbHelper,people.Name,YEAR,MONTH,DAY);
+                peopleList.remove(position);
+                adapter.notifyDataSetChanged();
+                Log.d("delete",people.Name);
+            }
+
+            @Override
+            public void InsertComeTimeInData(People people) {
+                DBHelper dbHelper = new DBHelper(Main2Activity.this);
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                String time = df.format(Calendar.getInstance().getTime());
+                people.CameTime = time;
+                dbHelper.InsertComeTime(dbHelper,people.Name,time,YEAR,MONTH,DAY);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void InsertLeaveTimeInData(People people) {
+                DBHelper dbHelper = new DBHelper(Main2Activity.this);
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                String time = df.format(Calendar.getInstance().getTime());
+                people.LeaveTime = time;
+                dbHelper.InsertLeaveTime(dbHelper,people.Name,time,YEAR,MONTH,DAY);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void CheckTime(People people) {
+                DBHelper dbHelper = new DBHelper(Main2Activity.this);
+                SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+                String id = dbHelper.GetIdByName(dbHelper,people.Name);
+                Cursor c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.CAME_TIME
+                        + " FROM " + dbHelper.DATA_PEOPLE
+                        + " WHERE "
+                        + dbHelper.ID_PEOPLE + "=? "
+                        + "AND " + dbHelper.YEAR + "=? "
+                        + "AND " +  dbHelper.MONTH + "=? "
+                        + "AND " +  dbHelper.DAY + "=? ",new String[]{id,YEAR,MONTH,DAY});
+                if(c.moveToFirst()){
+                    int index = c.getColumnIndex(DBHelper.CAME_TIME);
+                    do {
+                        people.CameTime=(c.getString(index));
+                        Log.d("people:","Came " + people.CameTime +" Leave "+people.LeaveTime);
+                    }while (c.moveToNext());
+                }
+
+                c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.LEAVE_TIME
+                        + " FROM " + dbHelper.DATA_PEOPLE
+                        + " WHERE "
+                        + dbHelper.ID_PEOPLE + "=? "
+                        + "AND " + dbHelper.YEAR + "=? "
+                        + "AND " +  dbHelper.MONTH + "=? "
+                        + "AND " +  dbHelper.DAY + "=? ",new String[]{id,YEAR,MONTH,DAY});
+                if(c.moveToFirst()){
+                    int index = c.getColumnIndex(DBHelper.LEAVE_TIME);
+                    do {
+                        people.LeaveTime=(c.getString(index));
+                        Log.d("people:","Came " + people.CameTime +" Leave "+people.LeaveTime);
+                    }while (c.moveToNext());
+                }
+            }
+        });
+
+
         recyclerView.setAdapter(adapter);
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Error:","ТУТ");
                 Intent intent = new Intent(Main2Activity.this,All_People.class);
-                Log.d("Error:","интент");
                 intent.putExtra("year",String.valueOf(YEAR));
-                Log.d("Error:","Год");
                 intent.putExtra("month",String.valueOf(MONTH));
-                Log.d("Error:","Месяц");
                 intent.putExtra("day",String.valueOf(DAY));
-                Log.d("Error:","День");
+                ReloadActivity();
                 startActivity(intent);
             }
         });
@@ -64,19 +130,32 @@ public class Main2Activity extends AppCompatActivity{
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                                             int dayOfMonth) {
-                YEAR = year;
-                MONTH = month+1;
-                DAY = dayOfMonth;
+                YEAR = String.valueOf(year);
+                MONTH = String.valueOf(month+1);
+                DAY = String.valueOf(dayOfMonth);
                 FindIDPeopleByData();
                 adapter.notifyDataSetChanged();
-                //Log.d("Date",dayOfMonth + " " + month + " " + year );
             }
         });
+    }
 
+    public void onStart() {
+
+        super.onStart();
+        FindIDPeopleByData();
+    }
+
+    private void ReloadActivity(){
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 
     private void FindIDPeopleByData(){
-        people.clear();
+        peopleList.clear();
         ArrayList<String> id = new ArrayList<>();
         DBHelper dbHelper = new DBHelper(this);
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
@@ -85,7 +164,7 @@ public class Main2Activity extends AppCompatActivity{
                 " WHERE " + dbHelper.YEAR + " = ?" +
                 " AND " + dbHelper.MONTH + " = ?" +
                 " AND " + dbHelper.DAY + " = ?"
-                ,new String[]{String.valueOf(YEAR),String.valueOf(MONTH),String.valueOf(DAY)});
+                ,new String[]{YEAR,MONTH,DAY});
         if (c.moveToFirst()) {
             do {
                 String index = c.getString(c.getColumnIndex(dbHelper.ID_PEOPLE));
@@ -112,7 +191,7 @@ public class Main2Activity extends AppCompatActivity{
             {
                 do{
                     String name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
-                    people.add(new People(name,"-"));
+                    peopleList.add(new People(name,"-"));
                 }while(cursor.moveToNext());
             }
             else

@@ -1,34 +1,31 @@
 package com.android.visitlog;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
+    private ComeLeaveRemove clr;
     private LayoutInflater inflater;
-    private List<People> peopleList;
+    private ArrayList<People> peopleList;
 
-    public ItemAdapter(Context context, List<People> people) {
+    public ItemAdapter(Context context, ArrayList<People> people,ComeLeaveRemove clr) {
 
         this.peopleList = people;
+        this.clr = clr;
         this.inflater = LayoutInflater.from(context);
     }
+
 
     @NonNull
     @Override
@@ -38,10 +35,36 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, int position) {
-        People people = peopleList.get(position);
+    public void onBindViewHolder(@NonNull final ItemAdapter.ViewHolder holder, int position) {
+        final People people = peopleList.get(position);
+        clr.CheckTime(people);
         holder.nameView.setText(people.Name);
         holder.groupView.setText(people.Group);
+        holder.came.setText(people.CameTime);
+        holder.leave.setText(people.LeaveTime);
+
+
+        holder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clr.RemovePeopleData(peopleList.get(holder.getAdapterPosition()),holder.getAdapterPosition());
+            }
+        });
+
+        holder.came.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clr.InsertComeTimeInData(peopleList.get(holder.getAdapterPosition()));
+            }
+        });
+
+        holder.leave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clr.InsertLeaveTimeInData(peopleList.get(holder.getAdapterPosition()));
+            }
+        });
+
     }
 
     @Override
@@ -52,7 +75,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         final TextView nameView, groupView;
-        final Button came,leave,remove;
+        Button came,leave,remove;
         ViewHolder(final View view){
             super(view);
 
@@ -61,37 +84,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             came = (Button) view.findViewById(R.id.came);
             leave = (Button) view.findViewById(R.id.leave);
             remove = (Button) view.findViewById(R.id.remove);
-
-            came.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DateFormat df = new SimpleDateFormat("HH:mm");
-                    String date = df.format(Calendar.getInstance().getTime());
-                    came.setText(date);
-                }
-            });
-
-            leave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DateFormat df = new SimpleDateFormat("HH:mm");
-                    String date = df.format(Calendar.getInstance().getTime());
-                    leave.setText(date);
-                }
-            });
-
-            remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DBHelper dbHelper = new DBHelper(v.getContext());
-                    String name = peopleList.get(getAdapterPosition()).Name;
-                    dbHelper.DeleteDataByName(dbHelper,name);
-                    peopleList.remove(getAdapterPosition());
-                    notifyDataSetChanged();
-                    Log.d("delete",name);
-                }
-            });
         }
+    }
+    interface ComeLeaveRemove{
+        void RemovePeopleData(People people,int position);
+        void InsertComeTimeInData(People people);
+        void InsertLeaveTimeInData(People people);
+        void CheckTime(People people);
     }
 }
 
