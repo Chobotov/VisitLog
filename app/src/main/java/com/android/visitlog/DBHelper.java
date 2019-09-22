@@ -145,17 +145,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Удаление даты из таблицы DATA_PEOPLE
-    public void DeleteDataFromDataTable(DBHelper dbHelper,String Name,String YEAR,String MONTH,String DAY){
+    public void DeleteDataFromDataTable(DBHelper dbHelper,String Name){
         SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
         String id  = dbHelper.GetIdByName(dbHelper,Name);
 
         sqLiteDatabase.delete(dbHelper.DATA_PEOPLE,
-                 dbHelper.ID_PEOPLE + "= ?"
-                         + " AND " + dbHelper.YEAR + "= ?"
-                         + " AND " + dbHelper.MONTH + "= ?"
-                         + " AND " + dbHelper.DAY + "= ?",
-                new String[]{id,YEAR,MONTH,DAY});
+                 dbHelper.ID_PEOPLE + "= ?", new String[]{id});
     }
 
     //Добавление время Пришел в DATA_PEOPLE

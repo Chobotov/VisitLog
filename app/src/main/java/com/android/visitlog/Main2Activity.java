@@ -46,7 +46,7 @@ public class Main2Activity extends AppCompatActivity{
             @Override
             public void RemovePeopleData(People people,int position) {
                 DBHelper dbHelper = new DBHelper(Main2Activity.this);
-                dbHelper.DeleteDataFromDataTable(dbHelper,people.Name,YEAR,MONTH,DAY);
+                dbHelper.DeleteDataFromDataTable(dbHelper,people.Name);
                 peopleList.remove(position);
                 adapter.notifyDataSetChanged();
                 Log.d("delete",people.Name);

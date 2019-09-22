@@ -72,8 +72,8 @@ public class All_People extends AppCompatActivity{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = people.get(position);
                 people.remove(position);
+                dbHelper.DeleteDataFromDataTable(dbHelper,name);
                 dbHelper.DeleteNameFromPeopleTable(dbHelper,name);
-                dbHelper.DeleteDataFromDataTable(dbHelper,name,year,month,day);
                 adapter.notifyDataSetChanged();
                 return true;
             }
