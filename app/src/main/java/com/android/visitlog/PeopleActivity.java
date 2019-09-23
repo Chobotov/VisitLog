@@ -1,5 +1,6 @@
 package com.android.visitlog;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +43,7 @@ public class PeopleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
+        this.setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         if (people_list == null)
             people_list = setAllPeople();
@@ -127,7 +129,6 @@ public class PeopleActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
 
     }
-
 
     private ArrayList<Item> setAllPeople() {
         ArrayList<Item> people = new ArrayList<>();

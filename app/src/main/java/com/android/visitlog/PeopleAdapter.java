@@ -36,6 +36,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item people = peoples.get(position);
 
+
+
         holder.itemView.setOnLongClickListener(view -> {
             if (onLongClickListener != null)
                 onLongClickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
@@ -61,7 +63,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
 
         ViewHolder(View view) {
