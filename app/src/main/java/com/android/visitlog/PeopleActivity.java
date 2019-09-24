@@ -1,8 +1,6 @@
 package com.android.visitlog;
 
-import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -113,10 +111,11 @@ public class PeopleActivity extends AppCompatActivity {
 
 
             builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
                 EditText editText = view1.findViewById(R.id.text_edit_alertview);
                 people_list.add(new Item(people_list.size(), editText.getText().toString()));
-            });
 
+            });
             AlertDialog alertDialog = builder.create();
 
             alertDialog.show();
@@ -139,7 +138,6 @@ public class PeopleActivity extends AppCompatActivity {
         return people;
     }
 
-    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
