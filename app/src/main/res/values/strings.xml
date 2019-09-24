@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">VisitLog</string>
+
+    <string name="Groups">Groups</string>
+    <string name="People">People</string>
+    <string name="SearchString">item</string>
+    <string name="NameTextLayout">Name</string>
+    <string name="Add">Add</string>
+
+
 </resources>
