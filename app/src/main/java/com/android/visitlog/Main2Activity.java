@@ -191,7 +191,7 @@ public class Main2Activity extends AppCompatActivity{
             {
                 do{
                     String name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
-                    peopleList.add(new People(name,"-"));
+                    peopleList.add(new People(name));
                 }while(cursor.moveToNext());
             }
             else
