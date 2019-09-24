@@ -1,6 +1,8 @@
 package com.android.visitlog;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -137,6 +139,7 @@ public class PeopleActivity extends AppCompatActivity {
         return people;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
