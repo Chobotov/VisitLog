@@ -5,5 +5,8 @@
     <color name="colorAccent">#D33030</color>
     <color name="bg">#F5F5F5</color>
     <color name="addPeopleTextColor">#A3A3A3</color>
+	<color name="floatingActionButton">#A3A3A3</color>
     <color name="textColor">#6A6868</color>
+	<color name="came">#1DC82E</color>
+    <color name="leave">#DB4437</color>
 </resources>
