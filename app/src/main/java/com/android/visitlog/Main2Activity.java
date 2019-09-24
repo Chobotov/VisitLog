@@ -2,7 +2,6 @@ package com.android.visitlog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Main2Activity extends AppCompatActivity{
+public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
 
     CalendarView calendarView;
     FloatingActionButton fab;
@@ -198,5 +197,12 @@ public class Main2Activity extends AppCompatActivity{
                 Log.d(LOG_TAG,"Cursor is null");
         }
         sqLiteDatabase.close();
+        fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
