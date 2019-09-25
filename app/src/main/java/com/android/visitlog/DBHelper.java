@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -86,13 +88,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Запись нового имени
-    public void SetNewName(DBHelper dbHelper, String name){
+    public void SetNewName(String name){
         ContentValues cv = new ContentValues();
 
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        cv.put(dbHelper.FULL_NAME,name);
-        sqLiteDatabase.insert(dbHelper.PEOPLE, null, cv);
+        cv.put(this.FULL_NAME,name);
+        sqLiteDatabase.insert(this.PEOPLE, null, cv);
     }
 
     public String GetIdByName(DBHelper dbHelper, String name){
@@ -186,5 +188,21 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "AND " + dbHelper.YEAR + "=? "
                 + "AND " +  dbHelper.MONTH + "=? "
                 + "AND " +  dbHelper.DAY + "=? ",new String[]{id,year,month,day});
+    }
+
+    public ArrayList<People> getAllPeople(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        ArrayList<People> people = new ArrayList<>();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
+                FULL_NAME +" FROM " +
+                PEOPLE,null);
+        while (cursor.moveToNext()){
+            String Name = cursor.getString(cursor.getColumnIndex(FULL_NAME));
+            people.add(new People(Name));
+        }
+        cursor.close();
+        return people;
     }
 }

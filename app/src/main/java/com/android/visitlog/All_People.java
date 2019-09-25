@@ -93,7 +93,7 @@ public class All_People extends AppCompatActivity{
                 }
                 else{
                     people.add(Name);
-                    dbHelper.SetNewName(dbHelper,Name);
+                   // dbHelper.SetNewName(dbHelper,Name);
                     adapter.notifyDataSetChanged();
                     editText.setText("");
                 }
@@ -101,20 +101,9 @@ public class All_People extends AppCompatActivity{
             }
         });
 
-        InsertFullNamesIntoList(dbHelper, sqLiteDatabase, people);
+        //InsertFullNamesIntoList(dbHelper, sqLiteDatabase, people);
     }
 
 
-    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase sqLiteDatabase,
-                                         ArrayList<String> people){
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
-                dbHelper.FULL_NAME +" FROM " +
-                dbHelper.PEOPLE,null);
-        people.clear();
-        while (cursor.moveToNext()){
-            String Name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
-            people.add(Name);
-        }
-        cursor.close();
-    }
+
 }

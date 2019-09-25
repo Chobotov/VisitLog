@@ -23,10 +23,10 @@ public class PeopleFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private PeopleAdapter adapter;
-    private ArrayList<Item> peoples;
+    private ArrayList<People> peoples;
     private PeopleAdapter.OnLongItemClickListener onLongItemClickListener;
 
-    public PeopleFragment(PeopleAdapter.OnLongItemClickListener onLongItemClickListener, ArrayList<Item> peoples) {
+    public PeopleFragment(PeopleAdapter.OnLongItemClickListener onLongItemClickListener, ArrayList<People> peoples) {
         this.onLongItemClickListener = onLongItemClickListener;
         this.peoples = peoples;
     }
@@ -55,7 +55,11 @@ public class PeopleFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (peoples == null)
-            peoples = new ArrayList<Item>();
+            peoples = new ArrayList<People>();
 
+    }
+
+    public void update(){
+        adapter.notifyDataSetChanged();
     }
 }
