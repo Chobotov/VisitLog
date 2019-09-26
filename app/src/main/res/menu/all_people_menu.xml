@@ -7,16 +7,14 @@
     <item
         android:id="@+id/app_bar_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search"
+        android:title="@string/Search"
         app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/editMod"
+        android:icon="@drawable/ic_mode_edit_black_24dp"
+        android:title="@string/Edit"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/item2"
-        android:title="Add"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/item3"
-        android:title="Remove"
-        app:showAsAction="never" />
+
 
 </menu>

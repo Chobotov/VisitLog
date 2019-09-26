@@ -46,7 +46,7 @@ public class Main2Activity extends AppCompatActivity{
             @Override
             public void RemovePeopleData(People people,int position) {
                 DBHelper dbHelper = new DBHelper(Main2Activity.this);
-                dbHelper.DeleteDataFromDataTable(dbHelper,people.Name);
+                dbHelper.DeleteDataFromDataTable(people.Name);
                 peopleList.remove(position);
                 adapter.notifyDataSetChanged();
                 Log.d("delete",people.Name);
@@ -58,7 +58,7 @@ public class Main2Activity extends AppCompatActivity{
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 String time = df.format(Calendar.getInstance().getTime());
                 people.CameTime = time;
-                dbHelper.InsertComeTime(dbHelper,people.Name,time,YEAR,MONTH,DAY);
+                dbHelper.InsertComeTime(people.Name,time,YEAR,MONTH,DAY);
                 adapter.notifyDataSetChanged();
             }
 
@@ -68,7 +68,7 @@ public class Main2Activity extends AppCompatActivity{
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 String time = df.format(Calendar.getInstance().getTime());
                 people.LeaveTime = time;
-                dbHelper.InsertLeaveTime(dbHelper,people.Name,time,YEAR,MONTH,DAY);
+                dbHelper.InsertLeaveTime(people.Name,time,YEAR,MONTH,DAY);
                 adapter.notifyDataSetChanged();
             }
 

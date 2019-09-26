@@ -44,6 +44,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
             return false;
         });
 
+        holder.itemView.setOnClickListener(view -> {
+            if (onLongClickListener != null)
+                onLongClickListener.onItemClick(peoples.get(holder.getAdapterPosition()));
+        });
+
         holder.name.setText(people.Name);
 
     }
@@ -78,5 +83,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     interface OnLongItemClickListener {
         void onLongItemClick(People item);
+        void onItemClick(People item);
     }
 }

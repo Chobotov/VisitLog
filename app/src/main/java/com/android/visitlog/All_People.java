@@ -3,7 +3,6 @@ package com.android.visitlog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -72,8 +71,8 @@ public class All_People extends AppCompatActivity{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = people.get(position);
                 people.remove(position);
-                dbHelper.DeleteDataFromDataTable(dbHelper,name);
-                dbHelper.DeleteNameFromPeopleTable(dbHelper,name);
+                dbHelper.removePeople(name);
+                //dbHelper.removePeople(dbHelper,name);
                 adapter.notifyDataSetChanged();
                 return true;
             }

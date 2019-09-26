@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
@@ -30,6 +31,7 @@ public class PeopleActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     MenuItem search;
+    MenuItem edit;
     Toolbar toolbar;
     ViewPager viewPager;
     PageAdapter pageAdapter;
@@ -50,16 +52,30 @@ public class PeopleActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pageView);
         pageAdapter = new PageAdapter(getSupportFragmentManager());
 
-        PeopleAdapter.OnLongItemClickListener onLongItemClickListener = item -> {
 
-            Toast.makeText(PeopleActivity.this, "И в чём прикол ?", Toast.LENGTH_SHORT).show();
-        };
+
 
 
         if (people_list == null) {
             people_list = new ArrayList<>();
-            setAllPeople();
+            updatePeople();
         }
+        PeopleAdapter.OnLongItemClickListener onLongItemClickListener = new PeopleAdapter.OnLongItemClickListener(){
+
+
+            @Override
+            public void onLongItemClick(People item) {
+                helper.removePeople(item.Name);
+                updatePeople();
+            }
+
+            @Override
+            public void onItemClick(People item) {
+
+            }
+
+
+        };
 
 
         peopleFragment = new PeopleFragment(onLongItemClickListener, people_list);
@@ -90,7 +106,7 @@ public class PeopleActivity extends AppCompatActivity {
 
                 addNewPeople(editText.getText().toString());
 
-                setAllPeople();
+
 
             });
             AlertDialog alertDialog = builder.create();
@@ -102,17 +118,47 @@ public class PeopleActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar_all_people);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(null);
 
     }
 
     private void addNewPeople(String name) {
-        helper.SetNewName(name);
+        if(!helper.containsPeople(new People(name))) {
+            helper.addPeople(name);
+        }
+        else{
+            int counter = 2;
 
+            while (helper.containsPeople(new People(name + counter)))
+            {
+                counter++;
+            }
+
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
+
+            builder.setCancelable(true);
+
+            String newName = name + counter;
+
+            builder.setMessage("Такой наименование уже есть. Создать новый контакт под названием "+'"'+ newName +'"'+ " ?");
+            builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                helper.addPeople(newName);
+                updatePeople();
+            });
+            builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                dialogInterface.cancel();
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+        updatePeople();
     }
 
-    private void setAllPeople() {
+    private void updatePeople() {
 
         people_list.clear();
         people_list.addAll(helper.getAllPeople());
@@ -126,6 +172,7 @@ public class PeopleActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.all_people_menu, menu);
 
         search = menu.findItem(R.id.app_bar_search);
+        edit = menu.findItem(R.id.editMod);
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
@@ -138,7 +185,16 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 people_list.clear();
-                people_list.add(new People("ewfwef"));
+
+                ArrayList<People> people = helper.getAllPeople(),
+                        newPeople = new ArrayList<>();
+                for (int i = 0; i < people.size(); i++) {
+                    if(people.get(i).Name.equals(newText)){
+                        newPeople.add(people.get(i));
+                    }
+                }
+                people_list.addAll(newPeople);
+                peopleFragment.update();
                 return false;
             }
         });
