@@ -2,17 +2,16 @@ package com.android.visitlog;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
@@ -26,7 +25,7 @@ public class PeopleActivity extends AppCompatActivity {
 
     FloatingActionButton floatingActionButton;
     public static ArrayList<People> people_list;
-    public static ArrayList<People> groups_list;
+    public static ArrayList<Groups> groups_list;
 
 
     TabLayout tabLayout;
@@ -37,6 +36,7 @@ public class PeopleActivity extends AppCompatActivity {
     PageAdapter pageAdapter;
 
     PeopleFragment peopleFragment;
+    GroupsFragment groupsFragment;
 
     DBHelper helper;
 
@@ -52,16 +52,20 @@ public class PeopleActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pageView);
         pageAdapter = new PageAdapter(getSupportFragmentManager());
 
-
-
-
+        if (groups_list == null) {
+            groups_list = new ArrayList<>();
+            updateGroups();
+        }
 
         if (people_list == null) {
             people_list = new ArrayList<>();
             updatePeople();
         }
-        PeopleAdapter.OnLongItemClickListener onLongItemClickListener = new PeopleAdapter.OnLongItemClickListener(){
 
+
+
+
+        PeopleAdapter.ClickListener ClickItemPeople = new PeopleAdapter.ClickListener(){
 
             @Override
             public void onLongItemClick(People item) {
@@ -74,14 +78,14 @@ public class PeopleActivity extends AppCompatActivity {
 
             }
 
-
         };
 
 
-        peopleFragment = new PeopleFragment(onLongItemClickListener, people_list);
+        peopleFragment = new PeopleFragment(ClickItemPeople, people_list);
+        groupsFragment = new GroupsFragment(null,groups_list);
 
         pageAdapter.AddFragment(peopleFragment, getResources().getString(R.string.People));
-        pageAdapter.AddFragment(new PeopleFragment(), getResources().getString(R.string.Groups));
+        pageAdapter.AddFragment(groupsFragment, getResources().getString(R.string.Groups));
 
         viewPager.setAdapter(pageAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -122,6 +126,12 @@ public class PeopleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(null);
 
+    }
+
+    private void updateGroups() {
+        for (int i = 0; i < 10; i++) {
+            groups_list.add(new Groups(("ewf"+groups_list.size())));
+        }
     }
 
     private void addNewPeople(String name) {
@@ -166,6 +176,7 @@ public class PeopleActivity extends AppCompatActivity {
             peopleFragment.update();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -177,23 +188,41 @@ public class PeopleActivity extends AppCompatActivity {
         SearchView mSearchView = (SearchView) search.getActionView();
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                Log.e("tag","Query");
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                people_list.clear();
-
-                ArrayList<People> people = helper.getAllPeople(),
-                        newPeople = new ArrayList<>();
-                for (int i = 0; i < people.size(); i++) {
-                    if(people.get(i).Name.equals(newText)){
-                        newPeople.add(people.get(i));
-                    }
+                Log.e("tag",newText);
+                if(newText.equals(""))
+                {
+                    updatePeople();
                 }
-                people_list.addAll(newPeople);
+                else {
+
+                    ArrayList<People> people = new ArrayList<>(people_list);
+
+
+
+                    ArrayList<People> newPeople = new ArrayList<>();
+
+
+                    for (int i = 0; i < people_list.size(); i++) {
+                        if (filtr(people.get(i).Name,newText)) {
+
+                            newPeople.add(people.get(i));
+                        }
+                    }
+                    people_list.clear();
+                    people_list.addAll(newPeople);
+                    peopleFragment.update();
+                }
                 peopleFragment.update();
                 return false;
             }
@@ -201,6 +230,24 @@ public class PeopleActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+    boolean filtr(String name, String text){
+
+        boolean a = true;
+        if(text.length() <= name.length())
+            for (int i = 0; i < text.length(); i++) {
+                if(text.charAt(i) != name.charAt(i)){
+                    a = false;
+                }
+            }
+        else{
+            a = false;
+        }
+        return  a;
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
