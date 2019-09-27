@@ -200,8 +200,24 @@ public class PeopleActivity extends AppCompatActivity {
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+            }
+        });
 
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                return false;
+            }
+        });
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -210,6 +226,7 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 if(newText.equals(""))
                 {
                     updatePeople();
@@ -217,11 +234,7 @@ public class PeopleActivity extends AppCompatActivity {
                 else {
 
                     ArrayList<People> people = new ArrayList<>(people_list);
-
-
-
                     ArrayList<People> newPeople = new ArrayList<>();
-
 
                     for (int i = 0; i < people_list.size(); i++) {
                         if (filtr(people.get(i).Name,newText)) {
