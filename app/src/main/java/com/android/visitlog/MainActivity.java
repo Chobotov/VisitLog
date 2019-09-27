@@ -1,6 +1,7 @@
 package com.android.visitlog;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity{
     FloatingActionButton fab;
     ItemAdapter adapter;
     public String YEAR,MONTH,DAY;
-    public static ArrayList<People> peopleList=new ArrayList<People>();
+    public ArrayList<People> peopleList;
 
     final String LOG_TAG = "myLogs";
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity{
         DAY = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         fab = findViewById(R.id.floatingActionButton);
         calendarView = findViewById(R.id.calendarView);
-
+        peopleList = new ArrayList<People>();
         FindIDPeopleByData();
 
         RecyclerView recyclerView = findViewById(R.id.list);
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
 
@@ -121,8 +123,10 @@ public class MainActivity extends AppCompatActivity{
                 intent.putExtra("year",String.valueOf(YEAR));
                 intent.putExtra("month",String.valueOf(MONTH));
                 intent.putExtra("day",String.valueOf(DAY));
-                ReloadActivity();
                 startActivity(intent);
+                //ReloadActivity();
+                update();
+
             }
         });
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -139,20 +143,14 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    public void onStart() {
-
-        super.onStart();
+    private void update()
+    {
         FindIDPeopleByData();
+        if(adapter!=null)
+            adapter.notifyDataSetChanged();
+
     }
 
-    private void ReloadActivity(){
-        Intent intent = getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-    }
 
     private void FindIDPeopleByData(){
         peopleList.clear();
@@ -204,7 +202,6 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        if(adapter!=null)
-            adapter.notifyDataSetChanged();
+            update();
     }
 }
