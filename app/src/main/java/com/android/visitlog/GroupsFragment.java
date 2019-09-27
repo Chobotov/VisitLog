@@ -1,6 +1,5 @@
 package com.android.visitlog;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,42 +7,43 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+public class GroupsFragment extends Fragment {
 
-public class PeopleFragment extends Fragment {
 
     public View v;
 
     private RecyclerView recyclerView;
-    private PeopleAdapter adapter;
-    private ArrayList<People> peoples;
-    private PeopleAdapter.ClickListener clickListener;
+    private GroupsAdapter adapter;
+    private ArrayList<Groups> groups;
+    private GroupsAdapter.ClickListener clickListener;
 
-    public PeopleFragment(PeopleAdapter.ClickListener clickListener, ArrayList<People> peoples) {
+    public GroupsFragment(GroupsAdapter.ClickListener clickListener, ArrayList<Groups> groups) {
         this.clickListener = clickListener;
-        this.peoples = peoples;
+        this.groups = groups;
     }
 
-    public PeopleFragment() {
+    public GroupsFragment() {
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_people, container, false);
-        recyclerView = v.findViewById(R.id.people_recyclerView);
+        v = inflater.inflate(R.layout.fragment_groups, container, false);
+        recyclerView = v.findViewById(R.id.groups_recyclerView);
 
         if (clickListener != null)
-            adapter = new PeopleAdapter(getContext(), clickListener, peoples);
+            adapter = new GroupsAdapter(getContext(), clickListener, groups);
         else
-            adapter = new PeopleAdapter(getContext(), null, peoples);
+            adapter = new GroupsAdapter(getContext(), null, groups);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         recyclerView.setAdapter(adapter);
         return v;
     }
@@ -51,13 +51,12 @@ public class PeopleFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (peoples == null)
-            peoples = new ArrayList<People>();
+        if (groups == null)
+            groups = new ArrayList<Groups>();
 
     }
 
     public void update(){
-        if(adapter!=null)
-            adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 }

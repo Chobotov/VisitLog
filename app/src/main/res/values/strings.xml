@@ -6,6 +6,10 @@
     <string name="SearchString">item</string>
     <string name="NameTextLayout">Name</string>
     <string name="Add">Add</string>
+    <string name="Cancel">Cancel</string>
 
+    <string name="Search">Search</string>
+    <string name="Edit">Edit</string>
+    <string name="RepeatAlert">"Такой наименование уже есть. Создать новый контакт под названием "</string>
 
 </resources>

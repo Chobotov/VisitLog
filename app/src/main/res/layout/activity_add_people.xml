@@ -3,7 +3,7 @@
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/All_people_main_layout"
+    android:id="@+id/add_people_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
@@ -48,17 +48,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-
-        android:id="@+id/add_float_button_all_people"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:theme="@style/Floating"
-
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_30dp"
-        />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

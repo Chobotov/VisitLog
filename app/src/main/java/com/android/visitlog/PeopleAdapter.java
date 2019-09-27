@@ -13,13 +13,13 @@ import java.util.ArrayList;
 
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
-    private OnLongItemClickListener onLongClickListener;
+    private ClickListener clickListener;
     private LayoutInflater inflater;
-    private ArrayList<Item> peoples;
+    private ArrayList<People> peoples;
 
-    public PeopleAdapter(Context context, OnLongItemClickListener onLongClickListener, ArrayList<Item> arrayList) {
+    public PeopleAdapter(Context context, ClickListener clickListener, ArrayList<People> arrayList) {
         peoples = arrayList;
-        this.onLongClickListener = onLongClickListener;
+        this.clickListener = clickListener;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -34,17 +34,22 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Item people = peoples.get(position);
+        People people = peoples.get(position);
 
 
 
         holder.itemView.setOnLongClickListener(view -> {
-            if (onLongClickListener != null)
-                onLongClickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
+            if (clickListener != null)
+                clickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
             return false;
         });
 
-        holder.name.setText(people.getName());
+        holder.itemView.setOnClickListener(view -> {
+            if (clickListener != null)
+                clickListener.onItemClick(peoples.get(holder.getAdapterPosition()));
+        });
+
+        holder.name.setText(people.Name);
 
     }
 
@@ -54,11 +59,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
 
-    public void setPeoples(ArrayList<Item> peoples) {
+    public void setPeoples(ArrayList<People> peoples) {
         this.peoples = peoples;
     }
 
-    public ArrayList<Item> getPeoples() {
+    public ArrayList<People> getPeoples() {
         return peoples;
     }
 
@@ -76,7 +81,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         }
     }
 
-    interface OnLongItemClickListener {
-        void onLongItemClick(Item item);
+    interface ClickListener {
+        void onLongItemClick(People item);
+        void onItemClick(People item);
     }
 }

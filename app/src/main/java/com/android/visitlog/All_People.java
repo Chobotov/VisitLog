@@ -3,7 +3,6 @@ package com.android.visitlog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -60,9 +59,9 @@ public class All_People extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = people.get(i);
-                dbHelper.SetDataInDataTable(dbHelper,name,year,month,day);
+                dbHelper.SetDataInDataTable(name,year,month,day);
                 adapter.notifyDataSetChanged();
-                Intent intent = new Intent(All_People.this,Main2Activity.class);
+                Intent intent = new Intent(All_People.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -72,8 +71,8 @@ public class All_People extends AppCompatActivity{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = people.get(position);
                 people.remove(position);
-                dbHelper.DeleteDataFromDataTable(dbHelper,name);
-                dbHelper.DeleteNameFromPeopleTable(dbHelper,name);
+                dbHelper.removePeople(name);
+                //dbHelper.removePeople(dbHelper,name);
                 adapter.notifyDataSetChanged();
                 return true;
             }
@@ -93,7 +92,7 @@ public class All_People extends AppCompatActivity{
                 }
                 else{
                     people.add(Name);
-                    dbHelper.SetNewName(dbHelper,Name);
+                   // dbHelper.SetNewName(dbHelper,Name);
                     adapter.notifyDataSetChanged();
                     editText.setText("");
                 }
@@ -101,20 +100,9 @@ public class All_People extends AppCompatActivity{
             }
         });
 
-        InsertFullNamesIntoList(dbHelper, sqLiteDatabase, people);
+        //InsertFullNamesIntoList(dbHelper, sqLiteDatabase, people);
     }
 
 
-    private void InsertFullNamesIntoList(DBHelper dbHelper,SQLiteDatabase sqLiteDatabase,
-                                         ArrayList<String> people){
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
-                dbHelper.FULL_NAME +" FROM " +
-                dbHelper.PEOPLE,null);
-        people.clear();
-        while (cursor.moveToNext()){
-            String Name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
-            people.add(Name);
-        }
-        cursor.close();
-    }
+
 }

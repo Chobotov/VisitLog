@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -86,28 +88,28 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Запись нового имени
-    public void SetNewName(DBHelper dbHelper, String name){
+    public void addPeople(String name){
         ContentValues cv = new ContentValues();
 
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        cv.put(dbHelper.FULL_NAME,name);
-        sqLiteDatabase.insert(dbHelper.PEOPLE, null, cv);
+        cv.put(this.FULL_NAME,name);
+        sqLiteDatabase.insert(this.PEOPLE, null, cv);
     }
 
-    public String GetIdByName(DBHelper dbHelper, String name){
+    public String GetIdByName( String name){
         String id = "0";
 
-        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
-                + dbHelper.KEY_ID
-                + " FROM " + dbHelper.PEOPLE
-                + " WHERE " + dbHelper.FULL_NAME
+                + KEY_ID
+                + " FROM " + PEOPLE
+                + " WHERE " + FULL_NAME
                 + " = ?",new String[]{name});
         if(cursor.moveToFirst())
         {
-            int index = cursor.getColumnIndex(dbHelper.KEY_ID);
+            int index = cursor.getColumnIndex(KEY_ID);
             do {
                 id = cursor.getString(index);
             }while (cursor.moveToNext());
@@ -120,71 +122,105 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public void SetDataInDataTable(DBHelper dbHelper,String name,String YEAR,String MONTH,String DAY){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+    public void SetDataInDataTable(String name,String YEAR,String MONTH,String DAY){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         ContentValues cv = new ContentValues();
 
-        String id = GetIdByName(dbHelper,name);
+        String id = GetIdByName(name);
 
-        cv.put(dbHelper.ID_PEOPLE,id);
-        cv.put(dbHelper.YEAR,YEAR);
-        cv.put(dbHelper.MONTH,MONTH);
-        cv.put(dbHelper.DAY,DAY);
-        cv.put(dbHelper.CAME_TIME,"Пришел");
-        cv.put(dbHelper.LEAVE_TIME,"Ушел");
+        cv.put(ID_PEOPLE,id);
+        cv.put(this.YEAR,YEAR);
+        cv.put(this.MONTH,MONTH);
+        cv.put(this.DAY,DAY);
+        cv.put(CAME_TIME,"Пришел");
+        cv.put(LEAVE_TIME,"Ушел");
 
-        sqLiteDatabase.insert(dbHelper.DATA_PEOPLE,null,cv);
+        sqLiteDatabase.insert(DATA_PEOPLE,null,cv);
     }
 
     //Удаление имени из таблицы PEOPLE
-    public void DeleteNameFromPeopleTable(DBHelper dbHelper, String name){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
-
-        sqLiteDatabase.delete(dbHelper.PEOPLE,dbHelper.FULL_NAME + " = ?" , new String[]{name});
+    public void removePeople(String name){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete(PEOPLE,FULL_NAME + " = ?" , new String[]{name});
+        sqLiteDatabase.close();
     }
 
     //Удаление даты из таблицы DATA_PEOPLE
-    public void DeleteDataFromDataTable(DBHelper dbHelper,String Name){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+    public void DeleteDataFromDataTable(String Name){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String id  = dbHelper.GetIdByName(dbHelper,Name);
+        String id  = GetIdByName(Name);
 
-        sqLiteDatabase.delete(dbHelper.DATA_PEOPLE,
-                 dbHelper.ID_PEOPLE + "= ?", new String[]{id});
+        sqLiteDatabase.delete(DATA_PEOPLE,
+                 ID_PEOPLE + "= ?", new String[]{id});
     }
 
     //Добавление время Пришел в DATA_PEOPLE
-    public void InsertComeTime(DBHelper dbHelper,String name,String time,String year,String month,String day){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+    public void InsertComeTime(String name,String time,String year,String month,String day){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String id = dbHelper.GetIdByName(dbHelper,name);
+        String id = GetIdByName(name);
 
         ContentValues cv = new ContentValues();
 
-        cv.put(dbHelper.CAME_TIME,time);
+        cv.put(CAME_TIME,time);
 
-        sqLiteDatabase.update(dbHelper.DATA_PEOPLE,cv,dbHelper.ID_PEOPLE
+        sqLiteDatabase.update(DATA_PEOPLE,cv,ID_PEOPLE
                 + "=? "
-                + "AND " + dbHelper.YEAR + "=? "
-                + "AND " +  dbHelper.MONTH + "=? "
-                + "AND " +  dbHelper.DAY + "=? ",new String[]{id,year,month,day});
+                + "AND " + YEAR + "=? "
+                + "AND " +  MONTH + "=? "
+                + "AND " +  DAY + "=? ",new String[]{id,year,month,day});
     }
 
     //Добавление время Ушел в DATA_PEOPLE
-    public void InsertLeaveTime(DBHelper dbHelper,String name,String time,String year,String month,String day){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+    public void InsertLeaveTime(String name,String time,String year,String month,String day){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String id = dbHelper.GetIdByName(dbHelper,name);
+        String id = GetIdByName(name);
 
         ContentValues cv = new ContentValues();
 
-        cv.put(dbHelper.LEAVE_TIME,time);
+        cv.put(LEAVE_TIME,time);
 
-        sqLiteDatabase.update(dbHelper.DATA_PEOPLE,cv,dbHelper.ID_PEOPLE
+        sqLiteDatabase.update(DATA_PEOPLE,cv,ID_PEOPLE
                 + "=? "
-                + "AND " + dbHelper.YEAR + "=? "
-                + "AND " +  dbHelper.MONTH + "=? "
-                + "AND " +  dbHelper.DAY + "=? ",new String[]{id,year,month,day});
+                + "AND " + YEAR + "=? "
+                + "AND " +  MONTH + "=? "
+                + "AND " +  DAY + "=? ",new String[]{id,year,month,day});
     }
+
+    public ArrayList<People> getAllPeople(){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        ArrayList<People> people = new ArrayList<>();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
+                FULL_NAME +" FROM " +
+                PEOPLE,null);
+        while (cursor.moveToNext()){
+            String Name = cursor.getString(cursor.getColumnIndex(FULL_NAME));
+            people.add(new People(Name));
+        }
+        cursor.close();
+        return people;
+    }
+
+    public boolean containsPeople(People people){
+        boolean ans = false;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
+                FULL_NAME +" FROM " +
+                PEOPLE + " WHERE "+ FULL_NAME + " =?", new String[]{people.Name});
+
+        if(cursor.getCount()>0)
+            ans = true;
+        cursor.close();
+        sqLiteDatabase.close();
+        return ans;
+
+    }
+
+
+
 }
