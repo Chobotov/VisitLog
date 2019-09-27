@@ -4,86 +4,98 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/itemstyle"
-    android:paddingBottom="10dp"
-    android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/itemstyle"
+    android:orientation="horizontal"
+    android:paddingBottom="4dp"
 
     >
 
-    <TextView
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="БВТ-31"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+    <Button
+        android:id="@+id/remove"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/vector_remove"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        >
+
+    </Button>
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/group"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="4dp"
         android:text="Чеботов Никита"
         android:textColor="@android:color/black"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/group"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/group">
 
-    <Button
-        android:id="@+id/remove"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/vector_remove"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+    </TextView>
 
     <Button
         android:id="@+id/came"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/name"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/button_came"
         android:text="Пришел"
         android:textColor="@android:color/white"
-        android:textSize="19sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name"></Button>
+        app:layout_constraintTop_toBottomOf="@+id/name">
+
+    </Button>
 
     <Button
         android:id="@+id/leave"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
         android:layout_below="@+id/name"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/came"
         android:background="@drawable/button_leave"
         android:text="Ушел"
         android:textColor="@android:color/white"
-        android:textSize="19dp"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/came"
-        app:layout_constraintTop_toBottomOf="@+id/name"></Button>
+        app:layout_constraintTop_toBottomOf="@+id/name">
+
+    </Button>
+
+    <TextView
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="БВТ-31"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
