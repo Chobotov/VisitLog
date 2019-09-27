@@ -59,9 +59,9 @@ public class All_People extends AppCompatActivity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = people.get(i);
-                dbHelper.SetDataInDataTable(dbHelper,name,year,month,day);
+                dbHelper.SetDataInDataTable(name,year,month,day);
                 adapter.notifyDataSetChanged();
-                Intent intent = new Intent(All_People.this,Main2Activity.class);
+                Intent intent = new Intent(All_People.this, MainActivity.class);
                 startActivity(intent);
             }
         });

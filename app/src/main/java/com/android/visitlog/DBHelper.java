@@ -97,19 +97,19 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.insert(this.PEOPLE, null, cv);
     }
 
-    public String GetIdByName(DBHelper dbHelper, String name){
+    public String GetIdByName( String name){
         String id = "0";
 
-        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
-                + dbHelper.KEY_ID
-                + " FROM " + dbHelper.PEOPLE
-                + " WHERE " + dbHelper.FULL_NAME
+                + KEY_ID
+                + " FROM " + PEOPLE
+                + " WHERE " + FULL_NAME
                 + " = ?",new String[]{name});
         if(cursor.moveToFirst())
         {
-            int index = cursor.getColumnIndex(dbHelper.KEY_ID);
+            int index = cursor.getColumnIndex(KEY_ID);
             do {
                 id = cursor.getString(index);
             }while (cursor.moveToNext());
@@ -122,21 +122,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public void SetDataInDataTable(DBHelper dbHelper,String name,String YEAR,String MONTH,String DAY){
-        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+    public void SetDataInDataTable(String name,String YEAR,String MONTH,String DAY){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         ContentValues cv = new ContentValues();
 
-        String id = GetIdByName(dbHelper,name);
+        String id = GetIdByName(name);
 
-        cv.put(dbHelper.ID_PEOPLE,id);
-        cv.put(dbHelper.YEAR,YEAR);
-        cv.put(dbHelper.MONTH,MONTH);
-        cv.put(dbHelper.DAY,DAY);
-        cv.put(dbHelper.CAME_TIME,"Пришел");
-        cv.put(dbHelper.LEAVE_TIME,"Ушел");
+        cv.put(ID_PEOPLE,id);
+        cv.put(this.YEAR,YEAR);
+        cv.put(this.MONTH,MONTH);
+        cv.put(this.DAY,DAY);
+        cv.put(CAME_TIME,"Пришел");
+        cv.put(LEAVE_TIME,"Ушел");
 
-        sqLiteDatabase.insert(dbHelper.DATA_PEOPLE,null,cv);
+        sqLiteDatabase.insert(DATA_PEOPLE,null,cv);
     }
 
     //Удаление имени из таблицы PEOPLE
@@ -150,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void DeleteDataFromDataTable(String Name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String id  = GetIdByName(this,Name);
+        String id  = GetIdByName(Name);
 
         sqLiteDatabase.delete(DATA_PEOPLE,
                  ID_PEOPLE + "= ?", new String[]{id});
@@ -160,7 +160,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void InsertComeTime(String name,String time,String year,String month,String day){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String id = GetIdByName(this,name);
+        String id = GetIdByName(name);
 
         ContentValues cv = new ContentValues();
 
@@ -177,7 +177,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void InsertLeaveTime(String name,String time,String year,String month,String day){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        String id = GetIdByName(this,name);
+        String id = GetIdByName(name);
 
         ContentValues cv = new ContentValues();
 

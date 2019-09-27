@@ -1,5 +1,6 @@
 package com.android.visitlog;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,16 +21,15 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
-public class PeopleActivity extends AppCompatActivity {
+public class AddPeopleActivity extends AppCompatActivity {
 
-
-    FloatingActionButton floatingActionButton;
     public static ArrayList<People> people_list;
     public static ArrayList<Groups> groups_list;
 
 
     TabLayout tabLayout;
     MenuItem search;
+    MenuItem edit;
     Toolbar toolbar;
     ViewPager viewPager;
     PageAdapter pageAdapter;
@@ -39,13 +39,17 @@ public class PeopleActivity extends AppCompatActivity {
 
     DBHelper helper;
 
+    String year;
+    String month;
+    String day;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_people);
+        setContentView(R.layout.activity_add_people);
         this.setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         helper = new DBHelper(this);
-
 
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.pageView);
@@ -62,29 +66,28 @@ public class PeopleActivity extends AppCompatActivity {
         }
 
 
-
-
         PeopleAdapter.ClickListener clickItemPeople = new PeopleAdapter.ClickListener(){
 
             @Override
             public void onLongItemClick(People item) {
-                helper.removePeople(item.Name);
-                updatePeople();
+                return;
             }
 
             @Override
             public void onItemClick(People item) {
-
+                Log.e("tag","tblk");
+                helper.SetDataInDataTable(item.Name,year,month,day);
+                updatePeople();
+                finish();
             }
 
         };
-
 
         GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener(){
 
             @Override
             public void onLongItemClick(Groups item) {
-
+                return;
             }
 
             @Override
@@ -105,33 +108,7 @@ public class PeopleActivity extends AppCompatActivity {
         viewPager.setAdapter(pageAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.add_float_button_all_people);
 
-        floatingActionButton.setOnClickListener(view -> {
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
-
-            builder.setCancelable(true);
-
-            View view1 = LayoutInflater.from(PeopleActivity.this).inflate(R.layout.add_people_alert, null);
-
-            builder.setView(view1);
-
-
-            builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
-
-                EditText editText = view1.findViewById(R.id.text_edit_alertview);
-
-                addNewPeople(editText.getText().toString());
-
-
-
-            });
-            AlertDialog alertDialog = builder.create();
-
-            alertDialog.show();
-        });
 
 
         toolbar = findViewById(R.id.toolbar_all_people);
@@ -139,8 +116,15 @@ public class PeopleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         getSupportActionBar().setTitle(null);
 
+
+        Intent intent = getIntent();
+
+        year = intent.getStringExtra("year");
+        month = intent.getStringExtra("month");
+        day = intent.getStringExtra("day");
     }
 
     private void updateGroups() {
@@ -149,42 +133,10 @@ public class PeopleActivity extends AppCompatActivity {
         }
     }
 
-    private void addNewPeople(String name) {
-        if(!helper.containsPeople(new People(name))) {
-            helper.addPeople(name);
-        }
-        else{
-            int counter = 2;
 
-            while (helper.containsPeople(new People(name + counter)))
-            {
-                counter++;
-            }
-
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
-
-            builder.setCancelable(true);
-
-            String newName = name + counter;
-
-            builder.setMessage(R.string.RepeatAlert+'"'+ newName +'"'+ " ?");
-            builder.setPositiveButton("Да", (dialogInterface, i) -> {
-                helper.addPeople(newName);
-                updatePeople();
-            });
-            builder.setNegativeButton("Нет", (dialogInterface, i) -> {
-                dialogInterface.cancel();
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-        updatePeople();
-    }
 
     private void updatePeople() {
-
+        Log.e("tag","updatePeople");
         people_list.clear();
         people_list.addAll(helper.getAllPeople());
         if(peopleFragment!=null)
@@ -195,14 +147,42 @@ public class PeopleActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.all_people_menu, menu);
+        getMenuInflater().inflate(R.menu.add_people_menu, menu);
 
         search = menu.findItem(R.id.app_bar_search);
+        edit = menu.findItem(R.id.editMod);
+
+        edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent = new Intent(AddPeopleActivity.this,PeopleActivity.class);
+                startActivity(intent);
+                updatePeople();
+                updateGroups();
+                return false;
+            }
+        });
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+            }
+        });
 
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                return false;
+            }
+        });
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -211,6 +191,7 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 if(newText.equals(""))
                 {
                     updatePeople();
@@ -218,11 +199,7 @@ public class PeopleActivity extends AppCompatActivity {
                 else {
 
                     ArrayList<People> people = new ArrayList<>(people_list);
-
-
-
                     ArrayList<People> newPeople = new ArrayList<>();
-
 
                     for (int i = 0; i < people_list.size(); i++) {
                         if (filtr(people.get(i).Name,newText)) {
@@ -242,6 +219,12 @@ public class PeopleActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        updatePeople();
+        super.onResume();
+
+    }
 
     boolean filtr(String name, String text){
 
@@ -259,7 +242,6 @@ public class PeopleActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -269,7 +251,5 @@ public class PeopleActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 }

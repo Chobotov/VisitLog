@@ -20,6 +20,10 @@
         <item name="android:textColor">#6A6868</item>
     </style>
 
+    <style name="Floating" parent="AppTheme">
+        <item name="colorAccent">@color/floatingButtonBG</item>
+        <item name="colorPrimary">@color/floatingButtonPlus</item>
+    </style>
 
    >
 

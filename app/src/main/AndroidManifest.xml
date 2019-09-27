@@ -10,26 +10,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".AddPeopleActivity"
+            android:screenOrientation="portrait">
 
-        <activity android:name=".PeopleActivity"
-            android:screenOrientation="portrait"
-            >
+
+        </activity>
+        <activity
+            android:name=".PeopleActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".Main2Activity"
-            >
-
-        </activity>
-        <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            >
-
         </activity>
     </application>
 

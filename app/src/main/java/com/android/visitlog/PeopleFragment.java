@@ -57,6 +57,7 @@ public class PeopleFragment extends Fragment {
     }
 
     public void update(){
-        adapter.notifyDataSetChanged();
+        if(adapter!=null)
+            adapter.notifyDataSetChanged();
     }
 }

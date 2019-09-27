@@ -9,4 +9,7 @@
     <color name="textColor">#6A6868</color>
 	<color name="came">#1DC82E</color>
     <color name="leave">#DB4437</color>
+
+    <color name="floatingButtonBG">#FA7B7B</color>
+    <color name="floatingButtonPlus">#733838</color>
 </resources>
