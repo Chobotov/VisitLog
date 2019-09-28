@@ -46,6 +46,7 @@ public class PeopleActivity extends AppCompatActivity {
         helper = new DBHelper(this);
 
 
+
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.pageView);
         pageAdapter = new PageAdapter(getSupportFragmentManager());
@@ -65,8 +66,11 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public void onLongItemClick(People item) {
+
+                helper.DeleteDataFromAllDataTable(item.Name);
                 helper.removePeople(item.Name);
                 updatePeople();
+
             }
 
             @Override
@@ -82,6 +86,7 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(Groups item) {
 
+
             }
 
             @Override
@@ -95,6 +100,8 @@ public class PeopleActivity extends AppCompatActivity {
 
         peopleFragment = new PeopleFragment(clickItemPeople, people_list);
         groupsFragment = new GroupsFragment(clickItemGroups,groups_list);
+
+
 
         pageAdapter.AddFragment(peopleFragment, getResources().getString(R.string.People));
         pageAdapter.AddFragment(groupsFragment, getResources().getString(R.string.Groups));
@@ -138,6 +145,8 @@ public class PeopleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(null);
 
+        updatePeople();
+        updateGroups();
     }
 
     private void updateGroups() {
@@ -164,7 +173,8 @@ public class PeopleActivity extends AppCompatActivity {
 
             String newName = name + counter;
 
-            builder.setMessage(R.string.RepeatAlert+'"'+ newName +'"'+ " ?");
+
+            builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
             builder.setPositiveButton("Да", (dialogInterface, i) -> {
                 helper.addPeople(newName);
                 updatePeople();
@@ -176,14 +186,19 @@ public class PeopleActivity extends AppCompatActivity {
             alertDialog.show();
         }
         updatePeople();
+        updateGroups();
     }
 
     private void updatePeople() {
 
         people_list.clear();
         people_list.addAll(helper.getAllPeople());
-        if(peopleFragment!=null)
+
+        if(peopleFragment != null) {
             peopleFragment.update();
+            peopleFragment.setCounterText(people_list.size());
+        }
+
     }
 
 
@@ -242,11 +257,10 @@ public class PeopleActivity extends AppCompatActivity {
                     people_list.addAll(newPeople);
                     peopleFragment.update();
                 }
-                peopleFragment.update();
+                peopleFragment.setCounterText(people_list.size());
                 return false;
             }
         });
-
         return true;
     }
 
@@ -266,7 +280,13 @@ public class PeopleActivity extends AppCompatActivity {
         return  a;
 
     }
+    @Override
+    protected void onResume() {
+        Log.e("tag","onResume");
+        updatePeople();
+        super.onResume();
 
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

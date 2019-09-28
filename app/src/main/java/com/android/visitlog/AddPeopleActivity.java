@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -75,10 +76,10 @@ public class AddPeopleActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(People item) {
-                Log.e("tag","tblk");
                 helper.SetDataInDataTable(item.Name,year,month,day);
                 updatePeople();
-                finish();
+
+                Toast.makeText(AddPeopleActivity.this,item.Name + getResources().getString(R.string.AddData) +" "+ day+"/"+month+"/"+year+".",Toast.LENGTH_SHORT).show();
             }
 
         };
@@ -120,11 +121,15 @@ public class AddPeopleActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
 
 
+
         Intent intent = getIntent();
 
         year = intent.getStringExtra("year");
         month = intent.getStringExtra("month");
         day = intent.getStringExtra("day");
+
+        Log.e("tag","onCreate");
+
     }
 
     private void updateGroups() {
@@ -136,11 +141,14 @@ public class AddPeopleActivity extends AppCompatActivity {
 
 
     private void updatePeople() {
-        Log.e("tag","updatePeople");
+
         people_list.clear();
         people_list.addAll(helper.getAllPeople());
-        if(peopleFragment!=null)
+
+        if(peopleFragment != null){
             peopleFragment.update();
+            peopleFragment.setCounterText(people_list.size());
+        }
     }
 
 
@@ -211,7 +219,9 @@ public class AddPeopleActivity extends AppCompatActivity {
                     people_list.addAll(newPeople);
                     peopleFragment.update();
                 }
-                peopleFragment.update();
+
+                peopleFragment.setCounterText(people_list.size());
+
                 return false;
             }
         });
@@ -221,6 +231,7 @@ public class AddPeopleActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.e("tag","onResume");
         updatePeople();
         super.onResume();
 

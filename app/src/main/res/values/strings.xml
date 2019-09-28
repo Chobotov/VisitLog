@@ -10,6 +10,9 @@
 
     <string name="Search">Search</string>
     <string name="Edit">Edit</string>
-    <string name="RepeatAlert">"Такой наименование уже есть. Создать новый контакт под названием "</string>
+    <string name="RepeatAlert">Такой наименование уже есть. Создать новый контакт под названием </string>
+    <string name="Members">Members</string>
+    <string name="AddData"> был добавлен на </string>
+
 
 </resources>

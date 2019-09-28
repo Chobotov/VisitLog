@@ -1,7 +1,9 @@
 package com.android.visitlog;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +22,12 @@ public class PeopleFragment extends Fragment {
     public View v;
 
     private RecyclerView recyclerView;
+
     private PeopleAdapter adapter;
     private ArrayList<People> peoples;
     private PeopleAdapter.ClickListener clickListener;
+
+    private TextView countPeoples;
 
     public PeopleFragment(PeopleAdapter.ClickListener clickListener, ArrayList<People> peoples) {
         this.clickListener = clickListener;
@@ -38,6 +43,8 @@ public class PeopleFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_people, container, false);
         recyclerView = v.findViewById(R.id.people_recyclerView);
+        countPeoples = v.findViewById(R.id.countPeoples);
+
 
         if (clickListener != null)
             adapter = new PeopleAdapter(getContext(), clickListener, peoples);
@@ -46,6 +53,10 @@ public class PeopleFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+        Log.e("tag","onCreateView");
+
+        setCounterText(peoples.size());
+
         return v;
     }
 
@@ -53,11 +64,17 @@ public class PeopleFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (peoples == null)
-            peoples = new ArrayList<People>();
+            peoples = new ArrayList<>();
     }
 
     public void update(){
         if(adapter!=null)
             adapter.notifyDataSetChanged();
     }
+
+    public void setCounterText(int text){
+        if(countPeoples!=null)
+            countPeoples.setText(text + " "+ getResources().getString(R.string.People));
+    }
+
 }

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             app:mcv_showOtherDates="all"
             app:mcv_selectionColor="#CE3333"
-            android:padding="16sp"
+            android:padding="16dp"
             app:layout_scrollFlags="scroll|enterAlways"
             />
     </com.google.android.material.appbar.AppBarLayout>

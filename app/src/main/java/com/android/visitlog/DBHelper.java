@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-
 import java.util.ArrayList;
 
 
@@ -157,6 +155,16 @@ public class DBHelper extends SQLiteOpenHelper {
                 + " AND " + YEAR + " = ? "
                 + " AND " + MONTH + " = ? "
                 + " AND " + DAY + " = ? ", new String[]{id,year,month,day});
+    }
+
+    public void DeleteDataFromAllDataTable(String Name){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        String id  = GetIdByName(Name);
+
+        sqLiteDatabase.delete(DATA_PEOPLE,
+                ID_PEOPLE + "= ? "
+                       , new String[]{id});
     }
 
     //Добавление время Пришел в DATA_PEOPLE
