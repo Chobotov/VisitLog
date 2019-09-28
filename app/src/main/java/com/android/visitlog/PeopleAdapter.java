@@ -50,7 +50,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         });
 
         holder.name.setText(people.Name);
-
     }
 
     @Override
@@ -67,9 +66,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         return peoples;
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
+        private TextView countPeoples;
 
         ViewHolder(View view) {
             super(view);

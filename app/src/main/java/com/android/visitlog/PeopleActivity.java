@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,6 @@ public class PeopleActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     public static ArrayList<People> people_list;
     public static ArrayList<Groups> groups_list;
-
 
     TabLayout tabLayout;
     MenuItem search;
@@ -59,8 +59,6 @@ public class PeopleActivity extends AppCompatActivity {
             people_list = new ArrayList<>();
             updatePeople();
         }
-
-
 
 
         PeopleAdapter.ClickListener clickItemPeople = new PeopleAdapter.ClickListener(){
@@ -159,8 +157,6 @@ public class PeopleActivity extends AppCompatActivity {
             {
                 counter++;
             }
-
-
 
             AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
 

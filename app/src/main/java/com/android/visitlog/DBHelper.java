@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.util.ArrayList;
 
 
@@ -117,8 +119,6 @@ public class DBHelper extends SQLiteOpenHelper {
         else
             cursor.close();
 
-        Log.d(LOG_TAG,id);
-
         return id;
     }
 
@@ -147,13 +147,16 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Удаление даты из таблицы DATA_PEOPLE
-    public void DeleteDataFromDataTable(String Name){
+    public void DeleteDataFromDataTable(String Name,String year,String month,String day){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         String id  = GetIdByName(Name);
 
         sqLiteDatabase.delete(DATA_PEOPLE,
-                 ID_PEOPLE + "= ?", new String[]{id});
+                 ID_PEOPLE + "= ? "
+                + " AND " + YEAR + " = ? "
+                + " AND " + MONTH + " = ? "
+                + " AND " + DAY + " = ? ", new String[]{id,year,month,day});
     }
 
     //Добавление время Пришел в DATA_PEOPLE
@@ -191,7 +194,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<People> getAllPeople(){
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
         ArrayList<People> people = new ArrayList<>();
 
@@ -208,7 +211,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean containsPeople(People people){
         boolean ans = false;
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
                 FULL_NAME +" FROM " +
                 PEOPLE + " WHERE "+ FULL_NAME + " =?", new String[]{people.Name});
@@ -218,9 +221,30 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         sqLiteDatabase.close();
         return ans;
-
     }
 
+    public ArrayList<Integer> getDaysOfMonth(String year,String month){
 
+        ArrayList<Integer> days = new ArrayList<>();
 
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT "
+                + DAY + " FROM "
+                + DATA_PEOPLE + " WHERE "
+                + MONTH + " = ? " + " AND "
+                + YEAR + " = ?",new String[]{month,year});
+
+        if(c.moveToFirst()){
+            do{
+                int index = c.getColumnIndex(DAY);
+                int day = c.getInt(index);
+                days.add(day);
+                //Log.d("days",String.valueOf(day));
+            }while (c.moveToNext());
+        }
+        c.close();
+        sqLiteDatabase.close();
+        return days;
+    }
 }
