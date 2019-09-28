@@ -79,7 +79,7 @@ public class AddPeopleActivity extends AppCompatActivity {
                 helper.SetDataInDataTable(item.Name,year,month,day);
                 updatePeople();
 
-                Toast.makeText(AddPeopleActivity.this,item.Name + getResources().getString(R.string.AddData) +" "+ day+"/"+month+"/"+year+".",Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddPeopleActivity.this,item.Name + " " + getResources().getString(R.string.AddData) + " " + day+"/"+month+"/"+year+".",Toast.LENGTH_SHORT).show();
             }
 
         };
