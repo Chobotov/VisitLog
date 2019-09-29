@@ -109,9 +109,6 @@ public class MainActivity extends AppCompatActivity {
                 String id = dbHelper.GetIdByName(people.Name);
 
                 SetTimeToPeople(id,people);
-
-                SetTimeToPeople(id,people);
-
             }
         });
 
