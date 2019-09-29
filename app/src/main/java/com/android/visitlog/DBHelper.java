@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.util.ArrayList;
 
 
@@ -241,9 +243,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<Integer> getDaysOfMonth(String year,String month){
+    public ArrayList<CalendarDay> SelectAllNotEmptyDays(String year, String month){
 
-        ArrayList<Integer> days = new ArrayList<>();
+        ArrayList<CalendarDay> days = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
@@ -257,7 +259,7 @@ public class DBHelper extends SQLiteOpenHelper {
             do{
                 int index = c.getColumnIndex(DAY);
                 int day = c.getInt(index);
-                days.add(day);
+                days.add(CalendarDay.from(Integer.valueOf(YEAR),Integer.valueOf(MONTH), day));
                 //Log.d("days",String.valueOf(day));
             }while (c.moveToNext());
         }

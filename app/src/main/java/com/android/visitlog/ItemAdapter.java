@@ -47,7 +47,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clr.RemovePeopleData(peopleList.get(holder.getAdapterPosition()),holder.getAdapterPosition());
+                if(holder.getAdapterPosition()>=0)
+                {
+                    clr.RemovePeopleData(peopleList.get(holder.getAdapterPosition()),holder.getAdapterPosition());
+                }
             }
         });
 

@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mcv = findViewById(R.id.calendarView);
         recyclerView = findViewById(R.id.list);
         eventDecorator = new EventDecorator(Color.BLUE);
-        eventDecorator.setDates(SelectNotEmptyDays());
+        eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
 
         peopleList = new ArrayList<People>();
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void RemovePeopleData(People people, int position) {
                 dbHelper.DeleteDataFromDataTable(people.Name,YEAR,MONTH,DAY);
                 peopleList.remove(position);
-                eventDecorator.setDates(SelectNotEmptyDays());
+                eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
                 mcv.invalidateDecorators();
                 adapter.notifyDataSetChanged();
                 //Log.d("delete", people.Name);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
                 MONTH = String.valueOf(date.getMonth());
-                eventDecorator.setDates(SelectNotEmptyDays());
+                eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
                 mcv.invalidateDecorators();
             }
         });
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         update();
-        eventDecorator.setDates(SelectNotEmptyDays());
+        eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
         mcv.invalidateDecorators();
     }
 
@@ -170,10 +170,10 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
 
         Cursor c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.ID_PEOPLE
-                        + " FROM " + dbHelper.DATA_PEOPLE +
-                        " WHERE " + dbHelper.YEAR + " = ?" +
-                        " AND " + dbHelper.MONTH + " = ?" +
-                        " AND " + dbHelper.DAY + " = ?"
+                        + " FROM " + dbHelper.DATA_PEOPLE 
+                        + " WHERE " + dbHelper.YEAR + " = ?" 
+                        + " AND " + dbHelper.MONTH + " = ?" 
+                        + " AND " + dbHelper.DAY + " = ?"
                 , new String[]{YEAR, MONTH, DAY});
         if (c.moveToFirst()) {
             do {
@@ -194,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
         for (String s : id) {
             cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.FULL_NAME
                     + " FROM " + dbHelper.PEOPLE
-                    + " WHERE " + dbHelper.KEY_ID + " = ?", new String[]{s});
+                    + " WHERE " + dbHelper.KEY_ID 
+                    + " = ?", new String[]{s});
             if (cursor.moveToFirst()) {
                 do {
                     String name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
@@ -204,17 +205,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(LOG_TAG, "Cursor is null");
         }
         sqLiteDatabase.close();
-    }
-
-    private ArrayList<CalendarDay> SelectNotEmptyDays(){
-        ArrayList<Integer> days = new ArrayList<>();
-        days = dbHelper.getDaysOfMonth(YEAR,MONTH);
-
-        ArrayList<CalendarDay> cd = new ArrayList<>();
-        for (int day : days) {
-            cd.add(CalendarDay.from(Integer.valueOf(YEAR),Integer.valueOf(MONTH), day));
-        }
-        return cd;
     }
 
     private void SetTimeToPeople(String id,People people){

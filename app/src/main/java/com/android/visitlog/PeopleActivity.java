@@ -44,9 +44,6 @@ public class PeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
         helper = new DBHelper(this);
-
-
-
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.pageView);
         pageAdapter = new PageAdapter(getSupportFragmentManager());
@@ -70,14 +67,12 @@ public class PeopleActivity extends AppCompatActivity {
                 helper.DeleteAllDataFromDataTable(item.Name);
                 helper.removePeople(item.Name);
                 updatePeople();
-
             }
 
             @Override
             public void onItemClick(People item) {
 
             }
-
         };
 
 
@@ -128,8 +123,6 @@ public class PeopleActivity extends AppCompatActivity {
                 EditText editText = view1.findViewById(R.id.text_edit_alertview);
 
                 addNewPeople(editText.getText().toString());
-
-
 
             });
             AlertDialog alertDialog = builder.create();

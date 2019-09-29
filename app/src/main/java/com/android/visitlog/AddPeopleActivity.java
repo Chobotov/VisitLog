@@ -34,6 +34,7 @@ public class AddPeopleActivity extends AppCompatActivity {
     Toolbar toolbar;
     ViewPager viewPager;
     PageAdapter pageAdapter;
+    FloatingActionButton floatingActionButton;
 
     PeopleFragment peopleFragment;
     GroupsFragment groupsFragment;
@@ -44,12 +45,15 @@ public class AddPeopleActivity extends AppCompatActivity {
     String month;
     String day;
 
+    Boolean editMode = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_people);
-        this.setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
+        floatingActionButton.setEnabled(false);
+        floatingActionButton.hide();
         helper = new DBHelper(this);
 
         tabLayout = findViewById(R.id.tabs);
@@ -67,24 +71,32 @@ public class AddPeopleActivity extends AppCompatActivity {
         }
 
 
-        PeopleAdapter.ClickListener clickItemPeople = new PeopleAdapter.ClickListener(){
+        PeopleAdapter.ClickListener clickItemPeople = new PeopleAdapter.ClickListener() {
 
             @Override
             public void onLongItemClick(People item) {
-                return;
+                if(!editMode){
+                    helper.DeleteAllDataFromDataTable(item.Name);
+                    helper.removePeople(item.Name);
+                    updatePeople();
+                }
             }
 
             @Override
             public void onItemClick(People item) {
-                helper.SetDataInDataTable(item.Name,year,month,day);
-                updatePeople();
+                if(editMode){
+                    helper.SetDataInDataTable(item.Name, year, month, day);
+                    updatePeople();
 
-                Toast.makeText(AddPeopleActivity.this,item.Name + " " + getResources().getString(R.string.AddData) + " " + day+"/"+month+"/"+year+".",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddPeopleActivity.this,
+                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "/" + month + "/" + year + ".",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
         };
 
-        GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener(){
+        GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener() {
 
             @Override
             public void onLongItemClick(Groups item) {
@@ -101,15 +113,13 @@ public class AddPeopleActivity extends AppCompatActivity {
 
 
         peopleFragment = new PeopleFragment(clickItemPeople, people_list);
-        groupsFragment = new GroupsFragment(clickItemGroups,groups_list);
+        groupsFragment = new GroupsFragment(clickItemGroups, groups_list);
 
         pageAdapter.AddFragment(peopleFragment, getResources().getString(R.string.People));
         pageAdapter.AddFragment(groupsFragment, getResources().getString(R.string.Groups));
 
         viewPager.setAdapter(pageAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
-
 
 
         toolbar = findViewById(R.id.toolbar_all_people);
@@ -121,36 +131,43 @@ public class AddPeopleActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
 
 
-
         Intent intent = getIntent();
 
         year = intent.getStringExtra("year");
         month = intent.getStringExtra("month");
         day = intent.getStringExtra("day");
 
-        Log.e("tag","onCreate");
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddPeopleActivity.this);
+
+                builder.setCancelable(true);
+
+                View view1 = LayoutInflater.from(AddPeopleActivity.this).inflate(R.layout.add_people_alert, null);
+
+                builder.setView(view1);
+
+                builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
+                    EditText editText = view1.findViewById(R.id.text_edit_alertview);
+
+                    addNewPeople(editText.getText().toString());
+
+                });
+                AlertDialog alertDialog = builder.create();
+
+                alertDialog.show();
+            }
+        });
 
     }
 
-    private void updateGroups() {
+    private void updateGroups () {
         for (int i = 0; i < 10; i++) {
-            groups_list.add(new Groups(("ewf"+groups_list.size())));
+            groups_list.add(new Groups(("ewf" + groups_list.size())));
         }
     }
-
-
-
-    private void updatePeople() {
-
-        people_list.clear();
-        people_list.addAll(helper.getAllPeople());
-
-        if(peopleFragment != null){
-            peopleFragment.update();
-            peopleFragment.setCounterText(people_list.size());
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,10 +180,16 @@ public class AddPeopleActivity extends AppCompatActivity {
         edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(AddPeopleActivity.this,PeopleActivity.class);
-                startActivity(intent);
-                updatePeople();
-                updateGroups();
+                if(editMode){
+                    floatingActionButton.setEnabled(true);
+                    floatingActionButton.show();
+                    editMode=!editMode;
+                }
+                else{
+                    floatingActionButton.setEnabled(false);
+                    floatingActionButton.hide();
+                    editMode=!editMode;
+                }
                 return false;
             }
         });
@@ -261,6 +284,52 @@ public class AddPeopleActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addNewPeople(String name) {
+        if(!helper.containsPeople(new People(name))) {
+            helper.addPeople(name);
+        }
+        else{
+            int counter = 2;
+
+            while (helper.containsPeople(new People(name + counter)))
+            {
+                counter++;
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(AddPeopleActivity.this);
+
+            builder.setCancelable(true);
+
+            String newName = name + counter;
+
+
+            builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
+            builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                helper.addPeople(newName);
+                updatePeople();
+            });
+            builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                dialogInterface.cancel();
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+        updatePeople();
+        updateGroups();
+    }
+
+    private void updatePeople() {
+
+        people_list.clear();
+        people_list.addAll(helper.getAllPeople());
+
+        if(peopleFragment != null) {
+            peopleFragment.update();
+            peopleFragment.setCounterText(people_list.size());
+        }
+
     }
 
 }
