@@ -40,12 +40,14 @@ import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    MaterialCalendarView mcv;
-    EventDecorator eventDecorator;
-    FloatingActionButton fab;
-    ItemAdapter adapter;
-    public String YEAR, MONTH, DAY;
-    public ArrayList<People> peopleList;
+    private RecyclerView recyclerView;
+    private MaterialCalendarView mcv;
+    private EventDecorator eventDecorator;
+    private FloatingActionButton fab;
+    private ItemAdapter adapter;
+    private String YEAR, MONTH, DAY;
+    private ArrayList<People> peopleList;
+    private DBHelper dbHelper;
 
     final String LOG_TAG = "myLogs";
 
@@ -54,50 +56,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dbHelper = new DBHelper(this);
         YEAR = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
         MONTH = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
         DAY = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         fab = findViewById(R.id.floatingActionButton);
-
+        mcv = findViewById(R.id.calendarView);
+        recyclerView = findViewById(R.id.list);
         eventDecorator = new EventDecorator(Color.BLUE);
         eventDecorator.setDates(SelectNotEmptyDays());
-        mcv = findViewById(R.id.calendarView);
-
-        mcv.setDateSelected(CalendarDay.today(),true);
 
         peopleList = new ArrayList<People>();
+
         FindIDPeopleByData();
 
-        RecyclerView recyclerView = findViewById(R.id.list);
-
+        mcv.setDateSelected(CalendarDay.today(),true);
         mcv.addDecorator(eventDecorator);
         mcv.invalidateDecorators();
-
+        
         adapter = new ItemAdapter(this, peopleList, new ItemAdapter.ComeLeaveRemove() {
             @Override
             public void RemovePeopleData(People people, int position) {
-                DBHelper dbHelper = new DBHelper(MainActivity.this);
                 dbHelper.DeleteDataFromDataTable(people.Name,YEAR,MONTH,DAY);
                 peopleList.remove(position);
-                adapter.notifyDataSetChanged();
                 eventDecorator.setDates(SelectNotEmptyDays());
                 mcv.invalidateDecorators();
-                Log.d("delete", people.Name);
+                adapter.notifyDataSetChanged();
+                //Log.d("delete", people.Name);
             }
 
             @Override
-            public void InsertComeTimeInData(People people) {
-                DBHelper dbHelper = new DBHelper(MainActivity.this);
+            public void InsertCameTimeInData(People people) {
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 String time = df.format(Calendar.getInstance().getTime());
                 people.CameTime = time;
-                dbHelper.InsertComeTime(people.Name, time, YEAR, MONTH, DAY);
+                dbHelper.InsertCameTime(people.Name, time, YEAR, MONTH, DAY);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void InsertLeaveTimeInData(People people) {
-                DBHelper dbHelper = new DBHelper(MainActivity.this);
                 DateFormat df = new SimpleDateFormat("HH:mm");
                 String time = df.format(Calendar.getInstance().getTime());
                 people.LeaveTime = time;
@@ -107,45 +105,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void CheckTime(People people) {
-                DBHelper dbHelper = new DBHelper(MainActivity.this);
                 SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
                 String id = dbHelper.GetIdByName(people.Name);
-                Cursor c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.CAME_TIME
-                        + " FROM " + dbHelper.DATA_PEOPLE
-                        + " WHERE "
-                        + dbHelper.ID_PEOPLE + "=? "
-                        + "AND " + dbHelper.YEAR + "=? "
-                        + "AND " + dbHelper.MONTH + "=? "
-                        + "AND " + dbHelper.DAY + "=? ", new String[]{id, YEAR, MONTH, DAY});
-                if (c.moveToFirst()) {
-                    int index = c.getColumnIndex(DBHelper.CAME_TIME);
-                    do {
-                        people.CameTime = (c.getString(index));
-                        //Log.d("people:", "Came " + people.CameTime + " Leave " + people.LeaveTime);
-                    } while (c.moveToNext());
-                }
 
-                c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.LEAVE_TIME
-                        + " FROM " + dbHelper.DATA_PEOPLE
-                        + " WHERE "
-                        + dbHelper.ID_PEOPLE + "=? "
-                        + "AND " + dbHelper.YEAR + "=? "
-                        + "AND " + dbHelper.MONTH + "=? "
-                        + "AND " + dbHelper.DAY + "=? ", new String[]{id, YEAR, MONTH, DAY});
-                if (c.moveToFirst()) {
-                    int index = c.getColumnIndex(DBHelper.LEAVE_TIME);
-                    do {
-                        people.LeaveTime = (c.getString(index));
-                        //Log.d("people:", "Came " + people.CameTime + " Leave " + people.LeaveTime);
-                    } while (c.moveToNext());
-                }
+                SetTimeToPeople(id,people);
+
+                SetTimeToPeople(id,people);
+
             }
         });
 
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,8 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("month", String.valueOf(MONTH));
                 intent.putExtra("day", String.valueOf(DAY));
                 startActivity(intent);
-                //ReloadActivity();
-                update();
+                //update();
             }
         });
 
@@ -175,8 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 YEAR = String.valueOf(date.getYear());
                 MONTH = String.valueOf(date.getMonth());
                 DAY = String.valueOf(date.getDay());
-                FindIDPeopleByData();
-                adapter.notifyDataSetChanged();
+                update();
             }
         });
     }
@@ -192,16 +161,17 @@ public class MainActivity extends AppCompatActivity {
     private void update() {
         FindIDPeopleByData();
         if (adapter != null)
+        {
             adapter.notifyDataSetChanged();
-
+        }
     }
 
 
     private void FindIDPeopleByData() {
         peopleList.clear();
         ArrayList<String> id = new ArrayList<>();
-        DBHelper dbHelper = new DBHelper(this);
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+
         Cursor c = sqLiteDatabase.rawQuery("SELECT " + dbHelper.ID_PEOPLE
                         + " FROM " + dbHelper.DATA_PEOPLE +
                         " WHERE " + dbHelper.YEAR + " = ?" +
@@ -217,16 +187,15 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Cursor is null");
         c.close();
         FindNamePeopleById(id);
-        dbHelper.close();
+        sqLiteDatabase.close();
     }
 
     private void FindNamePeopleById(ArrayList<String> id) {
-        DBHelper dbHelper = new DBHelper(this);
-
         SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+        Cursor cursor;
 
         for (String s : id) {
-            Cursor cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.FULL_NAME
+            cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.FULL_NAME
                     + " FROM " + dbHelper.PEOPLE
                     + " WHERE " + dbHelper.KEY_ID + " = ?", new String[]{s});
             if (cursor.moveToFirst()) {
@@ -241,17 +210,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<CalendarDay> SelectNotEmptyDays(){
-        DBHelper dbHelper = new DBHelper(this);
         ArrayList<Integer> days = new ArrayList<>();
         days = dbHelper.getDaysOfMonth(YEAR,MONTH);
 
-        ArrayList<CalendarDay>cd = new ArrayList<>();
+        ArrayList<CalendarDay> cd = new ArrayList<>();
         for (int day : days) {
             cd.add(CalendarDay.from(Integer.valueOf(YEAR),Integer.valueOf(MONTH), day));
         }
-        dbHelper.close();
         return cd;
     }
+
+    private void SetTimeToPeople(String id,People people){
+        SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
+        Cursor cursor;
+
+        cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.CAME_TIME
+                + " FROM " + dbHelper.DATA_PEOPLE
+                + " WHERE "
+                + dbHelper.ID_PEOPLE + "=? "
+                + "AND " + dbHelper.YEAR + "=? "
+                + "AND " + dbHelper.MONTH + "=? "
+                + "AND " + dbHelper.DAY + "=? ", new String[]{id, YEAR, MONTH, DAY});
+        if (cursor.moveToFirst()) {
+            int index = cursor.getColumnIndex(dbHelper.CAME_TIME);
+            do {
+                people.CameTime = (cursor.getString(index));
+                //Log.d("people:", "Came " + people.CameTime + " Leave " + people.LeaveTime);
+            } while (cursor.moveToNext());
+        }
+
+        cursor = sqLiteDatabase.rawQuery("SELECT " + dbHelper.LEAVE_TIME
+                + " FROM " + dbHelper.DATA_PEOPLE
+                + " WHERE "
+                + dbHelper.ID_PEOPLE + "=? "
+                + "AND " + dbHelper.YEAR + "=? "
+                + "AND " + dbHelper.MONTH + "=? "
+                + "AND " + dbHelper.DAY + "=? ", new String[]{id, YEAR, MONTH, DAY});
+        if (cursor.moveToFirst()) {
+            int index = cursor.getColumnIndex(dbHelper.LEAVE_TIME);
+            do {
+                people.LeaveTime = (cursor.getString(index));
+                //Log.d("people:", "Came " + people.CameTime + " Leave " + people.LeaveTime);
+            } while (cursor.moveToNext());
+        }
+            cursor.close();
+            sqLiteDatabase.close();
+        }
+
     public class EventDecorator implements DayViewDecorator {
 
         private final int color;

@@ -67,7 +67,7 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
 
-                helper.DeleteDataFromAllDataTable(item.Name);
+                helper.DeleteAllDataFromDataTable(item.Name);
                 helper.removePeople(item.Name);
                 updatePeople();
 

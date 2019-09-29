@@ -14,8 +14,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = "MyLogs";
 
-    public static  final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "mydb";
+    private static  final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "mydb";
 
     public static final String DATA_PEOPLE = "data";
     public static final String PEOPLE = "people";
@@ -95,8 +95,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
         cv.put(this.FULL_NAME,name);
         sqLiteDatabase.insert(this.PEOPLE, null, cv);
+
     }
 
+    //Получить id человека по имени
     public String GetIdByName( String name){
         String id = "0";
 
@@ -113,13 +115,13 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 id = cursor.getString(index);
             }while (cursor.moveToNext());
-        }
-        else
-            cursor.close();
+        }      
+        cursor.close();
 
         return id;
     }
 
+    //Запись новой строки с датой в таблицу Data
     public void SetDataInDataTable(String name,String YEAR,String MONTH,String DAY){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -141,7 +143,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removePeople(String name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.delete(PEOPLE,FULL_NAME + " = ?" , new String[]{name});
-        sqLiteDatabase.close();
     }
 
     //Удаление даты из таблицы DATA_PEOPLE
@@ -155,9 +156,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 + " AND " + YEAR + " = ? "
                 + " AND " + MONTH + " = ? "
                 + " AND " + DAY + " = ? ", new String[]{id,year,month,day});
+
     }
 
-    public void DeleteDataFromAllDataTable(String Name){
+    //Удаление всех дат выбранного человека
+    public void DeleteAllDataFromDataTable(String Name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         String id  = GetIdByName(Name);
@@ -165,10 +168,11 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.delete(DATA_PEOPLE,
                 ID_PEOPLE + "= ? "
                        , new String[]{id});
+
     }
 
     //Добавление время Пришел в DATA_PEOPLE
-    public void InsertComeTime(String name,String time,String year,String month,String day){
+    public void InsertCameTime(String name,String time,String year,String month,String day){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         String id = GetIdByName(name);
@@ -182,6 +186,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "AND " + YEAR + "=? "
                 + "AND " +  MONTH + "=? "
                 + "AND " +  DAY + "=? ",new String[]{id,year,month,day});
+
     }
 
     //Добавление время Ушел в DATA_PEOPLE
@@ -199,6 +204,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "AND " + YEAR + "=? "
                 + "AND " +  MONTH + "=? "
                 + "AND " +  DAY + "=? ",new String[]{id,year,month,day});
+
     }
 
     public ArrayList<People> getAllPeople(){
@@ -206,29 +212,33 @@ public class DBHelper extends SQLiteOpenHelper {
 
         ArrayList<People> people = new ArrayList<>();
 
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
-                FULL_NAME +" FROM " +
-                PEOPLE,null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " 
+            + FULL_NAME +" FROM " 
+            + PEOPLE,null);
         while (cursor.moveToNext()){
             String Name = cursor.getString(cursor.getColumnIndex(FULL_NAME));
             people.add(new People(Name));
         }
         cursor.close();
+        
         return people;
     }
 
     public boolean containsPeople(People people){
-        boolean ans = false;
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " +
-                FULL_NAME +" FROM " +
-                PEOPLE + " WHERE "+ FULL_NAME + " =?", new String[]{people.Name});
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT " 
+            + FULL_NAME +" FROM " 
+            + PEOPLE + " WHERE " 
+            + FULL_NAME + " =?", new String[]{people.Name});
 
         if(cursor.getCount()>0)
-            ans = true;
+        {
+            return true;
+        }
+        
         cursor.close();
-        sqLiteDatabase.close();
-        return ans;
+        
+        return false;
     }
 
     public ArrayList<Integer> getDaysOfMonth(String year,String month){
@@ -252,7 +262,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }while (c.moveToNext());
         }
         c.close();
-        sqLiteDatabase.close();
+        
         return days;
     }
 }
