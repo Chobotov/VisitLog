@@ -259,7 +259,7 @@ public class DBHelper extends SQLiteOpenHelper {
             do{
                 int index = c.getColumnIndex(DAY);
                 int day = c.getInt(index);
-                days.add(CalendarDay.from(Integer.valueOf(YEAR),Integer.valueOf(MONTH), day));
+                days.add(CalendarDay.from(Integer.valueOf(year),Integer.valueOf(month), day));
                 //Log.d("days",String.valueOf(day));
             }while (c.moveToNext());
         }
@@ -267,4 +267,15 @@ public class DBHelper extends SQLiteOpenHelper {
         
         return days;
     }
+
+
+    //Затычка
+    public void addGroup(String name) {
+    }
+    //Затычка
+    public boolean containsGroup(Group group) {
+        return false;
+    }
+
+
 }

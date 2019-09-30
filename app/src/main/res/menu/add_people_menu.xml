@@ -12,6 +12,7 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/editMod"
+        android:enabled="true"
         android:icon="@drawable/ic_mode_edit_black_24dp"
         android:title="@string/Edit"
         app:showAsAction="ifRoom" />

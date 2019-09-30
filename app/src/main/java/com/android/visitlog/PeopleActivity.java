@@ -1,6 +1,5 @@
 package com.android.visitlog;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +24,7 @@ public class PeopleActivity extends AppCompatActivity {
 
     FloatingActionButton floatingActionButton;
     public static ArrayList<People> people_list;
-    public static ArrayList<Groups> groups_list;
+    public static ArrayList<Group> group_list;
 
     TabLayout tabLayout;
     MenuItem search;
@@ -48,8 +46,8 @@ public class PeopleActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.pageView);
         pageAdapter = new PageAdapter(getSupportFragmentManager());
 
-        if (groups_list == null) {
-            groups_list = new ArrayList<>();
+        if (group_list == null) {
+            group_list = new ArrayList<>();
             updateGroups();
         }
 
@@ -79,13 +77,13 @@ public class PeopleActivity extends AppCompatActivity {
         GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener(){
 
             @Override
-            public void onLongItemClick(Groups item) {
+            public void onLongItemClick(Group item) {
 
 
             }
 
             @Override
-            public void onItemClick(Groups item) {
+            public void onItemClick(Group item) {
 
             }
 
@@ -94,7 +92,7 @@ public class PeopleActivity extends AppCompatActivity {
 
 
         peopleFragment = new PeopleFragment(clickItemPeople, people_list);
-        groupsFragment = new GroupsFragment(clickItemGroups,groups_list);
+        groupsFragment = new GroupsFragment(clickItemGroups, group_list);
 
 
 
@@ -144,7 +142,7 @@ public class PeopleActivity extends AppCompatActivity {
 
     private void updateGroups() {
         for (int i = 0; i < 10; i++) {
-            groups_list.add(new Groups(("ewf"+groups_list.size())));
+            group_list.add(new Group(("ewf"+ group_list.size())));
         }
     }
 

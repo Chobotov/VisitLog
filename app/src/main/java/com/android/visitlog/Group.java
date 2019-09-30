@@ -1,9 +1,9 @@
 package com.android.visitlog;
 
-public class Groups {
+public class Group {
     public String Name;
 
-    public Groups(String name) {
+    public Group(String name) {
         Name = name;
     }
 }
