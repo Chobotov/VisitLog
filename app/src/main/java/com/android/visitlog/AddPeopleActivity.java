@@ -74,9 +74,13 @@ public class AddPeopleActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
                 if(editMode){
+
                     helper.DeleteAllDataFromDataTable(item.Name);
                     helper.removePeople(item.Name);
-                    updatePeople();
+                    people_list.remove(item);
+                    peopleFragment.update();
+                    peopleFragment.setCounterText(people_list.size());
+
                 }
             }
 
@@ -159,12 +163,12 @@ public class AddPeopleActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    protected void onResume() {
+        updatePeople();
+        updateGroups();
+        super.onResume();
 
-    private void updateGroups () {
-        group_list.clear();
-        for (int i = 0; i < 10; i++) {
-            group_list.add(new Group(("ewf" + group_list.size())));
-        }
     }
 
     @Override
@@ -258,14 +262,6 @@ public class AddPeopleActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        updatePeople();
-        updateGroups();
-        super.onResume();
-
-    }
-
     boolean filtr(String name, String text){
 
         boolean a = true;
@@ -308,6 +304,7 @@ public class AddPeopleActivity extends AppCompatActivity {
 
         if(!helper.containsPeople(new People(name))) {
             helper.addPeople(name);
+            people_list.add(new People(name));
         }
         else{
             int counter = 2;
@@ -335,7 +332,7 @@ public class AddPeopleActivity extends AppCompatActivity {
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }
-
+        peopleFragment.setCounterText(people_list.size());
     }
 
     private void addNewGroup(String name){
@@ -375,8 +372,6 @@ public class AddPeopleActivity extends AppCompatActivity {
 
     }
 
-
-
     private void updatePeople() {
         people_list.clear();
         people_list.addAll(helper.getAllPeople());
@@ -388,4 +383,10 @@ public class AddPeopleActivity extends AppCompatActivity {
 
     }
 
+    private void updateGroups () {
+        group_list.clear();
+        for (int i = 0; i < 10; i++) {
+            group_list.add(new Group(("ewf" + group_list.size())));
+        }
+    }
 }
