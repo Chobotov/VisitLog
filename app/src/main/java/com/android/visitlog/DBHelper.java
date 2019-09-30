@@ -122,7 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    //Получить id человека по имени
+    //Получить id группы по названию
     public String GetIdGroupByName(String name){
         String id = "0";
 
