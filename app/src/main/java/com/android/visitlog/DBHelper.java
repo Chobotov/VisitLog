@@ -95,8 +95,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        cv.put(this.FULL_NAME,name);
-        sqLiteDatabase.insert(this.PEOPLE, null, cv);
+        cv.put(FULL_NAME,name);
+        sqLiteDatabase.insert(PEOPLE, null, cv);
 
     }
 
@@ -117,9 +117,30 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 id = cursor.getString(index);
             }while (cursor.moveToNext());
-        }      
+        }
         cursor.close();
+        return id;
+    }
 
+    //Получить id человека по имени
+    public String GetIdGroupByName(String name){
+        String id = "0";
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
+                + KEY_ID
+                + " FROM " + GROUPS
+                + " WHERE " + GROUP_NAME
+                + " = ?",new String[]{name});
+        if(cursor.moveToFirst())
+        {
+            int index = cursor.getColumnIndex(KEY_ID);
+            do {
+                id = cursor.getString(index);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
         return id;
     }
 
@@ -233,13 +254,11 @@ public class DBHelper extends SQLiteOpenHelper {
             + PEOPLE + " WHERE " 
             + FULL_NAME + " =?", new String[]{people.Name});
 
-        if(cursor.getCount()>0)
+        if(cursor.moveToFirst())
         {
             return true;
         }
-        
         cursor.close();
-        
         return false;
     }
 
@@ -249,33 +268,48 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
-        Cursor c = sqLiteDatabase.rawQuery("SELECT "
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
                 + DAY + " FROM "
                 + DATA_PEOPLE + " WHERE "
                 + MONTH + " = ? " + " AND "
                 + YEAR + " = ?",new String[]{month,year});
 
-        if(c.moveToFirst()){
+        if(cursor.moveToFirst()){
             do{
-                int index = c.getColumnIndex(DAY);
-                int day = c.getInt(index);
+                int index = cursor.getColumnIndex(DAY);
+                int day = cursor.getInt(index);
                 days.add(CalendarDay.from(Integer.valueOf(year),Integer.valueOf(month), day));
                 //Log.d("days",String.valueOf(day));
-            }while (c.moveToNext());
+            }while (cursor.moveToNext());
         }
-        c.close();
-        
+        cursor.close();
         return days;
     }
 
-
-    //Затычка
+    //Добавление новой группы в БД
     public void addGroup(String name) {
+        ContentValues cv = new ContentValues();
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        cv.put(GROUP_NAME,name);
+        sqLiteDatabase.insert(GROUPS,null,cv);
     }
-    //Затычка
+    //Проверка наличия группы в БД
     public boolean containsGroup(Group group) {
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT " + GROUP_NAME
+                        + " FROM " + GROUPS
+                        + " WHERE " + GROUP_NAME
+                        + " =?",new String[]{group.Name});
+        if(cursor.moveToFirst()){
+            return  true;
+        }
+        else{
+            Log.d("ContainsGroup","No group like that!");
+        }
+        cursor.close();
         return false;
     }
-
-
 }
