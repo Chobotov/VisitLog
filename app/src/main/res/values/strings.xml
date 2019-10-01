@@ -13,6 +13,7 @@
     <string name="RepeatAlert">Такой наименование уже есть. Создать новый контакт под названием </string>
     <string name="Members">Members</string>
     <string name="AddData"> был добавлен на </string>
-
+    <string name="AllGroups">All Groups</string>
+    <string name="AllPeople">All People</string>
 
 </resources>

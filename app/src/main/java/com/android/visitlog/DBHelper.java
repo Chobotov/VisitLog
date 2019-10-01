@@ -10,6 +10,7 @@ import android.util.Log;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -168,6 +169,12 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.delete(PEOPLE,FULL_NAME + " = ?" , new String[]{name});
     }
 
+    //Удаление имени из таблицы GROUPS
+    public void removeGroup(String name){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete(GROUPS,GROUP_NAME + " = ?" , new String[]{name});
+    }
+
     //Удаление даты из таблицы DATA_PEOPLE
     public void DeleteDataFromDataTable(String Name,String year,String month,String day){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -311,5 +318,23 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return false;
+
+    }
+
+    public ArrayList<Group> getAllGroups() {
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        ArrayList<Group> groups = new ArrayList<>();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
+                + GROUP_NAME +" FROM "
+                + GROUPS,null);
+        while (cursor.moveToNext()){
+            String Name = cursor.getString(cursor.getColumnIndex(GROUP_NAME));
+            groups.add(new Group(Name));
+        }
+        cursor.close();
+
+        return groups;
     }
 }

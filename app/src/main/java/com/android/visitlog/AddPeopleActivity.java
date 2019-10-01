@@ -49,9 +49,11 @@ public class AddPeopleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_people);
+
         floatingActionButton = findViewById(R.id.floatingActionButton);
         floatingActionButton.setEnabled(false);
         floatingActionButton.hide();
+
         helper = new DBHelper(this);
 
         tabLayout = findViewById(R.id.tabs);
@@ -77,6 +79,7 @@ public class AddPeopleActivity extends AppCompatActivity {
 
                     helper.DeleteAllDataFromDataTable(item.Name);
                     helper.removePeople(item.Name);
+                    
                     people_list.remove(item);
                     peopleFragment.update();
                     peopleFragment.setCounterText(people_list.size());
@@ -91,7 +94,7 @@ public class AddPeopleActivity extends AppCompatActivity {
                     updatePeople();
 
                     Toast.makeText(AddPeopleActivity.this,
-                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "/" + month + "/" + year + ".",
+                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + ":" + month + ":" + year + ".",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -102,6 +105,13 @@ public class AddPeopleActivity extends AppCompatActivity {
 
             @Override
             public void onLongItemClick(Group item) {
+                if(editMode){
+                    helper.removeGroup(item.Name);
+                    group_list.remove(item);
+                    groupsFragment.update();
+                    groupsFragment.setCounterText(group_list.size());
+
+                }
 
             }
 
@@ -130,28 +140,27 @@ public class AddPeopleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(null);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddPeopleActivity.this);
+        floatingActionButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AddPeopleActivity.this);
 
-                builder.setCancelable(true);
+            builder.setCancelable(true);
 
-                View view1 = LayoutInflater.from(AddPeopleActivity.this).inflate(R.layout.add_people_alert, null);
+            View view1 = LayoutInflater.from(AddPeopleActivity.this).inflate(R.layout.add_people_alert, null);
 
-                builder.setView(view1);
+            builder.setView(view1);
 
-                builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+            builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
 
-                    EditText editText = view1.findViewById(R.id.text_edit_alertview);
-
+                EditText editText = view1.findViewById(R.id.text_edit_alertview);
+                if(tabLayout.getSelectedTabPosition()==0)
                     addNewPeople(editText.getText().toString());
+                else
+                    addNewGroup(editText.getText().toString());
 
-                });
-                AlertDialog alertDialog = builder.create();
+            });
+            AlertDialog alertDialog = builder.create();
 
-                alertDialog.show();
-            }
+            alertDialog.show();
         });
 
         Intent intent = getIntent();
@@ -336,7 +345,7 @@ public class AddPeopleActivity extends AppCompatActivity {
     }
 
     private void addNewGroup(String name){
-        if(!helper.containsPeople(new People(name))) {
+        if(!helper.containsGroup(new Group(name))) {
             helper.addGroup(name);
             group_list.add(new Group(name));
 
@@ -358,7 +367,7 @@ public class AddPeopleActivity extends AppCompatActivity {
 
             builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
             builder.setPositiveButton("Да", (dialogInterface, i) -> {
-                helper.addPeople(newName);
+                helper.addGroup(newName);
                 group_list.add(new Group(name));
 
             });
@@ -368,6 +377,7 @@ public class AddPeopleActivity extends AppCompatActivity {
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }
+        groupsFragment.setCounterText(group_list.size());
 
 
     }
@@ -385,8 +395,11 @@ public class AddPeopleActivity extends AppCompatActivity {
 
     private void updateGroups () {
         group_list.clear();
-        for (int i = 0; i < 10; i++) {
-            group_list.add(new Group(("ewf" + group_list.size())));
+        group_list.addAll(helper.getAllGroups());
+        if(groupsFragment != null) {
+            groupsFragment.update();
+            groupsFragment.setCounterText(group_list.size());
         }
     }
+
 }

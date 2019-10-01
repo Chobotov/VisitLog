@@ -27,7 +27,7 @@ public class PeopleFragment extends Fragment {
     private ArrayList<People> peoples;
     private PeopleAdapter.ClickListener clickListener;
 
-    private TextView countPeoples;
+    private TextView countPeople;
 
     public PeopleFragment(PeopleAdapter.ClickListener clickListener, ArrayList<People> peoples) {
         this.clickListener = clickListener;
@@ -43,7 +43,7 @@ public class PeopleFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_people, container, false);
         recyclerView = v.findViewById(R.id.people_recyclerView);
-        countPeoples = v.findViewById(R.id.countPeoples);
+        countPeople = v.findViewById(R.id.countPeople);
 
 
         if (clickListener != null)
@@ -73,8 +73,8 @@ public class PeopleFragment extends Fragment {
     }
 
     public void setCounterText(int text){
-        if(countPeoples!=null)
-            countPeoples.setText(text + " "+ getResources().getString(R.string.People));
+        if(countPeople!=null)
+            countPeople.setText(text + " "+ getResources().getString(R.string.People));
     }
 
 }
