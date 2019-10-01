@@ -86,6 +86,7 @@ public class AddPeopleActivity extends AppCompatActivity {
         GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener(){
 
             @Override
+<<<<<<< Updated upstream
             public void onLongItemClick(Groups item) {
                 return;
             }
@@ -93,6 +94,21 @@ public class AddPeopleActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Groups item) {
 
+=======
+            public void onLongItemClick(Group item) {
+                if(editMode){
+                    helper.removeGroup(item.Name);
+                    group_list.remove(item);
+                    groupsFragment.update();
+                    groupsFragment.setCounterText(people_list.size());
+
+                }
+            }
+
+            @Override
+            public void onItemClick(Group item) {
+                //добовление всех новых людей из группы
+>>>>>>> Stashed changes
             }
 
 
@@ -110,10 +126,13 @@ public class AddPeopleActivity extends AppCompatActivity {
 
 
 
+<<<<<<< Updated upstream
 
         toolbar = findViewById(R.id.toolbar_all_people);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+=======
+>>>>>>> Stashed changes
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -134,6 +153,7 @@ public class AddPeopleActivity extends AppCompatActivity {
     }
 
 
+<<<<<<< Updated upstream
 
     private void updatePeople() {
         Log.e("tag","updatePeople");
@@ -141,6 +161,13 @@ public class AddPeopleActivity extends AppCompatActivity {
         people_list.addAll(helper.getAllPeople());
         if(peopleFragment!=null)
             peopleFragment.update();
+=======
+        toolbar = findViewById(R.id.toolbar_all_people);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(null);
+>>>>>>> Stashed changes
     }
 
 

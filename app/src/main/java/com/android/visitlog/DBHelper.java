@@ -223,4 +223,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
 
+    public void removeGroup(String name) {
+    }
 }

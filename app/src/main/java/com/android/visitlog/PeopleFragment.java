@@ -23,6 +23,11 @@ public class PeopleFragment extends Fragment {
     private ArrayList<People> peoples;
     private PeopleAdapter.ClickListener clickListener;
 
+<<<<<<< Updated upstream
+=======
+    private TextView countPeople;
+
+>>>>>>> Stashed changes
     public PeopleFragment(PeopleAdapter.ClickListener clickListener, ArrayList<People> peoples) {
         this.clickListener = clickListener;
         this.peoples = peoples;
@@ -37,6 +42,11 @@ public class PeopleFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_people, container, false);
         recyclerView = v.findViewById(R.id.people_recyclerView);
+<<<<<<< Updated upstream
+=======
+        countPeople = v.findViewById(R.id.countPeople);
+
+>>>>>>> Stashed changes
 
         if (clickListener != null)
             adapter = new PeopleAdapter(getContext(), clickListener, peoples);
@@ -45,6 +55,11 @@ public class PeopleFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+<<<<<<< Updated upstream
+=======
+        Log.e("tag","onCreateView");
+        setCounterText(peoples.size());
+>>>>>>> Stashed changes
         return v;
     }
 
@@ -60,4 +75,13 @@ public class PeopleFragment extends Fragment {
         if(adapter!=null)
             adapter.notifyDataSetChanged();
     }
+<<<<<<< Updated upstream
+=======
+
+    public void setCounterText(int text){
+        if(countPeople !=null)
+            countPeople.setText(text + " "+ getResources().getString(R.string.People));
+    }
+
+>>>>>>> Stashed changes
 }
