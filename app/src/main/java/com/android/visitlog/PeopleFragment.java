@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ public class PeopleFragment extends Fragment {
     private PeopleAdapter adapter;
     private ArrayList<People> peoples;
     private PeopleAdapter.ClickListener clickListener;
+    private NestedScrollView nestedScrollView;
 
     private TextView countPeople;
 
@@ -44,7 +46,7 @@ public class PeopleFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_people, container, false);
         recyclerView = v.findViewById(R.id.people_recyclerView);
         countPeople = v.findViewById(R.id.countPeople);
-
+        nestedScrollView =  v.findViewById(R.id.Scroll_all_people);
 
         if (clickListener != null)
             adapter = new PeopleAdapter(getContext(), clickListener, peoples);
@@ -53,7 +55,9 @@ public class PeopleFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-        Log.e("tag","onCreateView");
+
+        recyclerView.setFocusable(false);
+        v.findViewById(R.id.temp).requestFocus();
 
         setCounterText(peoples.size());
 
@@ -68,8 +72,10 @@ public class PeopleFragment extends Fragment {
     }
 
     public void update(){
-        if(adapter!=null)
+        if(adapter!=null && v!=null) {
             adapter.notifyDataSetChanged();
+
+        }
     }
 
     public void setCounterText(int text){

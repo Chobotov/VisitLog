@@ -47,7 +47,12 @@ public class GroupsFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         recyclerView.setAdapter(adapter);
 
+        recyclerView.setFocusable(false);
+        v.findViewById(R.id.temp).requestFocus();
+
         setCounterText(groups.size());
+
+
         return v;
     }
 

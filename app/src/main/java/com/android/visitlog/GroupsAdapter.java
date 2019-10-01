@@ -19,7 +19,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
 
     public GroupsAdapter(Context context, GroupsAdapter.ClickListener onLongClickListener, ArrayList<Group> arrayList) {
         groups = arrayList;
-        this.listener = listener;
+        this.listener = onLongClickListener;
         this.inflater = LayoutInflater.from(context);
     }
 

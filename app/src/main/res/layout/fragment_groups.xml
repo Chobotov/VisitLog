@@ -16,6 +16,7 @@
         >
 
         <LinearLayout
+            android:id="@+id/temp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -23,20 +24,14 @@
             android:layout_marginRight="16dp"
             >
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/AllGroups"
-                android:textSize="20sp"
-                android:layout_marginTop="20dp"
-                />
+
 
             <TextView
                 android:id="@+id/countGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
-                android:textSize="14sp"
+                android:textSize="20sp"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="15dp"/>
 
