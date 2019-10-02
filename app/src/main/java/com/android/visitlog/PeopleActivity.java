@@ -94,7 +94,7 @@ public class PeopleActivity extends AppCompatActivity {
                     updatePeople();
 
                     Toast.makeText(PeopleActivity.this,
-                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + ":" + month + ":" + year + ".",
+                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year ,
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -116,6 +116,17 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(Group item) {
+                if(editMode){
+                    Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
+                    intent.putExtra("name", String.valueOf(item.Name));
+                    startActivity(intent);
+                }
+                else {
+                    helper.addFromGroup(item.Name);
+                    Toast.makeText(PeopleActivity.this,"Я ещё не сделал так, что лови тост !!!",
+                            Toast.LENGTH_SHORT).show();
+                }
+
 
             }
 
@@ -182,7 +193,7 @@ public class PeopleActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.add_people_menu, menu);
+        getMenuInflater().inflate(R.menu.people_activity_menu, menu);
 
         search = menu.findItem(R.id.app_bar_search);
         edit = menu.findItem(R.id.editMod);
@@ -245,19 +256,8 @@ public class PeopleActivity extends AppCompatActivity {
                     updatePeople();
                 }
                 else {
-
-
-                    ArrayList<People> people = new ArrayList<>(people_list);
-                    ArrayList<People> newPeople = new ArrayList<>();
-
-                    for (int i = 0; i < people_list.size(); i++) {
-                        if (filtr(people.get(i).Name,newText)) {
-
-                            newPeople.add(people.get(i));
-                        }
-                    }
                     people_list.clear();
-                    people_list.addAll(newPeople);
+                    people_list.addAll(helper.getPeopleFilter(newText));
                     peopleFragment.update();
                 }
 
@@ -268,22 +268,6 @@ public class PeopleActivity extends AppCompatActivity {
         });
 
         return true;
-    }
-
-    boolean filtr(String name, String text){
-
-        boolean a = true;
-        if(text.length() <= name.length())
-            for (int i = 0; i < text.length(); i++) {
-                if(text.charAt(i) != name.charAt(i)){
-                    a = false;
-                }
-            }
-        else{
-            a = false;
-        }
-        return  a;
-
     }
 
     @Override

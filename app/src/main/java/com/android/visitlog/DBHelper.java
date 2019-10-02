@@ -337,4 +337,32 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return groups;
     }
+
+
+    //Затычка
+    //  Возвращает всех людей добавленных в эту группу
+    public ArrayList<People> getGroupMembers(String groupName) {
+        Log.e("tag",groupName);
+        ArrayList<People> people = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            people.add(new People(people.size() + groupName));
+        }
+        return people;
+    }
+
+    //Затычка
+    // Возвращает всех людей имеющих в начале полученный текст
+    public ArrayList<People> getPeopleFilter(String newText) {
+        return new ArrayList<>();
+    }
+
+    //Затычка
+    // Добавляет всех людей из выбранной группы на текущуюю выбранную дату
+    public void addFromGroup(String name) {
+    }
+
+    //Затычка
+    // Удаляет человека из группы
+    public void removePeopleFromGroup(String groupName ,String peopleName) {
+    }
 }

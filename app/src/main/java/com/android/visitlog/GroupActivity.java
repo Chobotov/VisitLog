@@ -1,0 +1,147 @@
+package com.android.visitlog;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+public class GroupActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    PeopleAdapter peopleAdapter;
+    TextView textView;
+
+    ArrayList<People> people_list;
+
+    MenuItem search;
+
+    Toolbar toolbar;
+
+    DBHelper helper;
+
+    String GroupName;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_group);
+
+        Intent intent = getIntent();
+        GroupName = intent.getStringExtra("name");
+
+        recyclerView = findViewById(R.id.people_recyclerView);
+        textView = findViewById(R.id.countPeople);
+
+        helper = new DBHelper(this);
+
+        people_list = helper.getGroupMembers(GroupName);
+
+        PeopleAdapter.ClickListener clickListener = new PeopleAdapter.ClickListener() {
+            @Override
+            public void onLongItemClick(People item) {
+
+                helper.removePeopleFromGroup(GroupName,item.Name);
+            }
+
+            @Override
+            public void onItemClick(People item) {
+
+            }
+        };
+
+        PeopleAdapter.RemoveListener removeListener = item -> {
+            helper.removePeopleFromGroup(GroupName,item.Name);
+        };
+
+
+        peopleAdapter = new PeopleAdapter(this,clickListener,removeListener ,people_list);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        recyclerView.setAdapter(peopleAdapter);
+
+        peopleAdapter.notifyDataSetChanged();
+
+        textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
+                + getResources().getString(R.string.in) + " " + GroupName);
+
+        toolbar = findViewById(R.id.toolbar_all_people);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(null);
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.group_memders_menu, menu);
+        search = menu.findItem(R.id.app_bar_search);
+
+
+        SearchView mSearchView = (SearchView) search.getActionView();
+
+        mSearchView.setOnSearchClickListener(view -> {
+
+
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        });
+
+        mSearchView.setOnCloseListener(() -> {
+
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            return false;
+        });
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+//
+
+                textView.setText(people_list.size() + " " + getResources().getString(R.string.Members) + " in "+ GroupName);
+
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    private void updatePeople() {
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+                finish();
+
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

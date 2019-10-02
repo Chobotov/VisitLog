@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,13 +15,27 @@ import java.util.ArrayList;
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
     private ClickListener clickListener;
+    private RemoveListener removeListener;
     private LayoutInflater inflater;
     private ArrayList<People> peoples;
+    private boolean removeVisible;
 
-    public PeopleAdapter(Context context, ClickListener clickListener, ArrayList<People> arrayList) {
+
+    public PeopleAdapter(Context context, ClickListener clickListener, RemoveListener removeListener, ArrayList<People> peoples) {
+
+        this.inflater = LayoutInflater.from(context);
+        this.peoples = peoples;
+        this.removeListener = removeListener;
+        this.clickListener = clickListener;
+        removeVisible = true;
+    }
+
+
+    public PeopleAdapter(Context context, ClickListener clickListener, ArrayList<People> arrayList ) {
         peoples = arrayList;
         this.clickListener = clickListener;
         this.inflater = LayoutInflater.from(context);
+        removeVisible = false;
     }
 
     @NonNull
@@ -35,21 +50,25 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         People people = peoples.get(position);
-
-
-
-        holder.itemView.setOnLongClickListener(view -> {
-            if (clickListener != null)
+        if (clickListener != null) {
+            holder.itemView.setOnLongClickListener(view -> {
                 clickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
-            return false;
-        });
+                return false;
+            });
 
-        holder.itemView.setOnClickListener(view -> {
-            if (clickListener != null)
+            holder.itemView.setOnClickListener(view -> {
                 clickListener.onItemClick(peoples.get(holder.getAdapterPosition()));
-        });
+            });
+        }
 
         holder.name.setText(people.Name);
+
+        holder.setRemoveButtonVisible(removeVisible);
+
+        if(removeListener!=null){
+            holder.remove.setOnClickListener(view -> removeListener.onRemoveClick(people));
+        }
+
     }
 
     @Override
@@ -57,27 +76,38 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         return peoples == null ? 0 : peoples.size();
     }
 
-
-    public void setPeoples(ArrayList<People> peoples) {
-        this.peoples = peoples;
+    public boolean isRemoveVisible() {
+        notifyDataSetChanged();
+        return removeVisible;
     }
 
-    public ArrayList<People> getPeoples() {
-        return peoples;
+    public void setRemoveVisible(boolean removeVisible) {
+        this.removeVisible = removeVisible;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
-        private TextView countPeoples;
+        public Button remove;
 
         ViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.item_people_text);
+            remove = view.findViewById(R.id.remove);
         }
 
-        public TextView getTextView() {
-            return name;
+        public void setRemoveButtonVisible(boolean enable){
+            if(enable)
+                remove.setVisibility(View.VISIBLE);
+            else
+                remove.setVisibility(View.INVISIBLE);
+
         }
+
+    }
+
+    interface RemoveListener{
+        void  onRemoveClick(People item);
     }
 
     interface ClickListener {

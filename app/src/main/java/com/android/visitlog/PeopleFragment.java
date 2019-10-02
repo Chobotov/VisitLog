@@ -27,7 +27,6 @@ public class PeopleFragment extends Fragment {
     private PeopleAdapter adapter;
     private ArrayList<People> peoples;
     private PeopleAdapter.ClickListener clickListener;
-    private NestedScrollView nestedScrollView;
 
     private TextView countPeople;
 
@@ -46,7 +45,7 @@ public class PeopleFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_people, container, false);
         recyclerView = v.findViewById(R.id.people_recyclerView);
         countPeople = v.findViewById(R.id.countPeople);
-        nestedScrollView =  v.findViewById(R.id.Scroll_all_people);
+
 
         if (clickListener != null)
             adapter = new PeopleAdapter(getContext(), clickListener, peoples);

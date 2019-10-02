@@ -15,5 +15,6 @@
     <string name="AddData"> был добавлен на </string>
     <string name="AllGroups">All Groups</string>
     <string name="AllPeople">All People</string>
+    <string name="in">in</string>
 
 </resources>

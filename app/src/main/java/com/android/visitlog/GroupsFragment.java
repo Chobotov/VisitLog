@@ -39,6 +39,7 @@ public class GroupsFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_groups, container, false);
         recyclerView = v.findViewById(R.id.groups_recyclerView);
         countGroup = v.findViewById(R.id.countGroup);
+        
         if (clickListener != null)
             adapter = new GroupsAdapter(getContext(), clickListener, groups);
         else
