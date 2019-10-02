@@ -101,6 +101,30 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public String GetNameByID(String id){
+        String name = "null";
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                        + FULL_NAME
+                        + " FROM "
+                        + PEOPLE
+                        + " WHERE "
+                        + ID_PEOPLE
+                        +" =?",
+                new String[]{id});
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(FULL_NAME);
+            do {
+               name = cursor.getString(index);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return name;
+    }
+
     //Получить id человека по имени
     public String GetIdByName( String name){
         String id = "0";
@@ -339,41 +363,156 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    //Затычка
     //  Возвращает всех людей добавленных в эту группу
     public ArrayList<People> getGroupMembers(String groupName) {
-        Log.e("tag",groupName);
-        ArrayList<People> people = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            people.add(new People(people.size() + groupName));
-        }
-        return people;
+       String GroupId = GetIdGroupByName(groupName);
+
+       ArrayList<People>Peoples = new ArrayList<>();
+
+       SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+       Cursor cursor;
+       cursor = sqLiteDatabase.rawQuery(
+               "SELECT "
+               + FULL_NAME
+               + " FROM "
+               + PEOPLE
+               + " WHERE "
+               + ID_PEOPLE
+               + " = "
+               + "(SELECT "
+               + ID_PEOPLE
+               + " FROM "
+               + PEOPLES_GROUP
+               + " WHERE "
+               + ID_GROUP
+               + " =?)",
+               new String[]{GroupId});
+       if(cursor.moveToFirst()) {
+           int index = cursor.getColumnIndex(FULL_NAME);
+           do{
+               String name = cursor.getString(index);
+               Peoples.add(new People(name));
+           }while (cursor.moveToNext());
+       }
+       cursor.close();
+       return Peoples;
     }
 
-    //Затычка
     // Возвращает всех людей имеющих в начале полученный текст
     public ArrayList<People> getPeopleFilter(String newText) {
-        return new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        ArrayList<People>Peoples = new ArrayList<>();
+        Cursor cursor;
+        cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                + FULL_NAME
+                + " FROM "
+                + PEOPLE
+                + " WHERE "
+                + FULL_NAME
+                + " LIKE '?'",
+                new String[]{"%" + newText + "%"});
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(FULL_NAME);
+            do{
+                String name = cursor.getString(index);
+                Peoples.add(new People(name));
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return Peoples;
     }
 
-    //Затычка
     // Добавляет всех людей из выбранной группы на текущуюю выбранную дату
-    public void addFromGroup(String name) {
+    public void addFromGroup(String groupname,String year,String month,String day) {
+        String id = GetIdGroupByName(groupname);
+
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                        + FULL_NAME
+                        + " FROM "
+                        + PEOPLE
+                        + " WHERE "
+                        + ID_PEOPLE
+                        + " = "
+                        + "(SELECT "
+                        + ID_PEOPLE
+                        + " FROM "
+                        + PEOPLES_GROUP
+                        + " WHERE "
+                        + ID_GROUP
+                        + " =?)",new String[]{id});
+
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(FULL_NAME);
+            do{
+                String name = cursor.getString(index);
+                SetDataInDataTable(name,year,month,day);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
     }
 
-    //Затычка
     // Удаляет человека из группы
     public void removePeopleFromGroup(String groupName ,String peopleName) {
+        String PeopleId = GetIdByName(peopleName);
+        String GroupId = GetIdGroupByName(groupName);
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        sqLiteDatabase.delete(PEOPLES_GROUP,
+                ID_PEOPLE + " AND " + ID_GROUP,
+                new String[]{PeopleId,GroupId});
     }
 
-    //Затычка
     // Добавить человека в группу
     public void addPeopleInGroup(String name) {
+        String PeopleId = GetIdByName(name);
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(ID_PEOPLE,PeopleId);
+
+        sqLiteDatabase.insert(PEOPLES_GROUP,null,cv);
     }
 
-    //Затычка
     // Возвращает всех людей, что ещё не состоят в группе
-    public ArrayList<People> getAllPeopleNotInGroup(String groupName ) {
-        return getAllPeople();
+    public ArrayList<People> getAllPeopleNotInGroup(String groupName )
+    {
+        String GroupId = GetIdGroupByName(groupName);
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        ArrayList<People> Peoples = new ArrayList<>();
+
+        Cursor cursor;
+        cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                        + FULL_NAME
+                        + " FROM "
+                        + PEOPLE
+                        + " WHERE "
+                        + ID_PEOPLE
+                        + " !="
+                        + " (SELECT "
+                        + ID_PEOPLE
+                        + " FROM "
+                        + PEOPLES_GROUP
+                        + " WHERE "
+                        + ID_GROUP
+                        + " =?)",new String[]{GroupId});
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(FULL_NAME);
+            do{
+                String name = cursor.getString(index);
+                Peoples.add(new People(name));
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return Peoples;
     }
 }
