@@ -16,5 +16,8 @@
     <string name="AllGroups">All Groups</string>
     <string name="AllPeople">All People</string>
     <string name="in">in</string>
+    <string name="AlertEmptyName">Не удалось добавить пустое наименование</string>
+    <string name="hasRemoved">был удалён</string>
+    <string name="willHasAdd">будет добавлен</string>
 
 </resources>

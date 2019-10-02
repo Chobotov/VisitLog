@@ -1,16 +1,13 @@
 package com.android.visitlog;
 
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,27 +24,34 @@ public class PeopleFragment extends Fragment {
     private PeopleAdapter adapter;
     private ArrayList<People> peoples;
     private PeopleAdapter.ClickListener clickListener;
+    private PeopleAdapter.RemoveListener removeListener;
+
 
     private TextView countPeople;
+
+    public PeopleFragment(PeopleAdapter.ClickListener clickListener,PeopleAdapter.RemoveListener removeListener , ArrayList<People> peoples) {
+        this.removeListener = removeListener;
+        this.clickListener = clickListener;
+        this.peoples = peoples;
+    }
 
     public PeopleFragment(PeopleAdapter.ClickListener clickListener, ArrayList<People> peoples) {
         this.clickListener = clickListener;
         this.peoples = peoples;
     }
 
-    public PeopleFragment() {
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_people, container, false);
-        recyclerView = v.findViewById(R.id.people_recyclerView);
+        recyclerView = v.findViewById(R.id.alert_people_recyclerView);
         countPeople = v.findViewById(R.id.countPeople);
 
-
-        if (clickListener != null)
+        if (clickListener != null && removeListener!= null) {
+            adapter = new PeopleAdapter(getContext(), clickListener, removeListener, peoples);
+            adapter.setRemoveVisible(false);
+        }
+        else if (clickListener != null)
             adapter = new PeopleAdapter(getContext(), clickListener, peoples);
         else
             adapter = new PeopleAdapter(getContext(), null, peoples);
@@ -81,5 +85,20 @@ public class PeopleFragment extends Fragment {
         if(countPeople!=null)
             countPeople.setText(text + " "+ getResources().getString(R.string.People));
     }
+
+
+    public void setRemoveVisible(boolean enable){
+        if(adapter != null){
+            adapter.setRemoveVisible(enable);
+        }
+    }
+    public boolean getRemoveVisible(){
+        if(adapter!= null){
+           return adapter.getRemoveVisible();
+        }
+        return false;
+    }
+
+
 
 }

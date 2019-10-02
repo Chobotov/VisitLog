@@ -50,11 +50,10 @@ public class PeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
 
-        floatingActionButton = findViewById(R.id.floatingActionButton);
-        floatingActionButton.setEnabled(false);
-        floatingActionButton.hide();
-
         helper = new DBHelper(this);
+
+        floatingActionButton = findViewById(R.id.floatingActionButton);
+        floatingActionButton.hide();
 
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.pageView);
@@ -75,66 +74,71 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public void onLongItemClick(People item) {
-                if(editMode){
+                if (editMode) {
 
                     helper.DeleteAllDataFromDataTable(item.Name);
                     helper.removePeople(item.Name);
-                    
+
                     people_list.remove(item);
                     peopleFragment.update();
                     peopleFragment.setCounterText(people_list.size());
-
+                    Toast.makeText(PeopleActivity.this,
+                            item.Name + " " + getResources().getString(R.string.hasRemoved),
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onItemClick(People item) {
-                if(!editMode){
+                if (!editMode) {
                     helper.SetDataInDataTable(item.Name, year, month, day);
                     updatePeople();
 
                     Toast.makeText(PeopleActivity.this,
-                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year ,
+                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
                             Toast.LENGTH_SHORT).show();
                 }
             }
 
+        };
+
+        PeopleAdapter.RemoveListener removeListener = item -> {
+            helper.DeleteAllDataFromDataTable(item.Name);
+            helper.removePeople(item.Name);
+            people_list.remove(item);
+            peopleFragment.update();
+            peopleFragment.setCounterText(people_list.size());
         };
 
         GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener() {
 
             @Override
             public void onLongItemClick(Group item) {
-                if(editMode){
+                if (editMode) {
                     helper.removeGroup(item.Name);
                     group_list.remove(item);
                     groupsFragment.update();
                     groupsFragment.setCounterText(group_list.size());
                 }
-
             }
 
             @Override
             public void onItemClick(Group item) {
-                if(editMode){
+                if (editMode) {
                     Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
                     intent.putExtra("name", String.valueOf(item.Name));
                     startActivity(intent);
-                }
-                else {
+                } else {
                     helper.addFromGroup(item.Name);
-                    Toast.makeText(PeopleActivity.this,"Я ещё не сделал так, что лови тост !!!",
+                    Toast.makeText(PeopleActivity.this, "Я ещё не сделал так, что лови тост !!!",
                             Toast.LENGTH_SHORT).show();
                 }
-
-
             }
-
-
         };
 
 
-        peopleFragment = new PeopleFragment(clickItemPeople, people_list);
+
+        peopleFragment = new PeopleFragment(clickItemPeople,removeListener, people_list);
         groupsFragment = new GroupsFragment(clickItemGroups, group_list);
 
         pageAdapter.AddFragment(peopleFragment, getResources().getString(R.string.People));
@@ -162,7 +166,7 @@ public class PeopleActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
 
                 EditText editText = view1.findViewById(R.id.text_edit_alertview);
-                if(tabLayout.getSelectedTabPosition()==0)
+                if (tabLayout.getSelectedTabPosition() == 0)
                     addNewPeople(editText.getText().toString());
                 else
                     addNewGroup(editText.getText().toString());
@@ -180,8 +184,8 @@ public class PeopleActivity extends AppCompatActivity {
         day = intent.getStringExtra("day");
 
 
-
     }
+
     @Override
     protected void onResume() {
         updatePeople();
@@ -199,17 +203,15 @@ public class PeopleActivity extends AppCompatActivity {
         edit = menu.findItem(R.id.editMod);
 
         edit.setOnMenuItemClickListener(menuItem -> {
-            if(editMode){
-                floatingActionButton.setEnabled(false);
+            if (editMode) {
+                peopleFragment.setRemoveVisible(false);
                 floatingActionButton.hide();
-                editMode=!editMode;
-            }
-            else{
-                edit.setEnabled(false);
+                editMode = !editMode;
+            } else {
                 edit.setVisible(false);
-                floatingActionButton.setEnabled(true);
+                peopleFragment.setRemoveVisible(true);
                 floatingActionButton.show();
-                editMode=!editMode;
+                editMode = !editMode;
             }
             return false;
         });
@@ -218,12 +220,11 @@ public class PeopleActivity extends AppCompatActivity {
 
         mSearchView.setOnSearchClickListener(view -> {
 
-            if(!editMode) {
+            if (!editMode) {
                 edit.setVisible(false);
             }
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
-
 
 
         });
@@ -233,12 +234,12 @@ public class PeopleActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            if(!editMode) {
+            if (!editMode) {
                 edit.setVisible(true);
                 edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
 
-          return false;
+            return false;
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -251,11 +252,9 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(newText.equals(""))
-                {
+                if (newText.equals("")) {
                     updatePeople();
-                }
-                else {
+                } else {
                     people_list.clear();
                     people_list.addAll(helper.getPeopleFilter(newText));
                     peopleFragment.update();
@@ -275,25 +274,21 @@ public class PeopleActivity extends AppCompatActivity {
 
         if (item.getItemId() == android.R.id.home) {
 
-            if(editMode){
-                floatingActionButton.setEnabled(false);
+            if (editMode) {
+                peopleFragment.setRemoveVisible(false);
                 floatingActionButton.hide();
-                editMode=!editMode;
-                edit.setEnabled(true);
+                editMode = !editMode;
                 edit.setVisible(true);
-            }
-            else{
+            } else {
                 finish();
             }
-
-
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void addNewPeople(String name) {
-        if(!name.equals("")) {
+        if (!name.equals("")) {
 
             if (!helper.containsPeople(new People(name))) {
                 helper.addPeople(name);
@@ -311,7 +306,6 @@ public class PeopleActivity extends AppCompatActivity {
 
                 String newName = name + counter;
 
-
                 builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
                 builder.setPositiveButton("Да", (dialogInterface, i) -> {
                     helper.addPeople(newName);
@@ -324,16 +318,15 @@ public class PeopleActivity extends AppCompatActivity {
                 alertDialog.show();
             }
             peopleFragment.setCounterText(people_list.size());
-        }
-        else {
+        } else {
             Toast.makeText(PeopleActivity.this,
                     "Не удалось добавить пустое наименование",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void addNewGroup(String name){
-        if(!name.equals("")) {
+    private void addNewGroup(String name) {
+        if (!name.equals("")) {
             if (!helper.containsGroup(new Group(name))) {
                 helper.addGroup(name);
                 group_list.add(new Group(name));
@@ -365,10 +358,9 @@ public class PeopleActivity extends AppCompatActivity {
                 alertDialog.show();
             }
             groupsFragment.setCounterText(group_list.size());
-        }
-        else {
+        } else {
             Toast.makeText(PeopleActivity.this,
-                    "Не удалось добавить пустое наименование",
+                    getResources().getString(R.string.AlertEmptyName),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -379,7 +371,7 @@ public class PeopleActivity extends AppCompatActivity {
         people_list.clear();
         people_list.addAll(helper.getAllPeople());
 
-        if(peopleFragment != null) {
+        if (peopleFragment != null) {
             peopleFragment.update();
             peopleFragment.setCounterText(people_list.size());
             tabLayout.setScrollX(0);
@@ -387,10 +379,10 @@ public class PeopleActivity extends AppCompatActivity {
 
     }
 
-    private void updateGroups () {
+    private void updateGroups() {
         group_list.clear();
         group_list.addAll(helper.getAllGroups());
-        if(groupsFragment != null) {
+        if (groupsFragment != null) {
             groupsFragment.update();
             groupsFragment.setCounterText(group_list.size());
         }

@@ -1,5 +1,6 @@
 package com.android.visitlog;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,10 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -38,7 +42,7 @@ public class GroupActivity extends AppCompatActivity {
         Intent intent = getIntent();
         GroupName = intent.getStringExtra("name");
 
-        recyclerView = findViewById(R.id.people_recyclerView);
+        recyclerView = findViewById(R.id.alert_people_recyclerView);
         textView = findViewById(R.id.countPeople);
 
         helper = new DBHelper(this);
@@ -68,17 +72,75 @@ public class GroupActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(peopleAdapter);
+        recyclerView.setFocusable(false);
+        findViewById(R.id.temp).requestFocus();
 
         peopleAdapter.notifyDataSetChanged();
 
         textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
                 + getResources().getString(R.string.in) + " " + GroupName);
 
+
         toolbar = findViewById(R.id.toolbar_all_people);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(null);
+
+
+        findViewById(R.id.floatingActionButton).setOnClickListener(item->{
+            AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
+
+            ArrayList<People> newPeople = new ArrayList<>();
+
+            builder.setCancelable(true);
+
+            View view1 = LayoutInflater.from(GroupActivity.this).inflate(R.layout.add_group_people, null);
+
+            builder.setView(view1);
+
+            RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
+            alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
+            PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
+                @Override
+                public void onLongItemClick(People item) {
+                }
+
+                @Override
+                public void onItemClick(People item) {
+                    if(!newPeople.contains(item)){
+                        newPeople.add(item);
+                        Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        newPeople.remove(item);
+                        Toast.makeText(view1.getContext(),item.Name + " " + getResources().getString(R.string.hasRemoved),Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            };
+
+            PeopleAdapter alertAdapter = new PeopleAdapter(this,alertListener,helper.getAllPeopleNotInGroup(GroupName));
+
+
+
+            alertRecycler.setLayoutManager(new LinearLayoutManager(this));
+            alertRecycler.setAdapter(alertAdapter);
+
+
+            builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
+                for (int i = 0; i < newPeople.size(); i++) {
+                    helper.addPeopleInGroup(newPeople.get(i).Name);
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+            peopleAdapter.notifyDataSetChanged();
+
+        });
+
 
     }
 
@@ -129,9 +191,7 @@ public class GroupActivity extends AppCompatActivity {
         return true;
     }
 
-    private void updatePeople() {
 
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

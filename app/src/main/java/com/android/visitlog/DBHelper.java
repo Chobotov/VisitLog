@@ -365,4 +365,15 @@ public class DBHelper extends SQLiteOpenHelper {
     // Удаляет человека из группы
     public void removePeopleFromGroup(String groupName ,String peopleName) {
     }
+
+    //Затычка
+    // Добавить человека в группу
+    public void addPeopleInGroup(String name) {
+    }
+
+    //Затычка
+    // Возвращает всех людей, что ещё не состоят в группе
+    public ArrayList<People> getAllPeopleNotInGroup(String groupName ) {
+        return getAllPeople();
+    }
 }

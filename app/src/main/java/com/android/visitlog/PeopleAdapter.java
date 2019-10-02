@@ -84,7 +84,13 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void setRemoveVisible(boolean removeVisible) {
         this.removeVisible = removeVisible;
         notifyDataSetChanged();
+
     }
+
+    public boolean getRemoveVisible() {
+        return removeVisible;
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
