@@ -566,7 +566,26 @@ public class DBHelper extends SQLiteOpenHelper {
     // Затычка
     // Возвращает лист групп подходящих по названию поиска
     public ArrayList<Group> getGroupsFilter(String newText) {
-
-        return new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        ArrayList<Group>Groups = new ArrayList<>();
+        Cursor cursor;
+        cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                        + GROUP_NAME
+                        + " FROM "
+                        + GROUPS
+                        + " WHERE "
+                        + GROUP_NAME
+                        + " LIKE ?",
+                new String[]{"%" + newText + "%"});
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(GROUP_NAME);
+            do{
+                String name = cursor.getString(index);
+                Groups.add(new Group(name));
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return Groups;
     }
 }
