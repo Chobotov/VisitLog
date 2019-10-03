@@ -192,7 +192,9 @@ public class MainActivity extends AppCompatActivity {
             if (cursor.moveToFirst()) {
                 do {
                     String name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
-                    peopleList.add(new People(name));
+                    People people = new People(name);
+                    people.Group = dbHelper.FindGroupThisPeople(people);
+                    peopleList.add(people);
                 } while (cursor.moveToNext());
             } else
                 Log.d(LOG_TAG, "Cursor is null");

@@ -91,11 +91,18 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public void onItemClick(People item) {
                 if (!editMode) {
-                    helper.SetDataInDataTable(item.Name, year, month, day);
+                    if(!helper.containsDataPeople(item,year,month,day)){
+                        helper.SetDataInDataTable(item.Name, year, month, day);
 
-                    Toast.makeText(PeopleActivity.this,
-                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
-                            Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PeopleActivity.this,
+                                item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(PeopleActivity.this,
+                                item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -103,6 +110,7 @@ public class PeopleActivity extends AppCompatActivity {
 
         PeopleAdapter.RemoveListener removeListener = item -> {
             helper.DeleteAllDataFromDataTable(item.Name);
+            helper.removePeopleFromGroup(item.Group,item.Name);
             helper.removePeople(item.Name);
             people_list.remove(item);
             peopleFragment.update();
@@ -135,7 +143,9 @@ public class PeopleActivity extends AppCompatActivity {
                     ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
 
                     for (People i: peopleInGroup) {
-                        helper.SetDataInDataTable(i.Name, year, month, day);
+                        if(!helper.containsDataPeople(i,year,month,day)){
+                            helper.SetDataInDataTable(i.Name, year, month, day);
+                        }
                     }
 
                     Toast.makeText(PeopleActivity.this,

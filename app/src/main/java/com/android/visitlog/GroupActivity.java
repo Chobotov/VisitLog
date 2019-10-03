@@ -195,7 +195,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                Toast.makeText(GroupActivity.this,"Это что, селект из селекта из селекта ? это сколько ? 3 селектов ? на каждую букву?",Toast.LENGTH_LONG);
+                //Toast.makeText(GroupActivity.this,"Это что, селект из селекта из селекта ? это сколько ? 3 селектов ? на каждую букву?",Toast.LENGTH_LONG);
                 people_list.clear();
                 people_list.addAll(helper.getFilterGroupPeople(newText,GroupName));
 

@@ -217,7 +217,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.delete(PEOPLE,FULL_NAME + " = ?" , new String[]{name});
     }
 
-    //Удаление имени из таблицы GROUPS
+    //Удаление имени группы из таблицы GROUPS
     public void removeGroup(String name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.delete(GROUPS,GROUP_NAME + " = ?" , new String[]{name});
@@ -312,6 +312,28 @@ public class DBHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst())
         {
             return true;
+        }
+        cursor.close();
+        return false;
+    }
+
+    public boolean containsDataPeople(People people,String year,String month,String day){
+        String id = GetIdByName(people.Name);
+        Log.e("containsData",id);
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
+                + ID_PEOPLE +" FROM "
+                + DATA_PEOPLE + " WHERE "
+                + ID_PEOPLE + " =?", new String[]{id});
+
+        if(cursor.moveToFirst())
+        {
+            Log.e("containsData","true");
+            return true;
+        }
+        else {
+            Log.e("containsData","false");
         }
         cursor.close();
         return false;
@@ -481,8 +503,9 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         sqLiteDatabase.delete(PEOPLES_GROUP,
-                ID_PEOPLE + " =? " + " AND " + ID_GROUP + " =? ",
+                ID_PEOPLE + " =?" + " and " + ID_GROUP + " =?",
                 new String[]{PeopleId,GroupId});
+        Log.d("delete","Удалено");
     }
 
     // Добавить человека в группу
@@ -560,8 +583,59 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     // Затычка
     // Возвращает лист людей из фильтрованной группы
-    public ArrayList<People> getFilterGroupPeople(String text, String groupName) {
-        return new ArrayList<>();
+    public ArrayList<People> getFilterGroupPeople(String newtext, String groupName) {
+        String GroupID = GetIdByName(groupName);
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        ArrayList<String>id = new ArrayList<>();
+        Cursor cursor;
+        cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                        + ID_PEOPLE
+                        + " FROM "
+                        + PEOPLES_GROUP
+                        + " WHERE "
+                        + ID_GROUP
+                        + " =?",
+                new String[]{GroupID});
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(ID_PEOPLE);
+            do{
+                String Peopleid = cursor.getString(index);
+                id.add(Peopleid);
+            }while (cursor.moveToNext());
+        }
+
+        else {
+            Log.d("PeopleinGroup","error");
+            return getGroupMembers(groupName);
+        }
+        ArrayList<People>people = new ArrayList<>();
+        for(String s : id){
+            cursor = sqLiteDatabase.rawQuery(
+                    "SELECT "
+                            + FULL_NAME
+                            + " FROM "
+                            + PEOPLE
+                            + " WHERE "
+                            + KEY_ID
+                            + " =?"
+                            + " AND "
+                            + FULL_NAME
+                            + " LIKE ?",
+                    new String[]{s,"%" + newtext + "%"});
+            if(cursor.moveToFirst()){
+                int index = cursor.getColumnIndex(FULL_NAME);
+                do{
+                    String name = cursor.getString(index);
+                    people.add(new People(name));
+                }while (cursor.moveToNext());
+            }
+            else {
+                break;
+            }
+        }
+        cursor.close();
+        return people;
     }
     // Затычка
     // Возвращает лист групп подходящих по названию поиска
@@ -587,5 +661,53 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return Groups;
+    }
+
+
+    public String FindGroupThisPeople(People people){
+        String id = GetIdByName(people.Name);
+        String GroupName = "";
+        String GroupID = "";
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor cursor;
+
+        cursor = sqLiteDatabase.rawQuery(
+                " SELECT "
+                + ID_GROUP
+                + " FROM "
+                + PEOPLES_GROUP
+                + " WHERE "
+                + ID_PEOPLE
+                + " =?",
+                new String[]{id});
+        if (cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(ID_GROUP);
+            do{
+                 GroupID = cursor.getString(index);
+                 Log.d("GRID",GroupID);
+            }while (cursor.moveToNext());
+        }
+        else {
+            return "";
+        }
+
+        cursor = sqLiteDatabase.rawQuery(
+                " SELECT "
+                        + GROUP_NAME
+                        + " FROM "
+                        + GROUPS
+                        + " WHERE "
+                        + KEY_ID
+                        + " =?",
+                new String[]{GroupID});
+
+        if (cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(GROUP_NAME);
+            do{
+                GroupName = GroupName + " " + cursor.getString(index)+" ";
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return GroupName;
     }
 }
