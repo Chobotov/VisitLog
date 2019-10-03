@@ -92,7 +92,6 @@ public class PeopleActivity extends AppCompatActivity {
             public void onItemClick(People item) {
                 if (!editMode) {
                     helper.SetDataInDataTable(item.Name, year, month, day);
-                    updatePeople();
 
                     Toast.makeText(PeopleActivity.this,
                             item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
@@ -108,6 +107,9 @@ public class PeopleActivity extends AppCompatActivity {
             people_list.remove(item);
             peopleFragment.update();
             peopleFragment.setCounterText(people_list.size());
+            Toast.makeText(PeopleActivity.this,
+                    item.Name + " " + getResources().getString(R.string.hasRemoved),
+                    Toast.LENGTH_SHORT).show();
         };
 
         GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener() {
@@ -129,8 +131,19 @@ public class PeopleActivity extends AppCompatActivity {
                     intent.putExtra("name", String.valueOf(item.Name));
                     startActivity(intent);
                 } else {
-                    helper.addFromGroup(item.Name,year,month,day);
-                    Toast.makeText(PeopleActivity.this, "Я ещё не сделал так, что лови тост !!!",
+
+                    ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
+
+                    for (People i: peopleInGroup) {
+                        helper.SetDataInDataTable(i.Name, year, month, day);
+                    }
+
+                    Toast.makeText(PeopleActivity.this,
+                            getResources().getString(R.string.addGroupDate1) + " "
+                                    + item.Name  + " "
+                                    + getResources().getString(R.string.addGroupDate2) + " "
+                                    + day + "." + month + "." + year
+                            ,
                             Toast.LENGTH_SHORT).show();
                 }
             }

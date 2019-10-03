@@ -442,36 +442,36 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Добавляет всех людей из выбранной группы на текущуюю выбранную дату
-    public void addFromGroup(String groupname,String year,String month,String day) {
-        String id = GetIdGroupByName(groupname);
-
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-
-        Cursor cursor = sqLiteDatabase.rawQuery(
-                "SELECT "
-                        + FULL_NAME
-                        + " FROM "
-                        + PEOPLE
-                        + " WHERE "
-                        + KEY_ID
-                        + " = "
-                        + "(SELECT "
-                        + ID_PEOPLE
-                        + " FROM "
-                        + PEOPLES_GROUP
-                        + " WHERE "
-                        + ID_GROUP
-                        + " =?)",new String[]{id});
-
-        if(cursor.moveToFirst()){
-            int index = cursor.getColumnIndex(FULL_NAME);
-            do{
-                String name = cursor.getString(index);
-                SetDataInDataTable(name,year,month,day);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-    }
+//    public void addFromGroup(String groupname,String year,String month,String day) {
+//        String id = GetIdGroupByName(groupname);
+//
+//        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+//
+//        Cursor cursor = sqLiteDatabase.rawQuery(
+//                "SELECT "
+//                        + FULL_NAME
+//                        + " FROM "
+//                        + PEOPLE
+//                        + " WHERE "
+//                        + KEY_ID
+//                        + " = "
+//                        + "(SELECT "
+//                        + ID_PEOPLE
+//                        + " FROM "
+//                        + PEOPLES_GROUP
+//                        + " WHERE "
+//                        + ID_GROUP
+//                        + " =?)",new String[]{id});
+//
+//        if(cursor.moveToFirst()){
+//            int index = cursor.getColumnIndex(FULL_NAME);
+//            do{
+//                String name = cursor.getString(index);
+//                SetDataInDataTable(name,year,month,day);
+//            }while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//    }
 
     // Удаляет человека из группы
     public void removePeopleFromGroup(String groupName ,String peopleName) {

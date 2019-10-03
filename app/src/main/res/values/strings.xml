@@ -19,5 +19,7 @@
     <string name="AlertEmptyName">Не удалось добавить пустое наименование</string>
     <string name="hasRemoved">был удалён</string>
     <string name="willHasAdd">будет добавлен</string>
+    <string name="addGroupDate1">все участники</string>
+    <string name="addGroupDate2">были добавлены на</string>
 
 </resources>
