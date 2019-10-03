@@ -112,7 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         + " FROM "
                         + PEOPLE
                         + " WHERE "
-                        + ID_PEOPLE
+                        + KEY_ID
                         +" =?",
                 new String[]{id});
         if(cursor.moveToFirst()){
@@ -123,6 +123,30 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return name;
+    }
+
+    public String GetGroupByID(String id){
+        String group = "null";
+
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                        + GROUP_NAME
+                        + " FROM "
+                        + GROUPS
+                        + " WHERE "
+                        + ID_GROUP
+                        +" =?",
+                new String[]{id});
+        if(cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(FULL_NAME);
+            do {
+                group = cursor.getString(index);
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return group;
     }
 
     //Получить id человека по имени
@@ -368,33 +392,31 @@ public class DBHelper extends SQLiteOpenHelper {
        String GroupId = GetIdGroupByName(groupName);
 
        ArrayList<People>Peoples = new ArrayList<>();
-
        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
        Cursor cursor;
+
        cursor = sqLiteDatabase.rawQuery(
                "SELECT "
-               + FULL_NAME
-               + " FROM "
-               + PEOPLE
-               + " WHERE "
-               + ID_PEOPLE
-               + " = "
-               + "(SELECT "
                + ID_PEOPLE
                + " FROM "
                + PEOPLES_GROUP
                + " WHERE "
                + ID_GROUP
-               + " =?)",
+               + " =? ",
                new String[]{GroupId});
        if(cursor.moveToFirst()) {
-           int index = cursor.getColumnIndex(FULL_NAME);
+           int index = cursor.getColumnIndex(ID_PEOPLE);
            do{
-               String name = cursor.getString(index);
-               Peoples.add(new People(name));
+               String ID = cursor.getString(index);
+               Peoples.add(new People(GetNameByID(ID)));
            }while (cursor.moveToNext());
        }
+       else
+           Log.e("PG","Cursor is null!!!");
        cursor.close();
+
+
+
        return Peoples;
     }
 
@@ -410,7 +432,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + PEOPLE
                 + " WHERE "
                 + FULL_NAME
-                + " LIKE '?'",
+                + " LIKE ?",
                 new String[]{"%" + newText + "%"});
         if(cursor.moveToFirst()){
             int index = cursor.getColumnIndex(FULL_NAME);
@@ -435,7 +457,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         + " FROM "
                         + PEOPLE
                         + " WHERE "
-                        + ID_PEOPLE
+                        + KEY_ID
                         + " = "
                         + "(SELECT "
                         + ID_PEOPLE
@@ -463,19 +485,21 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         sqLiteDatabase.delete(PEOPLES_GROUP,
-                ID_PEOPLE + " AND " + ID_GROUP,
+                ID_PEOPLE + " =? " + " AND " + ID_GROUP + " =? ",
                 new String[]{PeopleId,GroupId});
     }
 
     // Добавить человека в группу
-    public void addPeopleInGroup(String name) {
+    public void addPeopleInGroup(String name,String groupName) {
         String PeopleId = GetIdByName(name);
+        String GroupId = GetIdGroupByName(groupName);
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         ContentValues cv = new ContentValues();
 
         cv.put(ID_PEOPLE,PeopleId);
+        cv.put(ID_GROUP,GroupId);
 
         sqLiteDatabase.insert(PEOPLES_GROUP,null,cv);
     }
@@ -492,27 +516,36 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor;
         cursor = sqLiteDatabase.rawQuery(
                 "SELECT "
-                        + FULL_NAME
-                        + " FROM "
-                        + PEOPLE
-                        + " WHERE "
-                        + ID_PEOPLE
-                        + " !="
-                        + " (SELECT "
                         + ID_PEOPLE
                         + " FROM "
                         + PEOPLES_GROUP
                         + " WHERE "
                         + ID_GROUP
-                        + " =?)",new String[]{GroupId});
+                        + " > ? "
+                        + " OR "
+                        + ID_GROUP
+                        + " < ?"
+                ,new String[]{GroupId,GroupId});
         if(cursor.moveToFirst()){
-            int index = cursor.getColumnIndex(FULL_NAME);
+            int index = cursor.getColumnIndex(ID_PEOPLE);
             do{
-                String name = cursor.getString(index);
-                Peoples.add(new People(name));
+                String ID = cursor.getString(index);
+                Peoples.add(new People(GetNameByID(ID)));
             }while (cursor.moveToNext());
         }
-        cursor.close();
+        else
+            return getAllPeople();
+    cursor.close();
         return Peoples;
+    }
+    // Затычка
+    // Возвращает лист людей из фильтрованной группы
+    public ArrayList<People> getFilterGroupPeople(String text, String groupName) {
+        return new ArrayList<>();
+    }
+    // Затычка
+    // Возвращает лист групп подходящих по названию поиска
+    public ArrayList<Group> getGroupsFilter(String newText) {
+        return new ArrayList<>();
     }
 }

@@ -129,7 +129,7 @@ public class PeopleActivity extends AppCompatActivity {
                     intent.putExtra("name", String.valueOf(item.Name));
                     startActivity(intent);
                 } else {
-                    helper.addFromGroup(item.Name);
+                    helper.addFromGroup(item.Name,year,month,day);
                     Toast.makeText(PeopleActivity.this, "Я ещё не сделал так, что лови тост !!!",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -166,15 +166,21 @@ public class PeopleActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
 
                 EditText editText = view1.findViewById(R.id.text_edit_alertview);
-                if (tabLayout.getSelectedTabPosition() == 0)
+                if (tabLayout.getSelectedTabPosition() == 0) {
                     addNewPeople(editText.getText().toString());
-                else
+                    updatePeople();
+                }
+                else {
                     addNewGroup(editText.getText().toString());
+                    updateGroups();
+
+                }
 
             });
             AlertDialog alertDialog = builder.create();
 
             alertDialog.show();
+
         });
 
         Intent intent = getIntent();
@@ -230,7 +236,8 @@ public class PeopleActivity extends AppCompatActivity {
         });
 
         mSearchView.setOnCloseListener(() -> {
-
+            updateGroups();
+            updatePeople();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -253,15 +260,29 @@ public class PeopleActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.equals("")) {
-                    updatePeople();
+                    if (tabLayout.getSelectedTabPosition() == 0) {
+                        updatePeople();
+                    }
+                    else {
+                        updateGroups();
+                    }
                 } else {
-                    people_list.clear();
-                    people_list.addAll(helper.getPeopleFilter(newText));
-                    peopleFragment.update();
+
+                    if (tabLayout.getSelectedTabPosition() == 0) {
+                        people_list.clear();
+                        people_list.addAll(helper.getPeopleFilter(newText));
+                        peopleFragment.update();
+                    }
+                    else {
+                        group_list.clear();
+                        group_list.addAll(helper.getGroupsFilter(newText));
+                        groupsFragment.update();
+                    }
+
                 }
 
                 peopleFragment.setCounterText(people_list.size());
-
+                groupsFragment.setCounterText(group_list.size());
                 return false;
             }
         });

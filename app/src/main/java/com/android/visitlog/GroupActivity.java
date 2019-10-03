@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,7 +54,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
 
-                helper.removePeopleFromGroup(GroupName,item.Name);
+
             }
 
             @Override
@@ -64,6 +65,8 @@ public class GroupActivity extends AppCompatActivity {
 
         PeopleAdapter.RemoveListener removeListener = item -> {
             helper.removePeopleFromGroup(GroupName,item.Name);
+            update();
+
         };
 
 
@@ -74,12 +77,6 @@ public class GroupActivity extends AppCompatActivity {
         recyclerView.setAdapter(peopleAdapter);
         recyclerView.setFocusable(false);
         findViewById(R.id.temp).requestFocus();
-
-        peopleAdapter.notifyDataSetChanged();
-
-        textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
-                + getResources().getString(R.string.in) + " " + GroupName);
-
 
         toolbar = findViewById(R.id.toolbar_all_people);
         setSupportActionBar(toolbar);
@@ -130,20 +127,36 @@ public class GroupActivity extends AppCompatActivity {
 
             builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
                 for (int i = 0; i < newPeople.size(); i++) {
-                    helper.addPeopleInGroup(newPeople.get(i).Name);
+                    helper.addPeopleInGroup(newPeople.get(i).Name,GroupName);
+                    Log.e("tag0",newPeople.get(i).Name);
                 }
+
+                update();
             });
 
             AlertDialog alertDialog = builder.create();
-
             alertDialog.show();
-            peopleAdapter.notifyDataSetChanged();
 
         });
 
-
+        update();
     }
 
+    public void update(){
+        people_list.clear();
+        people_list.addAll(helper.getGroupMembers(GroupName));
+        peopleAdapter.notifyDataSetChanged();
+        textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
+                + getResources().getString(R.string.in) + " " + GroupName);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        update();
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -164,6 +177,8 @@ public class GroupActivity extends AppCompatActivity {
 
         mSearchView.setOnCloseListener(() -> {
 
+            update();
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -180,9 +195,12 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-//
+                Toast.makeText(GroupActivity.this,"Это что, селект из селекта из селекта ? это сколько ? 3 селектов ? на каждую букву?",Toast.LENGTH_LONG);
+                people_list.clear();
+                people_list.addAll(helper.getFilterGroupPeople(newText,GroupName));
 
-                textView.setText(people_list.size() + " " + getResources().getString(R.string.Members) + " in "+ GroupName);
+                textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
+                        + getResources().getString(R.string.in) + " " + GroupName);
 
                 return false;
             }
