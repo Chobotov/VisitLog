@@ -386,7 +386,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return groups;
     }
 
-
     //  Возвращает всех людей добавленных в эту группу
     public ArrayList<People> getGroupMembers(String groupName) {
        String GroupId = GetIdGroupByName(groupName);
@@ -414,9 +413,6 @@ public class DBHelper extends SQLiteOpenHelper {
        else
            Log.e("PG","Cursor is null!!!");
        cursor.close();
-
-
-
        return Peoples;
     }
 
@@ -512,8 +508,27 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
         ArrayList<People> Peoples = new ArrayList<>();
+        ArrayList<String> id = new ArrayList<>();
+        ArrayList<String> Group = new ArrayList<>();
 
         Cursor cursor;
+        cursor = sqLiteDatabase.rawQuery(
+                "SELECT "
+                + KEY_ID
+                + " FROM "
+                + PEOPLE,
+                null);
+        if (cursor.moveToFirst()) {
+
+            int index = cursor.getColumnIndex(KEY_ID);
+            do{
+                id.add(cursor.getString(index));
+            }while (cursor.moveToNext());
+        }
+        else {
+            return getAllPeople();
+        }
+
         cursor = sqLiteDatabase.rawQuery(
                 "SELECT "
                         + ID_PEOPLE
@@ -521,21 +536,26 @@ public class DBHelper extends SQLiteOpenHelper {
                         + PEOPLES_GROUP
                         + " WHERE "
                         + ID_GROUP
-                        + " > ? "
-                        + " OR "
-                        + ID_GROUP
-                        + " < ?"
-                ,new String[]{GroupId,GroupId});
-        if(cursor.moveToFirst()){
+                        + " =?",
+                new String[]{GroupId});
+        if (cursor.moveToFirst()) {
+
             int index = cursor.getColumnIndex(ID_PEOPLE);
             do{
-                String ID = cursor.getString(index);
-                Peoples.add(new People(GetNameByID(ID)));
+                Group.add(cursor.getString(index));
             }while (cursor.moveToNext());
+
+            for(int i = 0; i < id.size();i++){
+                if(!Group.contains(id.get(i))){
+                    Peoples.add(new People(GetNameByID(id.get(i))));
+                }
+            }
         }
-        else
+        else{
             return getAllPeople();
-    cursor.close();
+        }
+
+        cursor.close();
         return Peoples;
     }
     // Затычка
@@ -546,6 +566,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Затычка
     // Возвращает лист групп подходящих по названию поиска
     public ArrayList<Group> getGroupsFilter(String newText) {
+
         return new ArrayList<>();
     }
 }
