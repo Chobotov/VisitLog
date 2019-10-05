@@ -463,38 +463,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return Peoples;
     }
 
-    // Добавляет всех людей из выбранной группы на текущуюю выбранную дату
-//    public void addFromGroup(String groupname,String year,String month,String day) {
-//        String id = GetIdGroupByName(groupname);
-//
-//        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-//
-//        Cursor cursor = sqLiteDatabase.rawQuery(
-//                "SELECT "
-//                        + FULL_NAME
-//                        + " FROM "
-//                        + PEOPLE
-//                        + " WHERE "
-//                        + KEY_ID
-//                        + " = "
-//                        + "(SELECT "
-//                        + ID_PEOPLE
-//                        + " FROM "
-//                        + PEOPLES_GROUP
-//                        + " WHERE "
-//                        + ID_GROUP
-//                        + " =?)",new String[]{id});
-//
-//        if(cursor.moveToFirst()){
-//            int index = cursor.getColumnIndex(FULL_NAME);
-//            do{
-//                String name = cursor.getString(index);
-//                SetDataInDataTable(name,year,month,day);
-//            }while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//    }
-
     // Удаляет человека из группы
     public void removePeopleFromGroup(String groupName ,String peopleName) {
         String PeopleId = GetIdByName(peopleName);
@@ -505,7 +473,18 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.delete(PEOPLES_GROUP,
                 ID_PEOPLE + " =?" + " and " + ID_GROUP + " =?",
                 new String[]{PeopleId,GroupId});
-        Log.d("delete","Удалено");
+        Log.e("delete",PeopleId + " " + GroupId);
+    }
+    // Удаляет человека из всех группы
+    public void removePeopleFromGroup(String peopleName) {
+        String PeopleId = GetIdByName(peopleName);
+
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        sqLiteDatabase.delete(PEOPLES_GROUP,
+                ID_PEOPLE + " =?" ,
+                new String[]{PeopleId});
+        Log.d("delete",PeopleId );
     }
 
     // Добавить человека в группу

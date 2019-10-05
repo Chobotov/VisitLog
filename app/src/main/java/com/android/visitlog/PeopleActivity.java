@@ -110,7 +110,7 @@ public class PeopleActivity extends AppCompatActivity {
 
         PeopleAdapter.RemoveListener removeListener = item -> {
             helper.DeleteAllDataFromDataTable(item.Name);
-            helper.removePeopleFromGroup(item.Group,item.Name);
+            helper.removePeopleFromGroup(item.Name);
             helper.removePeople(item.Name);
             people_list.remove(item);
             peopleFragment.update();
