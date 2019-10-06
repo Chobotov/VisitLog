@@ -94,7 +94,7 @@ public class PeopleFragment extends Fragment {
     }
     public boolean getRemoveVisible(){
         if(adapter!= null){
-           return adapter.getRemoveVisible();
+           return adapter.isRemoveVisible();
         }
         return false;
     }

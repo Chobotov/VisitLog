@@ -2,6 +2,7 @@ package com.android.visitlog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -69,14 +72,11 @@ public class PeopleActivity extends AppCompatActivity {
             updatePeople();
         }
 
-
         PeopleAdapter.ClickListener clickItemPeople = new PeopleAdapter.ClickListener() {
 
             @Override
             public void onLongItemClick(People item) {
                 if (editMode) {
-
-                    //helper.DeleteAllDataFromDataTable(item.Name);
                     helper.removePeople(item.Name);
 
                     people_list.remove(item);
@@ -109,8 +109,6 @@ public class PeopleActivity extends AppCompatActivity {
         };
 
         PeopleAdapter.RemoveListener removeListener = item -> {
-            //helper.DeleteAllDataFromDataTable(item.Name);
-            //helper.removePeopleFromAllGroup(item.Name);
             helper.removePeople(item.Name);
             people_list.remove(item);
             peopleFragment.update();
@@ -130,16 +128,7 @@ public class PeopleActivity extends AppCompatActivity {
                     groupsFragment.update();
                     groupsFragment.setCounterText(group_list.size());
                 }
-            }
-
-            @Override
-            public void onItemClick(Group item) {
-                if (editMode) {
-                    Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
-                    intent.putExtra("name", String.valueOf(item.Name));
-                    startActivity(intent);
-                } else {
-
+                else{
                     ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
 
                     for (People i: peopleInGroup) {
@@ -157,9 +146,73 @@ public class PeopleActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
             }
+
+            @Override
+            public void onItemClick(Group item) {
+                if (editMode) {
+                    Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
+                    intent.putExtra("name", String.valueOf(item.Name));
+                    startActivity(intent);
+                } else {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
+
+                    ArrayList<People> newPeople = helper.getGroupMembers(item.Name);
+
+                    builder.setCancelable(true);
+
+                    View view1 = LayoutInflater.from(PeopleActivity.this).inflate(R.layout.add_group_people, null);
+
+                    builder.setView(view1);
+
+                    RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
+                    alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
+
+
+
+                    PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
+                        @Override
+                        public void onLongItemClick(People item) {
+                        }
+
+                        @Override
+                        public void onItemClick(People item) {
+                            if(!newPeople.contains(item)){
+                                newPeople.add(item);
+
+                                Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                newPeople.remove(item);
+                                Toast.makeText(view1.getContext(),item.Name + " " + getResources().getString(R.string.hasRemoved),Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    };
+
+                    PeopleAdapter alertAdapter = new PeopleAdapter(PeopleActivity.this,alertListener,newPeople);
+
+                    alertAdapter.setCheckBoxVisible(true);
+                    alertAdapter.setCheckBox(true);
+
+                    alertRecycler.setLayoutManager(new LinearLayoutManager(PeopleActivity.this));
+                    alertRecycler.setAdapter(alertAdapter);
+
+
+                    builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
+                        for (People i: newPeople) {
+                            if(!helper.containsDataPeople(i,year,month,day)){
+                                helper.SetDataInDataTable(i.Name, year, month, day);
+                            }
+                        }
+
+                    });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            }
         };
-
-
 
         peopleFragment = new PeopleFragment(clickItemPeople,removeListener, people_list);
         groupsFragment = new GroupsFragment(clickItemGroups, group_list);

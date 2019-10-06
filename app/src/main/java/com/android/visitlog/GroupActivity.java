@@ -54,7 +54,6 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
 
-
             }
 
             @Override
@@ -98,6 +97,9 @@ public class GroupActivity extends AppCompatActivity {
 
             RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
             alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
+
+
+
             PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
                 @Override
                 public void onLongItemClick(People item) {
@@ -107,6 +109,7 @@ public class GroupActivity extends AppCompatActivity {
                 public void onItemClick(People item) {
                     if(!newPeople.contains(item)){
                         newPeople.add(item);
+
                         Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
                     }
                     else {
@@ -119,7 +122,7 @@ public class GroupActivity extends AppCompatActivity {
 
             PeopleAdapter alertAdapter = new PeopleAdapter(this,alertListener,helper.getAllPeopleNotInGroup(GroupName));
 
-
+            alertAdapter.setCheckBoxVisible(true);
 
             alertRecycler.setLayoutManager(new LinearLayoutManager(this));
             alertRecycler.setAdapter(alertAdapter);
