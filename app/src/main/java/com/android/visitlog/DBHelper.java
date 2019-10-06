@@ -136,11 +136,11 @@ public class DBHelper extends SQLiteOpenHelper {
                         + " FROM "
                         + GROUPS
                         + " WHERE "
-                        + ID_GROUP
+                        + KEY_ID
                         +" =?",
                 new String[]{id});
         if(cursor.moveToFirst()){
-            int index = cursor.getColumnIndex(FULL_NAME);
+            int index = cursor.getColumnIndex(GROUP_NAME);
             do {
                 group = cursor.getString(index);
             }while (cursor.moveToNext());
@@ -325,7 +325,13 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT "
                 + ID_PEOPLE +" FROM "
                 + DATA_PEOPLE + " WHERE "
-                + ID_PEOPLE + " =?", new String[]{id});
+                + ID_PEOPLE + " =? "
+                + " AND "
+                + YEAR + " =? "
+                + " AND "
+                + MONTH + " =? "
+                + " AND "
+                + DAY + " =?", new String[]{id,year,month,day});
 
         if(cursor.moveToFirst())
         {
@@ -649,6 +655,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String GroupID = "";
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         Cursor cursor;
+        ArrayList<String>groupsID = new ArrayList<>();
 
         cursor = sqLiteDatabase.rawQuery(
                 " SELECT "
@@ -663,6 +670,7 @@ public class DBHelper extends SQLiteOpenHelper {
             int index = cursor.getColumnIndex(ID_GROUP);
             do{
                  GroupID = cursor.getString(index);
+                 groupsID.add(GroupID);
                  Log.d("GRID",GroupID);
             }while (cursor.moveToNext());
         }
@@ -670,21 +678,14 @@ public class DBHelper extends SQLiteOpenHelper {
             return "";
         }
 
-        cursor = sqLiteDatabase.rawQuery(
-                " SELECT "
-                        + GROUP_NAME
-                        + " FROM "
-                        + GROUPS
-                        + " WHERE "
-                        + KEY_ID
-                        + " =?",
-                new String[]{GroupID});
-
-        if (cursor.moveToFirst()){
-            int index = cursor.getColumnIndex(GROUP_NAME);
-            do{
-                GroupName = GroupName + " " + cursor.getString(index)+" ";
-            }while (cursor.moveToNext());
+        if(groupsID.size()>1){
+            GroupName = GetGroupByID(groupsID.get(0));
+            for(int i =1;i<groupsID.size();i++){
+                GroupName += " / " + GetGroupByID(groupsID.get(i));
+            }
+        }
+        else {
+            GroupName = GetGroupByID(groupsID.get(0));
         }
         cursor.close();
         return GroupName;
