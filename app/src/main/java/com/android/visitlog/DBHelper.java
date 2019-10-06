@@ -102,7 +102,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public String GetNameByID(String id){
-        String name = "null";
+        String name = "";
 
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
@@ -214,12 +214,15 @@ public class DBHelper extends SQLiteOpenHelper {
     //Удаление имени из таблицы PEOPLE
     public void removePeople(String name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete(DATA_PEOPLE,ID_PEOPLE + " = ?" , new String[]{GetIdByName(name)});
+        sqLiteDatabase.delete(PEOPLES_GROUP,ID_PEOPLE + " = ?" , new String[]{GetIdByName(name)});
         sqLiteDatabase.delete(PEOPLE,FULL_NAME + " = ?" , new String[]{name});
     }
 
     //Удаление имени группы из таблицы GROUPS
     public void removeGroup(String name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.delete(PEOPLES_GROUP,ID_GROUP + " = ?" , new String[]{GetIdGroupByName(name)});
         sqLiteDatabase.delete(GROUPS,GROUP_NAME + " = ?" , new String[]{name});
     }
 
@@ -234,19 +237,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + " AND " + YEAR + " = ? "
                 + " AND " + MONTH + " = ? "
                 + " AND " + DAY + " = ? ", new String[]{id,year,month,day});
-
-    }
-
-    //Удаление всех дат выбранного человека
-    public void DeleteAllDataFromDataTable(String Name){
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-
-        String id  = GetIdByName(Name);
-
-        sqLiteDatabase.delete(DATA_PEOPLE,
-                ID_PEOPLE + "= ? "
-                       , new String[]{id});
-
     }
 
     //Добавление время Пришел в DATA_PEOPLE
@@ -264,7 +254,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "AND " + YEAR + "=? "
                 + "AND " +  MONTH + "=? "
                 + "AND " +  DAY + "=? ",new String[]{id,year,month,day});
-
     }
 
     //Добавление время Ушел в DATA_PEOPLE
@@ -282,7 +271,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "AND " + YEAR + "=? "
                 + "AND " +  MONTH + "=? "
                 + "AND " +  DAY + "=? ",new String[]{id,year,month,day});
-
     }
 
     public ArrayList<People> getAllPeople(){
@@ -378,6 +366,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(GROUP_NAME,name);
         sqLiteDatabase.insert(GROUPS,null,cv);
     }
+
     //Проверка наличия группы в БД
     public boolean containsGroup(Group group) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
@@ -481,17 +470,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 new String[]{PeopleId,GroupId});
         Log.e("delete",PeopleId + " " + GroupId);
     }
-    // Удаляет человека из всех группы
-    public void removePeopleFromGroup(String peopleName) {
-        String PeopleId = GetIdByName(peopleName);
-
-        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-
-        sqLiteDatabase.delete(PEOPLES_GROUP,
-                ID_PEOPLE + " =?" ,
-                new String[]{PeopleId});
-        Log.d("delete",PeopleId );
-    }
 
     // Добавить человека в группу
     public void addPeopleInGroup(String name,String groupName) {
@@ -566,7 +544,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return Peoples;
     }
-    // Затычка
+
+
     // Возвращает лист людей из фильтрованной группы
     public ArrayList<People> getFilterGroupPeople(String newtext, String groupName) {
         String GroupID = GetIdByName(groupName);
@@ -622,7 +601,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         return people;
     }
-    // Затычка
+
+
     // Возвращает лист групп подходящих по названию поиска
     public ArrayList<Group> getGroupsFilter(String newText) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();

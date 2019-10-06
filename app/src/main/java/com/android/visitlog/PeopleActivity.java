@@ -76,7 +76,7 @@ public class PeopleActivity extends AppCompatActivity {
             public void onLongItemClick(People item) {
                 if (editMode) {
 
-                    helper.DeleteAllDataFromDataTable(item.Name);
+                    //helper.DeleteAllDataFromDataTable(item.Name);
                     helper.removePeople(item.Name);
 
                     people_list.remove(item);
@@ -109,8 +109,8 @@ public class PeopleActivity extends AppCompatActivity {
         };
 
         PeopleAdapter.RemoveListener removeListener = item -> {
-            helper.DeleteAllDataFromDataTable(item.Name);
-            helper.removePeopleFromGroup(item.Name);
+            //helper.DeleteAllDataFromDataTable(item.Name);
+            //helper.removePeopleFromAllGroup(item.Name);
             helper.removePeople(item.Name);
             people_list.remove(item);
             peopleFragment.update();
