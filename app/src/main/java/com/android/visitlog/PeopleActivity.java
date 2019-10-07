@@ -48,6 +48,7 @@ public class PeopleActivity extends AppCompatActivity {
 
     boolean editMode = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,67 +150,10 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(Group item) {
-                if (editMode) {
+                if (!editMode) {
                     Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
                     intent.putExtra("name", String.valueOf(item.Name));
                     startActivity(intent);
-                } else {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
-
-                    ArrayList<People> newPeople = helper.getGroupMembers(item.Name);
-
-                    builder.setCancelable(true);
-
-                    View view1 = LayoutInflater.from(PeopleActivity.this).inflate(R.layout.add_group_people, null);
-
-                    builder.setView(view1);
-
-                    RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
-                    alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
-
-
-
-                    PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
-                        @Override
-                        public void onLongItemClick(People item) {
-                        }
-
-                        @Override
-                        public void onItemClick(People item) {
-                            if(!newPeople.contains(item)){
-                                newPeople.add(item);
-
-                                Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                newPeople.remove(item);
-                                Toast.makeText(view1.getContext(),item.Name + " " + getResources().getString(R.string.hasRemoved),Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    };
-
-                    PeopleAdapter alertAdapter = new PeopleAdapter(PeopleActivity.this,alertListener,newPeople);
-
-                    alertAdapter.setCheckBoxVisible(true);
-                    alertAdapter.setCheckBox(true);
-
-                    alertRecycler.setLayoutManager(new LinearLayoutManager(PeopleActivity.this));
-                    alertRecycler.setAdapter(alertAdapter);
-
-
-                    builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
-                        for (People i: newPeople) {
-                            if(!helper.containsDataPeople(i,year,month,day)){
-                                helper.SetDataInDataTable(i.Name, year, month, day);
-                            }
-                        }
-
-                    });
-
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
                 }
             }
         };

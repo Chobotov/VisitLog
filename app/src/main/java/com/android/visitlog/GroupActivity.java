@@ -17,6 +17,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class GroupActivity extends AppCompatActivity {
@@ -28,12 +30,18 @@ public class GroupActivity extends AppCompatActivity {
     ArrayList<People> people_list;
 
     MenuItem search;
+    MenuItem edit;
 
     Toolbar toolbar;
+
+    FloatingActionButton floatingActionButton;
 
     DBHelper helper;
 
     String GroupName;
+
+    boolean editMode;
+    boolean selectMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +61,9 @@ public class GroupActivity extends AppCompatActivity {
         PeopleAdapter.ClickListener clickListener = new PeopleAdapter.ClickListener() {
             @Override
             public void onLongItemClick(People item) {
-
+                if(!selectMode && !editMode){
+                    
+                }
             }
 
             @Override
@@ -84,64 +94,66 @@ public class GroupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(null);
 
 
-        findViewById(R.id.floatingActionButton).setOnClickListener(item->{
-            AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
 
-            ArrayList<People> newPeople = new ArrayList<>();
+        floatingActionButton.setOnClickListener(item->{
 
-            builder.setCancelable(true);
+           AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
+           ArrayList<People> newPeople = new ArrayList<>();
+           builder.setCancelable(true);
+           View view1 = LayoutInflater.from(GroupActivity.this).inflate(R.layout.add_group_people, null);
+           builder.setView(view1);
 
-            View view1 = LayoutInflater.from(GroupActivity.this).inflate(R.layout.add_group_people, null);
-
-            builder.setView(view1);
-
-            RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
-            alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
-
+           RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
+           alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
 
 
-            PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
-                @Override
-                public void onLongItemClick(People item) {
-                }
 
-                @Override
-                public void onItemClick(People item) {
-                    if(!newPeople.contains(item)){
-                        newPeople.add(item);
+           PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
+               @Override
+               public void onLongItemClick(People item) {
+               }
 
-                        Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        newPeople.remove(item);
-                        Toast.makeText(view1.getContext(),item.Name + " " + getResources().getString(R.string.hasRemoved),Toast.LENGTH_SHORT).show();
+               @Override
+               public void onItemClick(People item) {
+                   if(!newPeople.contains(item)){
+                       newPeople.add(item);
 
-                    }
-                }
-            };
-
-            PeopleAdapter alertAdapter = new PeopleAdapter(this,alertListener,helper.getAllPeopleNotInGroup(GroupName));
-
-            alertAdapter.setCheckBoxVisible(true);
-
-            alertRecycler.setLayoutManager(new LinearLayoutManager(this));
-            alertRecycler.setAdapter(alertAdapter);
+                       Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
+                   }
+                   else {
 
 
-            builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
-                for (int i = 0; i < newPeople.size(); i++) {
-                    helper.addPeopleInGroup(newPeople.get(i).Name,GroupName);
-                    Log.e("tag0",newPeople.get(i).Name);
-                }
 
-                update();
-            });
+                       newPeople.remove(item);
+                       Toast.makeText(view1.getContext(),item.Name + " " + getResources().getString(R.string.hasRemoved),Toast.LENGTH_SHORT).show();
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+                   }
+               }
+           };
 
-        });
+           PeopleAdapter alertAdapter = new PeopleAdapter(this,alertListener,helper.getAllPeopleNotInGroup(GroupName));
 
+           alertAdapter.setCheckBoxVisible(true);
+
+           alertRecycler.setLayoutManager(new LinearLayoutManager(this));
+           alertRecycler.setAdapter(alertAdapter);
+
+
+           builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
+               for (int i = 0; i < newPeople.size(); i++) {
+                   helper.addPeopleInGroup(newPeople.get(i).Name,GroupName);
+                   Log.e("tag0",newPeople.get(i).Name);
+               }
+
+               update();
+           });
+
+           AlertDialog alertDialog = builder.create();
+           alertDialog.show();
+
+       });
+        floatingActionButton.hide();
         update();
     }
 
@@ -164,9 +176,21 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.group_memders_menu, menu);
+        getMenuInflater().inflate(R.menu.people_activity_menu, menu);
         search = menu.findItem(R.id.app_bar_search);
+        edit = menu.findItem(R.id.editMod);
 
+        edit.setOnMenuItemClickListener(menuItem -> {
+            if (editMode) {
+                floatingActionButton.hide();
+                editMode = !editMode;
+            } else {
+                edit.setVisible(false);
+                floatingActionButton.show();
+                editMode = !editMode;
+            }
+            return false;
+        });
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
@@ -198,7 +222,6 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                //Toast.makeText(GroupActivity.this,"Это что, селект из селекта из селекта ? это сколько ? 3 селектов ? на каждую букву?",Toast.LENGTH_LONG);
                 people_list.clear();
                 people_list.addAll(helper.getFilterGroupPeople(newText,GroupName));
 

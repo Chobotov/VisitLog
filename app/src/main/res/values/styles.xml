@@ -23,6 +23,7 @@
     <style name="Floating" parent="AppTheme">
         <item name="colorAccent">@color/floatingButtonBG</item>
         <item name="colorPrimary">@color/floatingButtonPlus</item>
+        <item name="colorPrimaryDark">@color/floatingButtonPlus</item>
     </style>
 
    >

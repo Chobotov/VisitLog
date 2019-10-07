@@ -148,7 +148,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
     public void setCheckBox(boolean checkBox) {
+
         this.checkBox = checkBox;
+        notifyDataSetChanged();
     }
 
 
