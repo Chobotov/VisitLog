@@ -135,17 +135,27 @@ public class GroupActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(item -> {
 
             if (selectMode) {
+                selectMode = !selectMode;
+                selectAll = false;
 
-                for (int i = 0; i < selectedPeople.size(); i++) {
-                    helper.addPeopleInGroup(selectedPeople.get(i).Name, GroupName);
-                    Log.e("tag0", selectedPeople.get(i).Name);
-                }
+                search.setVisible(true);
+
+                peopleAdapter.setCheckBox(selectMode);
+                peopleAdapter.setCheckBoxVisible(selectMode);
+                itemSelectedMode.setVisible(selectMode);
+
+                floatingActionButton.hide();
+                edit.setVisible(true);
+
 
                 for (People i: selectedPeople) {
                     if(!helper.containsDataPeople(i,year,month,day)){
                         helper.SetDataInDataTable(i.Name, year, month, day);
                     }
                 }
+                updateIconSelectAllBox();
+
+                Toast.makeText(GroupActivity.this,"Ну добавил ты и всех на дату молодец Чё тебе ещё ?",Toast.LENGTH_SHORT).show();
 
             } else {
 
@@ -184,10 +194,11 @@ public class GroupActivity extends AppCompatActivity {
                 PeopleAdapter alertAdapter = new PeopleAdapter(this, alertListener, helper.getAllPeopleNotInGroup(GroupName));
 
                 builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
-                    for (int i = 0; i < newPeople.size(); i++) {
-                        helper.addPeopleInGroup(newPeople.get(i).Name, GroupName);
-                        Log.e("tag0", newPeople.get(i).Name);
+                    for (People i : newPeople) {
+                        helper.addPeopleInGroup(i.Name, GroupName);
+                        Log.e("tag0", i.Name);
                     }
+                    update();
                 });
                 alertAdapter.setCheckBoxVisible(true);
 
@@ -348,7 +359,7 @@ public class GroupActivity extends AppCompatActivity {
 
             } else if (selectMode) {
                 selectMode = !selectMode;
-
+                selectAll = false;
                 search.setVisible(true);
 
                 peopleAdapter.setCheckBox(selectMode);

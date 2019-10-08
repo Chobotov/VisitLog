@@ -94,14 +94,13 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public void onItemClick(People item) {
                 if (!editMode) {
-                    if(!helper.containsDataPeople(item,year,month,day)){
+                    if (!helper.containsDataPeople(item, year, month, day)) {
                         helper.SetDataInDataTable(item.Name, year, month, day);
 
                         Toast.makeText(PeopleActivity.this,
                                 item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
                                 Toast.LENGTH_SHORT).show();
-                    }
-                    else{
+                    } else {
                         Toast.makeText(PeopleActivity.this,
                                 item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
                                 Toast.LENGTH_SHORT).show();
@@ -130,19 +129,19 @@ public class PeopleActivity extends AppCompatActivity {
                     group_list.remove(item);
                     groupsFragment.update();
                     groupsFragment.setCounterText(group_list.size());
-                }
-                else{
+
+                } else {
                     ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
 
-                    for (People i: peopleInGroup) {
-                        if(!helper.containsDataPeople(i,year,month,day)){
+                    for (People i : peopleInGroup) {
+                        if (!helper.containsDataPeople(i, year, month, day)) {
                             helper.SetDataInDataTable(i.Name, year, month, day);
                         }
                     }
 
                     Toast.makeText(PeopleActivity.this,
                             getResources().getString(R.string.addGroupDate1) + " "
-                                    + item.Name  + " "
+                                    + item.Name + " "
                                     + getResources().getString(R.string.addGroupDate2) + " "
                                     + day + "." + month + "." + year
                             ,
@@ -163,7 +162,7 @@ public class PeopleActivity extends AppCompatActivity {
             }
         };
 
-        peopleFragment = new PeopleFragment(clickItemPeople,removeListener, people_list);
+        peopleFragment = new PeopleFragment(clickItemPeople, removeListener, people_list);
         groupsFragment = new GroupsFragment(clickItemGroups, group_list);
 
         pageAdapter.AddFragment(peopleFragment, getResources().getString(R.string.People));
@@ -194,8 +193,7 @@ public class PeopleActivity extends AppCompatActivity {
                 if (tabLayout.getSelectedTabPosition() == 0) {
                     addNewPeople(editText.getText().toString());
                     updatePeople();
-                }
-                else {
+                } else {
                     addNewGroup(editText.getText().toString());
                     updateGroups();
 
@@ -235,8 +233,7 @@ public class PeopleActivity extends AppCompatActivity {
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
 
-        itemCheckBox.setOnMenuItemClickListener(item-> {
-
+        itemCheckBox.setOnMenuItemClickListener(item -> {
 
 
             return false;
@@ -294,8 +291,7 @@ public class PeopleActivity extends AppCompatActivity {
                 if (newText.equals("")) {
                     if (tabLayout.getSelectedTabPosition() == 0) {
                         updatePeople();
-                    }
-                    else {
+                    } else {
                         updateGroups();
                     }
                 } else {
@@ -304,8 +300,7 @@ public class PeopleActivity extends AppCompatActivity {
                         people_list.clear();
                         people_list.addAll(helper.getPeopleFilter(newText));
                         peopleFragment.update();
-                    }
-                    else {
+                    } else {
                         group_list.clear();
                         group_list.addAll(helper.getGroupsFilter(newText));
                         groupsFragment.update();
@@ -334,7 +329,7 @@ public class PeopleActivity extends AppCompatActivity {
                 editMode = !editMode;
                 edit.setVisible(true);
 
-            }else {
+            } else {
                 finish();
             }
             return true;
