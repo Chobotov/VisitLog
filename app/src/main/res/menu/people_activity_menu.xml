@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_search_black_24dp"
         android:title="@string/Search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/editMod"
         android:enabled="true"

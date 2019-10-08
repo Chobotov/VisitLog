@@ -11,13 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".People_Information"></activity>
+        <activity android:name=".People_Information">
+
+        </activity>
         <activity
             android:name=".GroupActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".PeopleActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

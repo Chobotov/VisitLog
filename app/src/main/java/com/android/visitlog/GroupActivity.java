@@ -79,10 +79,18 @@ public class GroupActivity extends AppCompatActivity {
                     selectMode = true;
                     peopleAdapter.setCheckBoxVisible(selectMode);
                     peopleAdapter.setCheckBox(selectAll);
+
+                    peopleAdapter.setCheckBox(item);
+                    selectedPeople.add(item);
+
                     floatingActionButton.show();
+
                     search.setVisible(!selectMode);
+
                     edit.setVisible(!selectMode);
+
                     itemSelectedMode.setVisible(selectMode);
+
                 }
             }
 
@@ -361,6 +369,7 @@ public class GroupActivity extends AppCompatActivity {
                 selectMode = !selectMode;
                 selectAll = false;
                 search.setVisible(true);
+                updateIconSelectAllBox();
 
                 peopleAdapter.setCheckBox(selectMode);
                 peopleAdapter.setCheckBoxVisible(selectMode);
