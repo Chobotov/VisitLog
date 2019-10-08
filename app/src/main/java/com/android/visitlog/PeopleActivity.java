@@ -49,7 +49,6 @@ public class PeopleActivity extends AppCompatActivity {
     String day;
 
     boolean editMode = false;
-    boolean selectedAllSSSSS = false;
 
 
     @Override
@@ -156,6 +155,9 @@ public class PeopleActivity extends AppCompatActivity {
                 if (!editMode) {
                     Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
                     intent.putExtra("name", String.valueOf(item.Name));
+                    intent.putExtra("year", String.valueOf(year));
+                    intent.putExtra("month", String.valueOf(month));
+                    intent.putExtra("day", String.valueOf(day));
                     startActivity(intent);
                 }
             }
@@ -326,11 +328,13 @@ public class PeopleActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
 
             if (editMode) {
+
                 peopleFragment.setRemoveVisible(false);
                 floatingActionButton.hide();
                 editMode = !editMode;
                 edit.setVisible(true);
-            } else {
+
+            }else {
                 finish();
             }
             return true;

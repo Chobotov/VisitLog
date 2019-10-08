@@ -18,11 +18,11 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/itemCheckBox"
-        android:title="@string/SelectAll"
         android:enabled="true"
-        android:icon="@drawable/ic_mode_edit_black_24dp"
-        tools:icon="@drawable/ic_check_box_outline_blank_black_24dp"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_check_box_outline_blank_black_24dp"
+        android:title="@string/SelectAll"
+        app:showAsAction="ifRoom"
+        tools:icon="@drawable/ic_check_box_outline_blank_black_24dp" />
 
 
 </menu>

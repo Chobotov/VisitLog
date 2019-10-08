@@ -28,9 +28,11 @@ public class GroupActivity extends AppCompatActivity {
     TextView textView;
 
     ArrayList<People> people_list;
+    ArrayList<People> selectedPeople;
 
     MenuItem search;
     MenuItem edit;
+    MenuItem itemSelectedMode;
 
     Toolbar toolbar;
 
@@ -42,6 +44,11 @@ public class GroupActivity extends AppCompatActivity {
 
     boolean editMode;
     boolean selectMode = false;
+    boolean selectAll = false;
+
+    String year;
+    String month;
+    String day;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,10 @@ public class GroupActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         GroupName = intent.getStringExtra("name");
+        year = intent.getStringExtra("year");
+        month = intent.getStringExtra("month");
+        day = intent.getStringExtra("day");
+
 
         recyclerView = findViewById(R.id.alert_people_recyclerView);
         textView = findViewById(R.id.countPeople);
@@ -57,29 +68,53 @@ public class GroupActivity extends AppCompatActivity {
         helper = new DBHelper(this);
 
         people_list = helper.getGroupMembers(GroupName);
+        selectedPeople = new ArrayList<>();
+
 
         PeopleAdapter.ClickListener clickListener = new PeopleAdapter.ClickListener() {
             @Override
             public void onLongItemClick(People item) {
-                if(!selectMode && !editMode){
+                if (!selectMode && !editMode) {
+
                     selectMode = true;
+                    peopleAdapter.setCheckBoxVisible(selectMode);
+                    peopleAdapter.setCheckBox(selectAll);
+                    floatingActionButton.show();
+                    search.setVisible(!selectMode);
+                    edit.setVisible(!selectMode);
+                    itemSelectedMode.setVisible(selectMode);
                 }
             }
 
             @Override
             public void onItemClick(People item) {
+                if (selectMode) {
+                    if (!selectedPeople.contains(item)) {
+                        selectedPeople.add(item);
 
+                        if (selectedPeople.size() == people_list.size()) {
+                            selectAll = true;
+                        }
+                        updateIconSelectAllBox();
+
+                    } else {
+
+                        selectedPeople.remove(item);
+                        selectAll = false;
+                        updateIconSelectAllBox();
+                    }
+                }
             }
         };
 
         PeopleAdapter.RemoveListener removeListener = item -> {
-            helper.removePeopleFromGroup(GroupName,item.Name);
+            helper.removePeopleFromGroup(GroupName, item.Name);
             update();
 
         };
 
 
-        peopleAdapter = new PeopleAdapter(this,clickListener,removeListener ,people_list);
+        peopleAdapter = new PeopleAdapter(this, clickListener, removeListener, people_list);
         peopleAdapter.setRemoveVisible(false);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -97,68 +132,85 @@ public class GroupActivity extends AppCompatActivity {
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
 
-        floatingActionButton.setOnClickListener(item->{
+        floatingActionButton.setOnClickListener(item -> {
 
-           AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
-           ArrayList<People> newPeople = new ArrayList<>();
-           builder.setCancelable(true);
-           View view1 = LayoutInflater.from(GroupActivity.this).inflate(R.layout.add_group_people, null);
-           builder.setView(view1);
+            if (selectMode) {
 
-           RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
-           alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
+                for (int i = 0; i < selectedPeople.size(); i++) {
+                    helper.addPeopleInGroup(selectedPeople.get(i).Name, GroupName);
+                    Log.e("tag0", selectedPeople.get(i).Name);
+                }
 
+                for (People i: selectedPeople) {
+                    if(!helper.containsDataPeople(i,year,month,day)){
+                        helper.SetDataInDataTable(i.Name, year, month, day);
+                    }
+                }
 
+            } else {
 
-           PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
-               @Override
-               public void onLongItemClick(People item) {
-               }
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupActivity.this);
+                ArrayList<People> newPeople = new ArrayList<>();
+                builder.setCancelable(true);
+                View view1 = LayoutInflater.from(GroupActivity.this).inflate(R.layout.add_group_people, null);
+                builder.setView(view1);
 
-               @Override
-               public void onItemClick(People item) {
-                   if(!newPeople.contains(item)){
-                       newPeople.add(item);
-
-                       Toast.makeText(view1.getContext(),item.Name + " " +getResources().getString(R.string.willHasAdd),Toast.LENGTH_SHORT).show();
-                   }
-                   else {
-
+                RecyclerView alertRecycler = view1.findViewById(R.id.alert_people_recyclerView);
+                alertRecycler.setBackgroundColor(getResources().getColor(R.color.bg));
 
 
-                       newPeople.remove(item);
-                       Toast.makeText(view1.getContext(),item.Name + " " + getResources().getString(R.string.hasRemoved),Toast.LENGTH_SHORT).show();
+                PeopleAdapter.ClickListener alertListener = new PeopleAdapter.ClickListener() {
+                    @Override
+                    public void onLongItemClick(People item) {
 
-                   }
-               }
-           };
+                    }
 
-           PeopleAdapter alertAdapter = new PeopleAdapter(this,alertListener,helper.getAllPeopleNotInGroup(GroupName));
+                    @Override
+                    public void onItemClick(People item) {
+                        if (!newPeople.contains(item)) {
+                            newPeople.add(item);
 
-           alertAdapter.setCheckBoxVisible(true);
-
-           alertRecycler.setLayoutManager(new LinearLayoutManager(this));
-           alertRecycler.setAdapter(alertAdapter);
+                            Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
+                        } else {
 
 
-           builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
-               for (int i = 0; i < newPeople.size(); i++) {
-                   helper.addPeopleInGroup(newPeople.get(i).Name,GroupName);
-                   Log.e("tag0",newPeople.get(i).Name);
-               }
+                            newPeople.remove(item);
+                            Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
 
-               update();
-           });
+                        }
+                    }
+                };
 
-           AlertDialog alertDialog = builder.create();
-           alertDialog.show();
+                PeopleAdapter alertAdapter = new PeopleAdapter(this, alertListener, helper.getAllPeopleNotInGroup(GroupName));
 
-       });
+                builder.setPositiveButton(getResources().getString(R.string.Add), (dialogInterface, a) -> {
+                    for (int i = 0; i < newPeople.size(); i++) {
+                        helper.addPeopleInGroup(newPeople.get(i).Name, GroupName);
+                        Log.e("tag0", newPeople.get(i).Name);
+                    }
+                });
+                alertAdapter.setCheckBoxVisible(true);
+
+                alertRecycler.setLayoutManager(new LinearLayoutManager(this));
+                alertRecycler.setAdapter(alertAdapter);
+
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                update();
+
+            }
+        });
+
         floatingActionButton.hide();
         update();
+
+
+
     }
 
-    public void update(){
+    public void update() {
         people_list.clear();
         people_list.addAll(helper.getGroupMembers(GroupName));
         peopleAdapter.notifyDataSetChanged();
@@ -174,12 +226,50 @@ public class GroupActivity extends AppCompatActivity {
 
     }
 
+    void updateIconSelectAllBox() {
+
+        if(selectAll) {
+            itemSelectedMode.setIcon(R.drawable.ic_check_box_black_24dp);
+
+        }
+        else{
+            itemSelectedMode.setIcon(R.drawable.ic_check_box_outline_blank_black_24dp);
+
+        }
+
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.people_activity_menu, menu);
         search = menu.findItem(R.id.app_bar_search);
         edit = menu.findItem(R.id.editMod);
+        itemSelectedMode = menu.findItem(R.id.itemCheckBox);
+        itemSelectedMode.setVisible(selectMode);
+
+        itemSelectedMode.setOnMenuItemClickListener(menuItem -> {
+
+            if(selectAll) {
+                selectAll = !selectAll;
+                selectedPeople.clear();
+                peopleAdapter.setCheckBox(selectAll);
+
+            }
+            else{
+
+                selectAll = !selectAll;
+                selectedPeople.clear();
+                selectedPeople.addAll(people_list);
+                peopleAdapter.setCheckBox(selectAll);
+
+            }
+            updateIconSelectAllBox();
+            update();
+
+            return false;
+        });
 
         edit.setOnMenuItemClickListener(menuItem -> {
             if (editMode) {
@@ -232,7 +322,7 @@ public class GroupActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
 
                 people_list.clear();
-                people_list.addAll(helper.getFilterGroupPeople(newText,GroupName));
+                people_list.addAll(helper.getFilterGroupPeople(newText, GroupName));
 
                 textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
                         + getResources().getString(R.string.in) + " " + GroupName);
@@ -245,16 +335,31 @@ public class GroupActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
+
             if (editMode) {
                 peopleAdapter.setRemoveVisible(false);
                 floatingActionButton.hide();
                 editMode = !editMode;
                 edit.setVisible(true);
+
+            } else if (selectMode) {
+                selectMode = !selectMode;
+
+                search.setVisible(true);
+
+                peopleAdapter.setCheckBox(selectMode);
+                peopleAdapter.setCheckBoxVisible(selectMode);
+                itemSelectedMode.setVisible(selectMode);
+
+                floatingActionButton.hide();
+                edit.setVisible(true);
+
+
+
             } else {
                 finish();
             }
