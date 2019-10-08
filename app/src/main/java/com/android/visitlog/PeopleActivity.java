@@ -32,6 +32,8 @@ public class PeopleActivity extends AppCompatActivity {
     TabLayout tabLayout;
     MenuItem search;
     MenuItem edit;
+    MenuItem itemCheckBox;
+
     Toolbar toolbar;
     ViewPager viewPager;
     PageAdapter pageAdapter;
@@ -47,6 +49,7 @@ public class PeopleActivity extends AppCompatActivity {
     String day;
 
     boolean editMode = false;
+    boolean selectedAllSSSSS = false;
 
 
     @Override
@@ -227,6 +230,15 @@ public class PeopleActivity extends AppCompatActivity {
 
         search = menu.findItem(R.id.app_bar_search);
         edit = menu.findItem(R.id.editMod);
+        itemCheckBox = menu.findItem(R.id.itemCheckBox);
+        itemCheckBox.setVisible(false);
+
+        itemCheckBox.setOnMenuItemClickListener(item-> {
+
+
+
+            return false;
+        });
 
         edit.setOnMenuItemClickListener(menuItem -> {
             if (editMode) {
@@ -252,7 +264,6 @@ public class PeopleActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
 
-
         });
 
         mSearchView.setOnCloseListener(() -> {
@@ -265,7 +276,6 @@ public class PeopleActivity extends AppCompatActivity {
                 edit.setVisible(true);
                 edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
-
             return false;
         });
 

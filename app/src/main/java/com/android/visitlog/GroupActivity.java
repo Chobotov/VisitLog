@@ -62,7 +62,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
                 if(!selectMode && !editMode){
-                    
+                    selectMode = true;
                 }
             }
 
@@ -80,6 +80,7 @@ public class GroupActivity extends AppCompatActivity {
 
 
         peopleAdapter = new PeopleAdapter(this,clickListener,removeListener ,people_list);
+        peopleAdapter.setRemoveVisible(false);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -182,10 +183,12 @@ public class GroupActivity extends AppCompatActivity {
 
         edit.setOnMenuItemClickListener(menuItem -> {
             if (editMode) {
+                peopleAdapter.setRemoveVisible(false);
                 floatingActionButton.hide();
                 editMode = !editMode;
             } else {
                 edit.setVisible(false);
+                peopleAdapter.setRemoveVisible(true);
                 floatingActionButton.show();
                 editMode = !editMode;
             }
@@ -196,18 +199,24 @@ public class GroupActivity extends AppCompatActivity {
 
         mSearchView.setOnSearchClickListener(view -> {
 
-
+            if (!editMode) {
+                edit.setVisible(false);
+            }
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
+
 
         });
 
         mSearchView.setOnCloseListener(() -> {
-
             update();
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            if (!editMode) {
+                edit.setVisible(true);
+                edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            }
 
             return false;
         });
@@ -241,9 +250,14 @@ public class GroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
+            if (editMode) {
+                peopleAdapter.setRemoveVisible(false);
+                floatingActionButton.hide();
+                editMode = !editMode;
+                edit.setVisible(true);
+            } else {
                 finish();
-
-
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
