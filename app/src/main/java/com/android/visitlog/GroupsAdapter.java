@@ -40,7 +40,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
         holder.itemView.setOnLongClickListener(view -> {
             if (listener != null)
                 listener.onLongItemClick(groups.get(holder.getAdapterPosition()));
-            return false;
+            return true;
         });
 
         holder.itemView.setOnClickListener(view -> {
