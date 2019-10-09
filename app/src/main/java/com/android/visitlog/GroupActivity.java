@@ -112,6 +112,15 @@ public class GroupActivity extends AppCompatActivity {
                         updateIconSelectAllBox();
                     }
                 }
+                else if (editMode){
+
+                }
+                else {
+                    helper.SetDataInDataTable(item.Name, year, month, day);
+                    Toast.makeText(GroupActivity.this,
+                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         };
 
@@ -163,7 +172,7 @@ public class GroupActivity extends AppCompatActivity {
                 }
                 updateIconSelectAllBox();
 
-                Toast.makeText(GroupActivity.this,"Ну добавил ты и всех на дату молодец Чё тебе ещё ?",Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupActivity.this,"Добавлены на"+ " " + day + "." + month + "." + year,Toast.LENGTH_SHORT).show();
 
             } else {
 
@@ -188,12 +197,12 @@ public class GroupActivity extends AppCompatActivity {
                         if (!newPeople.contains(item)) {
                             newPeople.add(item);
 
-                            Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
                         } else {
 
 
                             newPeople.remove(item);
-                            Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
 
                         }
                     }
