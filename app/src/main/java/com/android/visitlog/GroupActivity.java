@@ -219,9 +219,9 @@ public class GroupActivity extends AppCompatActivity {
                 });
                 alertAdapter.setCheckBoxVisible(true);
 
+
                 alertRecycler.setLayoutManager(new LinearLayoutManager(this));
                 alertRecycler.setAdapter(alertAdapter);
-
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();

@@ -173,7 +173,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
 
-    public boolean isCheckBoxVisible() {
+    boolean isCheckBoxVisible() {
         return checkBoxVisible;
     }
 
