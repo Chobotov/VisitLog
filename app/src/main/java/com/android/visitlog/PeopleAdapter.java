@@ -85,7 +85,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
                 clickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
 
-                return false;
+                return true;
             });
 
             holder.itemView.setOnClickListener(view -> {

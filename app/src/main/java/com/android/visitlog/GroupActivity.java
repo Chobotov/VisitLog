@@ -91,6 +91,12 @@ public class GroupActivity extends AppCompatActivity {
 
                     itemSelectedMode.setVisible(selectMode);
 
+                    if (selectedPeople.size() == people_list.size()) {
+                        selectAll = true;
+                    }
+                    updateIconSelectAllBox();
+
+
                 }
             }
 
@@ -116,10 +122,18 @@ public class GroupActivity extends AppCompatActivity {
 
                 }
                 else {
-                    helper.SetDataInDataTable(item.Name, year, month, day);
-                    Toast.makeText(GroupActivity.this,
-                            item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
-                            Toast.LENGTH_SHORT).show();
+                    if (!helper.containsDataPeople(item, year, month, day)) {
+                        helper.SetDataInDataTable(item.Name, year, month, day);
+                        Toast.makeText(GroupActivity.this,
+                                item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(GroupActivity
+                                        .this,
+                                item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };
@@ -351,6 +365,7 @@ public class GroupActivity extends AppCompatActivity {
 
                 people_list.clear();
                 people_list.addAll(helper.getFilterGroupPeople(newText, GroupName));
+                peopleAdapter.notifyDataSetChanged();
 
                 textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
                         + getResources().getString(R.string.in) + " " + GroupName);
