@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
                 mcv.invalidateDecorators();
                 adapter.notifyDataSetChanged();
+
+
+                
                 //Log.d("delete", people.Name);
             }
 

@@ -6,8 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+<<<<<<< HEAD
     android:background="@drawable/itemstyle"
     tools:context=".MainActivity">
+=======
+    tools:context=".MainActivity"
+    android:background="@color/bg"
+    >
+>>>>>>> f874f35d532aeae67d1e8b23524b402af3085569
 
     <com.google.android.material.appbar.AppBarLayout
 

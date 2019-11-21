@@ -548,7 +548,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Возвращает лист людей из фильтрованной группы
     public ArrayList<People> getFilterGroupPeople(String newtext, String groupName) {
-        String GroupID = GetIdByName(groupName);
+        String GroupID = GetIdGroupByName(groupName);
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         ArrayList<String>id = new ArrayList<>();
         Cursor cursor;
@@ -573,6 +573,7 @@ public class DBHelper extends SQLiteOpenHelper {
             Log.d("PeopleinGroup","error");
             return getGroupMembers(groupName);
         }
+
         ArrayList<People>people = new ArrayList<>();
         for(String s : id){
             cursor = sqLiteDatabase.rawQuery(
@@ -593,9 +594,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     String name = cursor.getString(index);
                     people.add(new People(name));
                 }while (cursor.moveToNext());
-            }
-            else {
-                break;
             }
         }
         cursor.close();

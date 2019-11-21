@@ -21,6 +21,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     private LayoutInflater inflater;
     private ArrayList<People> peoples;
 
+    private People selectPeople;
+
     private boolean removeVisible;
     private boolean checkBoxVisible;
     private boolean checkBox;
@@ -64,15 +66,26 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
         holder.setCheckBoxVisible(checkBoxVisible);
 
-        holder.setCheckBoxStatus(checkBox);
+        if(people.equals(selectPeople)){
+            holder.setCheckBoxStatus(!holder.getCheckBoxStatus());
+            selectPeople = null;
+
+        }
+        else{
+            holder.setCheckBoxStatus(checkBox);
+        }
 
         holder.name.setText(people.Name);
+
+
 
         if (clickListener != null) {
 
             holder.itemView.setOnLongClickListener(view -> {
+
                 clickListener.onLongItemClick(peoples.get(holder.getAdapterPosition()));
-                return false;
+
+                return true;
             });
 
             holder.itemView.setOnClickListener(view -> {
@@ -153,8 +166,14 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void setCheckBox(People selectPeople) {
 
-    public boolean isCheckBoxVisible() {
+        this.selectPeople = selectPeople;
+        notifyDataSetChanged();
+    }
+
+
+    boolean isCheckBoxVisible() {
         return checkBoxVisible;
     }
 
@@ -162,6 +181,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         this.checkBoxVisible = checkBoxVisible;
         notifyDataSetChanged();
     }
+
 
 
 

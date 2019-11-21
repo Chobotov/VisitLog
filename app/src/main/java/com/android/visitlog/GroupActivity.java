@@ -79,10 +79,24 @@ public class GroupActivity extends AppCompatActivity {
                     selectMode = true;
                     peopleAdapter.setCheckBoxVisible(selectMode);
                     peopleAdapter.setCheckBox(selectAll);
+
+                    peopleAdapter.setCheckBox(item);
+                    selectedPeople.add(item);
+
                     floatingActionButton.show();
+
                     search.setVisible(!selectMode);
+
                     edit.setVisible(!selectMode);
+
                     itemSelectedMode.setVisible(selectMode);
+
+                    if (selectedPeople.size() == people_list.size()) {
+                        selectAll = true;
+                    }
+                    updateIconSelectAllBox();
+
+
                 }
             }
 
@@ -102,6 +116,23 @@ public class GroupActivity extends AppCompatActivity {
                         selectedPeople.remove(item);
                         selectAll = false;
                         updateIconSelectAllBox();
+                    }
+                }
+                else if (editMode){
+
+                }
+                else {
+                    if (!helper.containsDataPeople(item, year, month, day)) {
+                        helper.SetDataInDataTable(item.Name, year, month, day);
+                        Toast.makeText(GroupActivity.this,
+                                item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(GroupActivity
+                                        .this,
+                                item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -155,7 +186,7 @@ public class GroupActivity extends AppCompatActivity {
                 }
                 updateIconSelectAllBox();
 
-                Toast.makeText(GroupActivity.this,"Ну добавил ты и всех на дату молодец Чё тебе ещё ?",Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupActivity.this,"Добавлены на"+ " " + day + "." + month + "." + year,Toast.LENGTH_SHORT).show();
 
             } else {
 
@@ -180,12 +211,12 @@ public class GroupActivity extends AppCompatActivity {
                         if (!newPeople.contains(item)) {
                             newPeople.add(item);
 
-                            Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
                         } else {
 
 
                             newPeople.remove(item);
-                            Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -202,9 +233,9 @@ public class GroupActivity extends AppCompatActivity {
                 });
                 alertAdapter.setCheckBoxVisible(true);
 
+
                 alertRecycler.setLayoutManager(new LinearLayoutManager(this));
                 alertRecycler.setAdapter(alertAdapter);
-
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
@@ -334,6 +365,7 @@ public class GroupActivity extends AppCompatActivity {
 
                 people_list.clear();
                 people_list.addAll(helper.getFilterGroupPeople(newText, GroupName));
+                peopleAdapter.notifyDataSetChanged();
 
                 textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
                         + getResources().getString(R.string.in) + " " + GroupName);
@@ -361,6 +393,7 @@ public class GroupActivity extends AppCompatActivity {
                 selectMode = !selectMode;
                 selectAll = false;
                 search.setVisible(true);
+                updateIconSelectAllBox();
 
                 peopleAdapter.setCheckBox(selectMode);
                 peopleAdapter.setCheckBoxVisible(selectMode);
