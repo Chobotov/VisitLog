@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         fab = findViewById(R.id.floatingActionButton);
         mcv = findViewById(R.id.calendarView);
         recyclerView = findViewById(R.id.list);
-        eventDecorator = new EventDecorator(Color.BLUE);
+        eventDecorator = new EventDecorator(getResources().getColor(R.color.colorAccent));
         eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
 
         peopleList = new ArrayList<People>();
