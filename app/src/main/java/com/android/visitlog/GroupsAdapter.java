@@ -15,11 +15,11 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
 
     private GroupsAdapter.ClickListener listener;
     private LayoutInflater inflater;
-    private ArrayList<Groups> groups;
+    private ArrayList<Group> groups;
 
-    public GroupsAdapter(Context context, GroupsAdapter.ClickListener onLongClickListener, ArrayList<Groups> arrayList) {
+    public GroupsAdapter(Context context, GroupsAdapter.ClickListener onLongClickListener, ArrayList<Group> arrayList) {
         groups = arrayList;
-        this.listener = listener;
+        this.listener = onLongClickListener;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -33,14 +33,14 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Groups people = groups.get(position);
+        Group people = groups.get(position);
 
 
 
         holder.itemView.setOnLongClickListener(view -> {
             if (listener != null)
                 listener.onLongItemClick(groups.get(holder.getAdapterPosition()));
-            return false;
+            return true;
         });
 
         holder.itemView.setOnClickListener(view -> {
@@ -75,7 +75,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
 
 
     interface ClickListener {
-        void onLongItemClick(Groups item);
-        void onItemClick(Groups item);
+        void onLongItemClick(Group item);
+        void onItemClick(Group item);
     }
 }

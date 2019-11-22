@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,11 +20,11 @@ public class GroupsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private GroupsAdapter adapter;
-    private ArrayList<Groups> groups;
+    private ArrayList<Group> groups;
     private GroupsAdapter.ClickListener clickListener;
-    private TextView countGroups;
+    private TextView countGroup;
 
-    public GroupsFragment(GroupsAdapter.ClickListener clickListener, ArrayList<Groups> groups) {
+    public GroupsFragment(GroupsAdapter.ClickListener clickListener, ArrayList<Group> groups) {
         this.clickListener = clickListener;
         this.groups = groups;
     }
@@ -39,9 +38,8 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_groups, container, false);
         recyclerView = v.findViewById(R.id.groups_recyclerView);
-        countGroups = v.findViewById(R.id.countGroup);
-
-
+        countGroup = v.findViewById(R.id.countGroup);
+        
         if (clickListener != null)
             adapter = new GroupsAdapter(getContext(), clickListener, groups);
         else
@@ -49,7 +47,13 @@ public class GroupsFragment extends Fragment {
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         recyclerView.setAdapter(adapter);
+
+        recyclerView.setFocusable(false);
+        v.findViewById(R.id.temp).requestFocus();
+
         setCounterText(groups.size());
+
+
         return v;
     }
 
@@ -57,20 +61,18 @@ public class GroupsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (groups == null)
-<<<<<<< Updated upstream
-            groups = new ArrayList<Groups>();
-=======
             groups = new ArrayList<>();
->>>>>>> Stashed changes
 
     }
 
     public void update(){
-        adapter.notifyDataSetChanged();
+        if(adapter!=null)
+            adapter.notifyDataSetChanged();
     }
 
-    public void setCounterText(int size) {
-        if(countGroups !=null)
-            countGroups.setText(size + " "+ getResources().getString(R.string.Groups));
+
+    public void setCounterText(int text){
+        if(countGroup != null)
+            countGroup.setText(text + " "+ getResources().getString(R.string.Groups));
     }
 }

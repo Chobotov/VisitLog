@@ -18,12 +18,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private ComeLeaveRemove clr;
     private LayoutInflater inflater;
     private ArrayList<People> peopleList;
+    private DBHelper helper;
 
     public ItemAdapter(Context context, ArrayList<People> people,ComeLeaveRemove clr) {
 
         this.peopleList = people;
         this.clr = clr;
         this.inflater = LayoutInflater.from(context);
+        helper = new DBHelper(context);
     }
 
 
@@ -47,14 +49,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clr.RemovePeopleData(peopleList.get(holder.getAdapterPosition()),holder.getAdapterPosition());
+                if(holder.getAdapterPosition()>=0)
+                {
+                    clr.RemovePeopleData(peopleList.get(holder.getAdapterPosition()),holder.getAdapterPosition());
+                }
             }
         });
 
         holder.came.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clr.InsertComeTimeInData(peopleList.get(holder.getAdapterPosition()));
+                clr.InsertCameTimeInData(peopleList.get(holder.getAdapterPosition()));
             }
         });
 
@@ -88,7 +93,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
     interface ComeLeaveRemove{
         void RemovePeopleData(People people,int position);
-        void InsertComeTimeInData(People people);
+        void InsertCameTimeInData(People people);
         void InsertLeaveTimeInData(People people);
         void CheckTime(People people);
     }

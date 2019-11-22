@@ -1,103 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_height="120dp"
+
     android:background="@drawable/itemstyle"
     android:orientation="horizontal"
-    android:paddingBottom="4dp"
-
-    >
-
-    <Button
-        android:id="@+id/remove"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/vector_remove"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/group"
-
-        >
-
-    </Button>
+    android:paddingBottom="4dp">
 
     <TextView
-        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/group"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Чеботов Никита Алексеевич"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/group">
-
+        android:layout_marginLeft="10dp"
+        android:textSize="14dp"
+        android:text="7:00-8:00">
     </TextView>
 
-    <Button
-        android:id="@+id/came"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/name"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/button_came"
-        android:text="Пришел"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name">
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="98dp"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="end|bottom">
 
-    </Button>
+        <Button
+            android:id="@+id/remove"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/vector_remove"
+            android:layout_alignParentRight="true">
+        </Button>
 
-    <Button
-        android:id="@+id/leave"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/name"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_toRightOf="@+id/came"
-        android:background="@drawable/button_leave"
-        android:text="Ушел"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/came"
-        app:layout_constraintStart_toEndOf="@+id/came"
-        app:layout_constraintTop_toBottomOf="@+id/name">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/group"
+            android:layout_marginLeft="10dp"
+            android:text="Чеботов Никита Алексеевич"
+            android:textColor="@android:color/black"
+            android:textSize="18sp">
 
-    </Button>
+        </TextView>
 
-    <TextView
-        android:id="@+id/group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:text="БВТ-31"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="БВТ-31"
+            android:textSize="16sp">
+        </TextView>
 
-    </TextView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/came"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/leave"
+            android:layout_toLeftOf="@+id/leave">
+        </Button>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/leave"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+        </Button>
+    </RelativeLayout>
+
+</FrameLayout>

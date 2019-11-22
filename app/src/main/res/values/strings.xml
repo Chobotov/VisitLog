@@ -7,19 +7,21 @@
     <string name="NameTextLayout">Name</string>
     <string name="Add">Add</string>
     <string name="Cancel">Cancel</string>
+    <string name="SelectAll">Select All</string>
 
     <string name="Search">Search</string>
     <string name="Edit">Edit</string>
-<<<<<<< Updated upstream
-    <string name="RepeatAlert">"Такой наименование уже есть. Создать новый контакт под названием "</string>
-=======
-    <string name="RepeatAlert">Такой наименование уже есть. Создать новый контакт под названием </string>
-    <string name="Members">Members </string>
+    <string name="RepeatAlert">Такое наименование уже есть. Создать новый контакт под названием </string>
+    <string name="Members">Members</string>
     <string name="AddData"> был добавлен на </string>
-    <string name="AllPeople">All People</string>
     <string name="AllGroups">All Groups</string>
-
-
->>>>>>> Stashed changes
+    <string name="AllPeople">All People</string>
+    <string name="in">in</string>
+    <string name="AlertEmptyName">Не удалось добавить пустое наименование</string>
+    <string name="hasRemoved">был удалён</string>
+    <string name="willHasAdd">будет добавлен</string>
+    <string name="addGroupDate1">все участники</string>
+    <string name="addGroupDate2">были добавлены на</string>
+    <string name="PeopleAlreadyHaveThisDate">уже записан(а) на выбранную дату.</string>
 
 </resources>
