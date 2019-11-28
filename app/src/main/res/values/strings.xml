@@ -24,4 +24,7 @@
     <string name="addGroupDate2">были добавлены на</string>
     <string name="PeopleAlreadyHaveThisDate">уже записан(а) на выбранную дату.</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
