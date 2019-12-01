@@ -9,6 +9,7 @@
     android:paddingBottom="4dp">
 
     <TextView
+        android:id="@+id/setTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -55,23 +56,42 @@
             android:textSize="16sp">
         </TextView>
 
-        <Button
+        <TextView
+            android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/came"
             android:layout_alignParentBottom="true"
-            android:layout_toStartOf="@+id/leave"
-            android:layout_toLeftOf="@+id/leave">
-        </Button>
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp">
+        </TextView>
 
-        <Button
+       <ImageButton
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/leave"
             android:layout_alignParentBottom="true"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toStartOf="@+id/setComment"
+            android:layout_toLeftOf="@+id/setComment"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_clock">
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/setComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true">
-        </Button>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_consulting_message">
+        </ImageButton>
     </RelativeLayout>
 
 </FrameLayout>

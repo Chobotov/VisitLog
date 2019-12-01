@@ -36,6 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static String DAY = "day";
     public static String CAME_TIME = "cameTime";
     public static String LEAVE_TIME = "leaveTime";
+    public static String COMMENT = "comment";
 
 
     public DBHelper(Context context) {
@@ -59,6 +60,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DAY + " integer,"
                 + CAME_TIME + " text,"
                 + LEAVE_TIME + " text,"
+                + COMMENT + " text,"
                 + "FOREIGN KEY (" + ID_PEOPLE + ") REFERENCES "
                 + PEOPLE + " (" + KEY_ID + ")"
                 + ")");
@@ -667,5 +669,46 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return GroupName;
+    }
+
+    public void SetCommentThisPeople(People people,String Year,String Month,String Day){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        String id = GetIdByName(people.Name);
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(COMMENT,people.commit);
+
+        sqLiteDatabase.update(DATA_PEOPLE,cv,ID_PEOPLE
+                + "=? "
+                + "AND " + YEAR + "=? "
+                + "AND " +  MONTH + "=? "
+                + "AND " +  DAY + "=? ",new String[]{id,Year,Month,Day});
+    }
+
+    public String GetCommentToPeople(People people,String Year,String Month,String Day){
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        String commit = "";
+
+        String id = GetIdByName(people.Name);
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT " + COMMENT
+                        + " FROM " + DATA_PEOPLE
+                        + " WHERE " + ID_PEOPLE + " = ?"
+                        + " AND " + YEAR + " = ?"
+                        + " AND " + MONTH + " = ?"
+                        + " AND " + DAY + " = ?"
+                , new String[]{id,Year, Month, Day});
+        if (c.moveToFirst()) {
+            do {
+                int index = c.getColumnIndex(COMMENT);
+                commit = (c.getString(index));
+            } while (c.moveToNext());
+        } else
+            Log.d(LOG_TAG, "Cursor is null");
+        c.close();
+        return commit;
     }
 }
