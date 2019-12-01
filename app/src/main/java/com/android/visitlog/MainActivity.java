@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navPeoples:
                     fragmentManager.beginTransaction().hide(active).show(peopleActivityFragment).commit();
+                    peopleActivityFragment.GetData(calendar.YEAR,calendar.MONTH,calendar.DAY);
+                    peopleActivityFragment.updatePeople();
                     active = peopleActivityFragment;
                     return true;
                 case R.id.navGroups:
@@ -87,4 +90,5 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
 }

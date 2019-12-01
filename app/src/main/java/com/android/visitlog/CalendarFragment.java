@@ -90,10 +90,6 @@ public class CalendarFragment extends Fragment {
                 eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
                 mcv.invalidateDecorators();
                 adapter.notifyDataSetChanged();
-
-
-
-                //Log.d("delete", people.Name);
             }
 
             @Override

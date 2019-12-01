@@ -60,17 +60,4 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="100dp"
-        android:src="@drawable/ic_add_30dp"
-        android:theme="@style/Floating"
-        app:elevation="0dp" /> -->
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

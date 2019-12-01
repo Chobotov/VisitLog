@@ -1,46 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/add_people_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg"
+    android:background="@drawable/itemstyle"
     >
 
-
     <com.google.android.material.appbar.AppBarLayout
-
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-
             android:id="@+id/toolbar_all_people"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:layout_scrollFlags="scroll|enterAlways"
-            />
-
-
+            app:layout_scrollFlags="scroll|enterAlways" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.core.widget.NestedScrollView
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:theme="@style/Floating"
-        android:layout_margin="16dp"
-        app:elevation="0dp"
-        android:src="@drawable/ic_add_30dp" />
+        android:id="@+id/Scroll_all_people"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        >
 
+        <LinearLayout
+            android:id="@+id/stemp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+            <TextView
+                android:id="@+id/scountPeople"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="20sp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="15dp"/>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/alert_people_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="65dp"
+                >
+            </androidx.recyclerview.widget.RecyclerView>
 
+            <Button
+                android:id="@+id/floatingActionButton"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_add_30dp"
+                android:text="Add people"
+                android:layout_gravity="center"
+                android:background="@drawable/itemstyle">
+            </Button>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
