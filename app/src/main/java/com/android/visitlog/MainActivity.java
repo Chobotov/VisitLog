@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     Fragment active;
     CalendarFragment calendar;
-    PeopleFragment peopleFragment;
-    GroupsFragment groupsFragment;
+    PeopleActivityFragment peopleActivityFragment;
+    GroupsActivityFragment groupsActivityFragment;
     FragmentManager fragmentManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -54,14 +54,14 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
 
         calendar = new CalendarFragment();
-        //peopleFragment = new PeopleFragment();
-        groupsFragment = new GroupsFragment();
+        peopleActivityFragment = new PeopleActivityFragment();
+        groupsActivityFragment = new GroupsActivityFragment();
 
         fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction().add(R.id.main_container, calendar, "calendar").commit();
-//      fragmentManager.beginTransaction().add(R.id.main_container,peopleFragment,"people").hide(peopleFragment).commit();
-        fragmentManager.beginTransaction().add(R.id.main_container, groupsFragment, "groups").hide(groupsFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.main_container,peopleActivityFragment,"people").hide(peopleActivityFragment).commit();
+        fragmentManager.beginTransaction().add(R.id.main_container, groupsActivityFragment, "groups").hide(groupsActivityFragment).commit();
 
         active = calendar;
 
@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
                     active = calendar;
                     return true;
                 case R.id.navPeoples:
-                    // fragmentManager.beginTransaction().hide(active).show(peopleFragment).commit();
-                    // active = peopleFragment;
+                    fragmentManager.beginTransaction().hide(active).show(peopleActivityFragment).commit();
+                    active = peopleActivityFragment;
                     return true;
                 case R.id.navGroups:
-                    fragmentManager.beginTransaction().hide(active).show(groupsFragment).commit();
-                    active = groupsFragment;
+                    fragmentManager.beginTransaction().hide(active).show(groupsActivityFragment).commit();
+                    active = groupsActivityFragment;
                     return true;
             }
             return false;
