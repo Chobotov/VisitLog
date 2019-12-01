@@ -37,7 +37,7 @@
                 android:layout_marginBottom="15dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/alert_people_recyclerView"
+                android:id="@+id/groups_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="65dp"
@@ -66,18 +66,6 @@
             />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:theme="@style/Floating"
-        app:elevation="0dp"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_30dp" />
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
