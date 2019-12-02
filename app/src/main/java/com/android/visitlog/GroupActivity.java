@@ -247,9 +247,6 @@ public class GroupActivity extends AppCompatActivity {
 
         floatingActionButton.hide();
         update();
-
-
-
     }
 
     public void update() {

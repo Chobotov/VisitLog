@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -40,9 +41,9 @@ public class CalendarFragment extends Fragment {
     private RecyclerView recyclerView;
     private MaterialCalendarView mcv;
     private EventDecorator eventDecorator;
-    private FloatingActionButton fab;
+    private Button fab;
     private ItemAdapter adapter;
-    private String YEAR, MONTH, DAY;
+    public String YEAR, MONTH, DAY;
     private ArrayList<People> peopleList;
     private DBHelper dbHelper;
 
@@ -89,10 +90,6 @@ public class CalendarFragment extends Fragment {
                 eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
                 mcv.invalidateDecorators();
                 adapter.notifyDataSetChanged();
-
-
-
-                //Log.d("delete", people.Name);
             }
 
             @Override

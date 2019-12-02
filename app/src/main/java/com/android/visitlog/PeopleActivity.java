@@ -44,9 +44,10 @@ public class PeopleActivity extends AppCompatActivity {
 
     DBHelper helper;
 
-    String year;
-    String month;
-    String day;
+    public String groupName;
+    public String year;
+    public String month;
+    public String day;
 
     boolean editMode = false;
 
@@ -152,6 +153,7 @@ public class PeopleActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Group item) {
                 if (!editMode) {
+                    groupName = item.Name;
                     Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
                     intent.putExtra("name", String.valueOf(item.Name));
                     intent.putExtra("year", String.valueOf(year));
