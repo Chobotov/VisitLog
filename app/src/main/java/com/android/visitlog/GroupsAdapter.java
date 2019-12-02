@@ -1,10 +1,10 @@
 package com.android.visitlog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,9 +32,10 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
         return new GroupsAdapter.ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Group people = groups.get(position);
+        Group group = groups.get(position);
 
 
 
@@ -49,8 +50,8 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
                 listener.onItemClick(groups.get(holder.getAdapterPosition()));
         });
 
-        holder.name.setText(people.Name);
-
+        holder.name.setText(group.Name);
+        holder.members.setText(inflater.getContext().getResources().getString(R.string.Members) + group.Count);
     }
 
 
@@ -63,11 +64,12 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
-        private Button More;
+        private TextView members;
 
         ViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.item_group_text);
+            members = view.findViewById(R.id.item_group_members);
         }
 
         public TextView getTextView() {

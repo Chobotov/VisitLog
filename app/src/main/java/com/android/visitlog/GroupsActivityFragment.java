@@ -20,10 +20,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -40,7 +42,7 @@ public class GroupsActivityFragment extends Fragment {
     private GroupsAdapter.ClickListener clickListener;
     private TextView countGroup;
 
-    private TabLayout tabLayout;
+    private AppBarLayout appBarLayout;
     private MenuItem search;
     private MenuItem edit;
     private MenuItem itemCheckBox;
@@ -68,9 +70,9 @@ public class GroupsActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_groups_activity, container, false);
 
+        appBarLayout = v.findViewById(R.id.appbar);
         recyclerView = v.findViewById(R.id.groups_recyclerView);
         countGroup = v.findViewById(R.id.countGroup);
-        tabLayout = v.findViewById(R.id.tabs);
         toolbar = v.findViewById(R.id.toolbar_all_people);
 
 
@@ -142,14 +144,12 @@ public class GroupsActivityFragment extends Fragment {
         v.findViewById(R.id.temp).requestFocus();
         setCounterText(groups.size());
 
-
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(null);
 
-
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
         return v;
     }
@@ -174,6 +174,10 @@ public class GroupsActivityFragment extends Fragment {
     private void updateGroups() {
         groups.clear();
         groups.addAll(helper.getAllGroups());
+
+        for (Group group : groups) {
+            group.Count = helper.getGroupMembers(group.Name).size();
+        }
         if (groups != null) {
             update();
             setCounterText(groups.size());
@@ -291,5 +295,16 @@ public class GroupsActivityFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void showPopup(View v){
+        PopupMenu popupMenu = new PopupMenu(getContext(),v);
+        popupMenu.inflate(R.menu.item_group_menu);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+        return false;
+        });
+
+        popupMenu.show();
     }
 }
