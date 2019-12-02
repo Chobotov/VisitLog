@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -62,6 +63,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
+        private Button More;
 
         ViewHolder(View view) {
             super(view);
@@ -72,6 +74,8 @@ public class GroupsAdapter  extends RecyclerView.Adapter<GroupsAdapter.ViewHolde
             return name;
         }
     }
+
+
 
 
     interface ClickListener {
