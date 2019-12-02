@@ -1,89 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
 
     android:background="@drawable/itemstyle"
     android:orientation="horizontal"
-    android:paddingBottom="4dp"
-
-    >
+    android:paddingBottom="4dp">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/setTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="7:00-8:00"
+        android:layout_marginLeft="10dp"
         android:textSize="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="7:00-8:00">
+    </TextView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="5dp"
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="98dp"
         android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        android:layout_gravity="end|bottom">
 
         <Button
             android:id="@+id/remove"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
             android:background="@drawable/vector_remove"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/group" />
-
-        <Button
-            android:id="@+id/came"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toStartOf="@+id/leave"
-            android:layout_toLeftOf="@+id/leave"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/leave"
-            app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
-            android:id="@+id/leave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            app:layout_constraintEnd_toEndOf="@+id/remove"
-            app:layout_constraintTop_toTopOf="@+id/came" />
+            android:layout_alignParentRight="true">
+        </Button>
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/group"
-            android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
             android:text="Чеботов Никита Алексеевич"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="@+id/group"
-            app:layout_constraintTop_toBottomOf="@+id/group">
+            android:textSize="18sp">
 
         </TextView>
 
@@ -91,14 +50,48 @@
             android:id="@+id/group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:text="БВТ-31"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp">
+        </TextView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp">
+        </TextView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+       <ImageButton
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toStartOf="@+id/setComment"
+            android:layout_toLeftOf="@+id/setComment"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_clock">
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/setComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_consulting_message">
+        </ImageButton>
+    </RelativeLayout>
+
+</FrameLayout>

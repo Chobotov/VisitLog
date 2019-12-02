@@ -1,13 +1,13 @@
 package com.android.visitlog;
 
-import android.content.Context;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +17,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TimePicker;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -27,17 +28,16 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 
 
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment{
 
     public View v;
+    private String commit;
     private RecyclerView recyclerView;
     private MaterialCalendarView mcv;
     private EventDecorator eventDecorator;
@@ -46,6 +46,8 @@ public class CalendarFragment extends Fragment {
     public String YEAR, MONTH, DAY;
     private ArrayList<People> peopleList;
     private DBHelper dbHelper;
+
+    private int whichTime;
 
     final String LOG_TAG = "myLogs";
 
@@ -64,11 +66,19 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
+        whichTime = 1;
+
+        commit = "";
+
+        final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        final int minute = Calendar.getInstance().get(Calendar.MINUTE);
+
         dbHelper = new DBHelper(v.getContext());
         YEAR = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
         MONTH = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
         DAY = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         fab = v.findViewById(R.id.floatingActionButton);
+
         mcv = v.findViewById(R.id.calendarView);
         recyclerView = v.findViewById(R.id.list);
         eventDecorator = new EventDecorator(getResources().getColor(R.color.colorAccent));
@@ -93,26 +103,66 @@ public class CalendarFragment extends Fragment {
             }
 
             @Override
-            public void InsertCameTimeInData(People people) {
-                DateFormat df = new SimpleDateFormat("HH:mm");
-                String time = df.format(Calendar.getInstance().getTime());
-                people.CameTime = time;
-                dbHelper.InsertCameTime(people.Name, time, YEAR, MONTH, DAY);
-                adapter.notifyDataSetChanged();
+            public void InsertTimeInData(People people) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if(whichTime == 1){
+                            people.CameTime = hourOfDay + ":" + minute;
+                            dbHelper.InsertCameTime(people.Name, people.CameTime, YEAR, MONTH, DAY);
+                            whichTime = 2;
+                        }
+                        else{
+                            people.LeaveTime = hourOfDay + ":" + minute;
+                            dbHelper.InsertLeaveTime(people.Name, people.LeaveTime, YEAR, MONTH, DAY);
+                            whichTime = 1;
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                },hour,minute,android.text.format.DateFormat.is24HourFormat(getContext()));
+                timePickerDialog.show();
             }
 
             @Override
-            public void InsertLeaveTimeInData(People people) {
-                DateFormat df = new SimpleDateFormat("HH:mm");
-                String time = df.format(Calendar.getInstance().getTime());
-                people.LeaveTime = time;
-                dbHelper.InsertLeaveTime(people.Name, time, YEAR, MONTH, DAY);
+            public void InsertCommentInData(People people) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                builder.setCancelable(true);
+
+                View view1 = LayoutInflater.from(getContext()).inflate(R.layout.add_comment_alert, null);
+
+                builder.setView(view1);
+
+                EditText editText = view1.findViewById(R.id.text_edit_commentAlert);
+                editText.setText(commit);
+
+                builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
+                    if(editText.getText().toString().length() >= 30){
+                        commit = editText.getText().toString();
+                        AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+
+                        builder1.setCancelable(true);
+
+                        builder1.setMessage("Text is more than 30 symbols!");
+                        AlertDialog alertDialog = builder1.create();
+                        alertDialog.show();
+                    }
+                    else{
+                        commit = "";
+                        people.commit = editText.getText().toString();
+                        Log.d("commit",people.commit);
+                        dbHelper.SetCommentThisPeople(people,YEAR,MONTH,DAY);
+                        update();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void CheckTime(People people) {
-                SQLiteDatabase sqLiteDatabase = dbHelper.getReadableDatabase();
                 String id = dbHelper.GetIdByName(people.Name);
 
                 SetTimeToPeople(id,people);
@@ -155,6 +205,7 @@ public class CalendarFragment extends Fragment {
         return v;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -163,7 +214,7 @@ public class CalendarFragment extends Fragment {
         mcv.invalidateDecorators();
     }
 
-    private void update() {
+    public void update() {
         FindIDPeopleByData();
         if (adapter != null)
         {
@@ -209,6 +260,7 @@ public class CalendarFragment extends Fragment {
                     String name = cursor.getString(cursor.getColumnIndex(dbHelper.FULL_NAME));
                     People people = new People(name);
                     people.Group = dbHelper.FindGroupThisPeople(people);
+                    people.commit = dbHelper.GetCommentToPeople(people,YEAR,MONTH,DAY);
                     peopleList.add(people);
                 } while (cursor.moveToNext());
             } else

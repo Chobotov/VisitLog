@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -37,13 +40,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ItemAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final People people = peopleList.get(position);
         clr.CheckTime(people);
         holder.nameView.setText(people.Name);
         holder.groupView.setText(people.Group);
-        holder.came.setText(people.CameTime);
-        holder.leave.setText(people.LeaveTime);
+        holder.setTime.setText(people.CameTime + " - " +  people.LeaveTime);
+        holder.comment.setText(people.commit);
 
 
         holder.remove.setOnClickListener(new View.OnClickListener() {
@@ -56,17 +59,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             }
         });
 
-        holder.came.setOnClickListener(new View.OnClickListener() {
+        holder.time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clr.InsertCameTimeInData(peopleList.get(holder.getAdapterPosition()));
+                clr.InsertTimeInData(peopleList.get(holder.getAdapterPosition()));
             }
         });
 
-        holder.leave.setOnClickListener(new View.OnClickListener() {
+        holder.setComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clr.InsertLeaveTimeInData(peopleList.get(holder.getAdapterPosition()));
+                clr.InsertCommentInData(peopleList.get(holder.getAdapterPosition()));
             }
         });
 
@@ -79,22 +82,24 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView nameView, groupView;
-        Button came,leave,remove;
+        final TextView nameView, groupView, setTime,comment;
+        ImageButton time,setComment;
+        Button remove;
         ViewHolder(final View view){
             super(view);
-
+            setTime = (TextView) view.findViewById(R.id.setTime);
             nameView = (TextView) view.findViewById(R.id.name);
             groupView = (TextView) view.findViewById(R.id.group);
-            came = (Button) view.findViewById(R.id.came);
-            leave = (Button) view.findViewById(R.id.leave);
+            comment = (TextView) view.findViewById(R.id.comment);
+            time = (ImageButton) view.findViewById(R.id.time);
+            setComment = (ImageButton) view.findViewById(R.id.setComment);
             remove = (Button) view.findViewById(R.id.remove);
         }
     }
     interface ComeLeaveRemove{
         void RemovePeopleData(People people,int position);
-        void InsertCameTimeInData(People people);
-        void InsertLeaveTimeInData(People people);
+        void InsertTimeInData(People people);
+        void InsertCommentInData(People people);
         void CheckTime(People people);
     }
 }
