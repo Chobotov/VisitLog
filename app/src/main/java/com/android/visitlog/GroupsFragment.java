@@ -45,6 +45,11 @@ public class GroupsFragment extends Fragment {
         else
             adapter = new GroupsAdapter(getContext(), null, groups);
 
+        adapter.MoreButtonEnable = false;
+        adapter.EmptyItemEnable = false;
+
+        adapter.notifyDataSetChanged();
+
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         recyclerView.setAdapter(adapter);
 

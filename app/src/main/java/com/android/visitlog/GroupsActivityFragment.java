@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -85,8 +86,6 @@ public class GroupsActivityFragment extends Fragment {
             updateGroups();
         }
 
-
-
         clickListener = new GroupsAdapter.ClickListener() {
             @Override
             public void onLongItemClick(Group item) {
@@ -97,6 +96,7 @@ public class GroupsActivityFragment extends Fragment {
                     setCounterText(groups.size());
 
                 } else {
+
                     ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
 
                     for (People i : peopleInGroup) {
@@ -104,18 +104,17 @@ public class GroupsActivityFragment extends Fragment {
                             helper.SetDataInDataTable(i.Name,  data[0], data[1], data[2]);
                         }
                     }
-
-
-
-                    Toast.makeText(v.getContext(),
-                            getResources().getString(R.string.addGroupDate1) + " "
-                                    + item.Name + " "
-                                    + getResources().getString(R.string.addGroupDate2) + " "
-                                    + data[0] + "." + data[1] + "." + data[2]
-                            ,
-                            Toast.LENGTH_SHORT).show();
+//
+//                    Toast.makeText(v.getContext(),
+//                            getResources().getString(R.string.addGroupDate1) + " "
+//                                    + item.Name + " "
+//                                    + getResources().getString(R.string.addGroupDate2) + " "
+//                                    + data[0] + "." + data[1] + "." + data[2]
+//                            ,
+//                            Toast.LENGTH_SHORT).show();
 
                 }
+
             }
 
             @Override
@@ -129,12 +128,42 @@ public class GroupsActivityFragment extends Fragment {
                     startActivity(intent);
                 }
             }
+
+            @Override
+            public void onMoreItemClick(Group item) {
+                showPopup(v);
+            }
+
+            @Override
+            public void onAddItemClick() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                builder.setCancelable(true);
+
+                View view1 = LayoutInflater.from(v.getContext()).inflate(R.layout.add_people_alert, null);
+
+                builder.setView(view1);
+
+                builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
+                    EditText editText = view1.findViewById(R.id.text_edit_alertview);
+                    addNewGroup(editText.getText().toString());
+                    updateGroups();
+
+                });
+                AlertDialog alertDialog = builder.create();
+
+                alertDialog.show();
+            }
         };
 
         if (clickListener != null)
             adapter = new GroupsAdapter(getContext(), clickListener, groups);
         else
             adapter = new GroupsAdapter(getContext(), null, groups);
+
+        adapter.EmptyItemEnable = true;
+        adapter.MoreButtonEnable = true;
 
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(),2));
         recyclerView.setAdapter(adapter);
@@ -299,12 +328,68 @@ public class GroupsActivityFragment extends Fragment {
 
 
     public void showPopup(View v){
-        PopupMenu popupMenu = new PopupMenu(getContext(),v);
-        popupMenu.inflate(R.menu.item_group_menu);
+        PopupMenu popupMenu = new PopupMenu(getActivity(), v);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-        return false;
+            Toast.makeText(v.getContext(),"Я удалил",Toast.LENGTH_LONG).show();
+
+            if(menuItem.getItemId() == R.id.renameItem){
+                return true;
+            }
+            else if (menuItem.getItemId() == R.id.removeItem){
+                return true;
+            }
+            return false;
+
         });
 
+        popupMenu.inflate(R.menu.item_group_menu);
         popupMenu.show();
     }
+
+
+
+    private void addNewGroup(String name) {
+
+        if (!name.equals("")) {
+
+            if (!helper.containsGroup(new Group(name))) {
+
+                helper.addGroup(name);
+                groups.add(new Group(name));
+
+            } else {
+
+                int counter = 2;
+
+                while (helper.containsGroup(new Group(name + counter))) {
+                    counter++;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                builder.setCancelable(true);
+
+                String newName = name + counter;
+
+                builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
+                builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                    helper.addGroup(newName);
+                    groups.add(new Group(name));
+
+                });
+                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        } else {
+            Toast.makeText(v.getContext(),
+                    getResources().getString(R.string.AlertEmptyName),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
 }

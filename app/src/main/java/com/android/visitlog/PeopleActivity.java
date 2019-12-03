@@ -162,6 +162,16 @@ public class PeopleActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
+
+            @Override
+            public void onMoreItemClick(Group item) {
+
+            }
+
+            @Override
+            public void onAddItemClick() {
+
+            }
         };
 
         peopleFragment = new PeopleFragment(clickItemPeople, removeListener, people_list);
