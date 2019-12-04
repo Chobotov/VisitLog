@@ -50,7 +50,7 @@ public class GroupsActivityFragment extends Fragment {
 
     private Toolbar toolbar;
 
-    private boolean editMode = false;
+    private boolean editMode = true;
 
     private DBHelper helper;
 
@@ -74,7 +74,6 @@ public class GroupsActivityFragment extends Fragment {
         appBarLayout = v.findViewById(R.id.appbar);
         recyclerView = v.findViewById(R.id.groups_recyclerView);
         countGroup = v.findViewById(R.id.countGroup);
-        toolbar = v.findViewById(R.id.toolbar_all_people);
 
 
         helper = new DBHelper(v.getContext());
@@ -173,12 +172,17 @@ public class GroupsActivityFragment extends Fragment {
         v.findViewById(R.id.temp).requestFocus();
         setCounterText(groups.size());
 
+        toolbar = v.findViewById(R.id.toolbar_all_people);
+
+
+
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(null);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
+        //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
         return v;
     }
@@ -222,7 +226,8 @@ public class GroupsActivityFragment extends Fragment {
 
     }
 
-    @Override
+
+
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 
         menuInflater.inflate(R.menu.people_activity_menu, menu);
@@ -234,8 +239,6 @@ public class GroupsActivityFragment extends Fragment {
         itemCheckBox.setVisible(false);
 
         itemCheckBox.setOnMenuItemClickListener(item -> {
-
-
             return false;
         });
 
@@ -247,7 +250,7 @@ public class GroupsActivityFragment extends Fragment {
             } else {
                 edit.setVisible(false);
                 this.setRemoveVisible(true);
-               // floatingActionButton.show();
+                //floatingActionButton.show();
                 editMode = !editMode;
             }
             return false;
@@ -263,15 +266,12 @@ public class GroupsActivityFragment extends Fragment {
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(false);
 
-
         });
 
         mSearchView.setOnCloseListener(() -> {
             updateGroups();
-
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(true);
-
 
             if (!editMode) {
                 edit.setVisible(true);
@@ -291,21 +291,17 @@ public class GroupsActivityFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.equals("")) {
-                        updateGroups();
+                    updateGroups();
+                } else {
+                    groups.clear();
+                    groups.addAll(helper.getGroupsFilter(newText));
+                    update();
                 }
-                else {
-                        groups.clear();
-                        groups.addAll(helper.getGroupsFilter(newText));
-                        update();
-                }
+
                 setCounterText(groups.size());
                 return false;
             }
         });
-    }
-
-    private void setRemoveVisible(boolean b) {
-
     }
 
     @Override
@@ -316,10 +312,10 @@ public class GroupsActivityFragment extends Fragment {
             if (editMode) {
 
                 setRemoveVisible(false);
+                //floatingActionButton.hide();
                 editMode = !editMode;
                 edit.setVisible(true);
-                ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(false);
+
             }
             return true;
         }
@@ -327,23 +323,20 @@ public class GroupsActivityFragment extends Fragment {
     }
 
 
+
+    private void setRemoveVisible(boolean b) {
+
+    }
+
     public void showPopup(View v){
-        PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            Toast.makeText(v.getContext(),"Я удалил",Toast.LENGTH_LONG).show();
-
-            if(menuItem.getItemId() == R.id.renameItem){
-                return true;
-            }
-            else if (menuItem.getItemId() == R.id.removeItem){
-                return true;
-            }
+        View menuItemView = getView().findViewById(R.id.popupMenu);
+        PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
+        popup.setOnMenuItemClickListener(x->{
+            Toast.makeText(getActivity(),"Under Construction ",Toast.LENGTH_LONG).show();
             return false;
-
         });
-
-        popupMenu.inflate(R.menu.item_group_menu);
-        popupMenu.show();
+        popup.inflate(R.menu.item_group_menu);
+        popup.show();
     }
 
 
