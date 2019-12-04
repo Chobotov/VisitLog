@@ -66,6 +66,7 @@
                 android:textColor="#9B9B9B"
                 android:fontFamily="@font/rockb"
                 android:layout_gravity="center"
+                android:layout_marginBottom="65dp"
                 android:background="@drawable/itemstyle">
             </Button>
 
