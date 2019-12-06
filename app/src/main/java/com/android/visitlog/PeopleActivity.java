@@ -164,9 +164,10 @@ public class PeopleActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onMoreItemClick(Group item) {
-
+            public void onMoreItemClick(Group item, MenuItem menuItem) {
+                
             }
+
 
             @Override
             public void onAddItemClick() {
