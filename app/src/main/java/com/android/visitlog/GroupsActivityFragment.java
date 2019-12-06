@@ -43,14 +43,14 @@ public class GroupsActivityFragment extends Fragment {
     private GroupsAdapter.ClickListener clickListener;
     private TextView countGroup;
 
-    private AppBarLayout appBarLayout;
     private MenuItem search;
     private MenuItem edit;
     private MenuItem itemCheckBox;
 
-    private Toolbar toolbar;
 
-    private boolean editMode = true;
+    public Toolbar toolbar;
+
+    private boolean editMode = false;
 
     private DBHelper helper;
 
@@ -71,9 +71,15 @@ public class GroupsActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_groups_activity, container, false);
 
-        appBarLayout = v.findViewById(R.id.appbar);
+
         recyclerView = v.findViewById(R.id.groups_recyclerView);
         countGroup = v.findViewById(R.id.countGroup);
+
+        toolbar = v.findViewById(R.id.toolbar_main_group);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
 
 
         helper = new DBHelper(v.getContext());
@@ -172,14 +178,6 @@ public class GroupsActivityFragment extends Fragment {
         v.findViewById(R.id.temp).requestFocus();
         setCounterText(groups.size());
 
-        toolbar = v.findViewById(R.id.toolbar_all_people);
-
-
-
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(null);
 
 
         //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
@@ -224,13 +222,13 @@ public class GroupsActivityFragment extends Fragment {
         updateGroups();
         super.onResume();
 
-    }
 
+    }
 
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 
-        menuInflater.inflate(R.menu.people_activity_menu, menu);
+        menuInflater.inflate(R.menu.groups_activity_menu, menu);
         super.onCreateOptionsMenu(menu,menuInflater);
 
         search = menu.findItem(R.id.app_bar_search);
