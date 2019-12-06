@@ -6,14 +6,18 @@
     android:id="@+id/popupMenu"
 
     >
+
+    <group android:id="@+id/item_group1">
     <item
         android:id="@+id/renameItem"
         android:title="@string/Rename"
-        app:showAsAction="always" />
+        />
     <item
         android:id="@+id/removeItem"
         android:title="@string/Remove"
-        app:showAsAction="always"
         />
+
+    </group>
+
 
 </menu>

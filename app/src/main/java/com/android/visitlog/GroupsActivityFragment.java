@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -75,11 +76,11 @@ public class GroupsActivityFragment extends Fragment {
         recyclerView = v.findViewById(R.id.groups_recyclerView);
         countGroup = v.findViewById(R.id.countGroup);
 
-        toolbar = v.findViewById(R.id.toolbar_main_group);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
+        //toolbar = v.findViewById(R.id.toolbar_main_group);
+        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
 
 
         helper = new DBHelper(v.getContext());
@@ -135,9 +136,43 @@ public class GroupsActivityFragment extends Fragment {
             }
 
             @Override
-            public void onMoreItemClick(Group item) {
-                showPopup(v);
+            public void onMoreItemClick(Group item, MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.removeItem){
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setCancelable(true);
+
+
+
+                    builder.setMessage("Удалить группу " +'"' + item.Name + '"' + " ?");
+                    builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                        helper.removeGroup(item.Name);
+                        groups.remove(item);
+                        update();
+                    });
+                    builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                        dialogInterface.cancel();
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+
+
+//                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Группа "+item.Name+" удалена", Snackbar.LENGTH_LONG)
+//                            .setAction("Отмена", (View.OnClickListener) v -> {
+//                            }).show();
+
+
+
+
+
+
+                }
+                else if(menuItem.getItemId() == R.id.renameItem){
+                    Toast.makeText(getContext(),"Ещё не готово",Toast.LENGTH_SHORT).show();
+                }
             }
+
 
             @Override
             public void onAddItemClick() {
@@ -192,8 +227,10 @@ public class GroupsActivityFragment extends Fragment {
 
 
     public void update(){
-        if(adapter!=null)
+        if(adapter!=null) {
             adapter.notifyDataSetChanged();
+            setCounterText(groups.size());
+        }
     }
 
 
@@ -324,17 +361,6 @@ public class GroupsActivityFragment extends Fragment {
 
     private void setRemoveVisible(boolean b) {
 
-    }
-
-    public void showPopup(View v){
-        View menuItemView = getView().findViewById(R.id.popupMenu);
-        PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
-        popup.setOnMenuItemClickListener(x->{
-            Toast.makeText(getActivity(),"Under Construction ",Toast.LENGTH_LONG).show();
-            return false;
-        });
-        popup.inflate(R.menu.item_group_menu);
-        popup.show();
     }
 
 

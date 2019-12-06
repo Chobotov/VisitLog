@@ -2,11 +2,15 @@ package com.android.visitlog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +24,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private ArrayList<Group> groups;
 
     public boolean EmptyItemEnable = false,
-                    MoreButtonEnable = false;
+            MoreButtonEnable = false;
 
 
 
@@ -79,8 +83,20 @@ public class GroupsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
 
             item.more.setOnClickListener( view ->{
-                if(listener != null)
-                    listener.onMoreItemClick(groups.get(holder.getAdapterPosition()));
+                if(listener != null) {
+
+                    item.showPopup(item.more,
+                            x->{
+                                listener.onMoreItemClick(groups.get(holder.getAdapterPosition()),x);
+
+                                Log.e("Keliz","setClickOnPopup");
+                                // Toast.makeText(inflater.getContext(),"Under Construction ",Toast.LENGTH_LONG).show();
+                                return false;
+                            });
+
+
+                }
+
 
             });
 
@@ -133,6 +149,14 @@ public class GroupsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView getTextView() {
             return name;
         }
+
+        public void showPopup(View v , PopupMenu.OnMenuItemClickListener clickListener){
+
+            PopupMenu popup = new PopupMenu(v.getContext(), v);
+            popup.inflate(R.menu.item_group_menu);
+            popup.setOnMenuItemClickListener( clickListener );
+            popup.show();
+        }
     }
 
     public static class EmptyViewHolder extends RecyclerView.ViewHolder {
@@ -145,11 +169,15 @@ public class GroupsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
+
+
+
     interface ClickListener {
         void onLongItemClick(Group item);
         void onItemClick(Group item);
-        void onMoreItemClick(Group item);
+        void onMoreItemClick(Group item, MenuItem menuItem);
         void onAddItemClick();
+
 
     }
 }

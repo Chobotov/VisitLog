@@ -9,6 +9,6 @@ public class People_Information extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_people__information);
+        setContentView(R.layout.activity_people_information);
     }
 }
