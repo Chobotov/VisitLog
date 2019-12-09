@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="150dp"
+    android:layout_margin="15dp"
     tools:context=".ItemComment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"></RelativeLayout>
+    <ImageView
+        android:id="@+id/message_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_consulting_message">
+    </ImageView>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/inputData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="09.12.2019"
+        android:layout_toRightOf="@+id/message_icon"
+        android:layout_margin="10dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/inputCommit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message_icon"
+        android:layout_margin="30dp"
+        android:textSize="20sp"
+        android:text="012345678901234567890123456789">
+    </TextView>
+
+
+</RelativeLayout>

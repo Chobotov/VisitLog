@@ -21,14 +21,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private ComeLeaveRemove clr;
     private LayoutInflater inflater;
     private ArrayList<People> peopleList;
-    private DBHelper helper;
 
     public ItemAdapter(Context context, ArrayList<People> people,ComeLeaveRemove clr) {
 
         this.peopleList = people;
         this.clr = clr;
         this.inflater = LayoutInflater.from(context);
-        helper = new DBHelper(context);
     }
 
 

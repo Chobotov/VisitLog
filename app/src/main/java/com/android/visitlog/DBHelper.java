@@ -707,4 +707,160 @@ public class DBHelper extends SQLiteOpenHelper {
         c.close();
         return commit;
     }
+
+    //Переименование группы
+    public void RenameGroup(String GroupName,String newGroupName){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        String id = GetIdGroupByName(GroupName);
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(GROUP_NAME,newGroupName);
+
+        sqLiteDatabase.update(GROUPS,cv,KEY_ID
+                + "=? "
+                + "AND " + GROUP_NAME + "=? ",new String[]{id,newGroupName});
+    }
+
+    //Кол-во дней посещений в Месяц/Год
+    public String CameDaysInMonth(int mode,String peopleName,String Year,String Month){
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+        int countOfDays = 0;
+
+        String id = GetIdByName(peopleName);
+
+        switch (mode){
+            case 0:
+                Cursor c = sqLiteDatabase.rawQuery("SELECT " + DAY
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                                + " AND " + MONTH + " = ?"
+                        , new String[]{id,Year, Month});
+                if (c.moveToFirst()) {
+                    do {
+                        countOfDays++;
+                    } while (c.moveToNext());
+                } else
+                    Log.d(LOG_TAG, "Cursor is null");
+                c.close();
+                break;
+
+            case 1:
+                 c = sqLiteDatabase.rawQuery("SELECT " + DAY
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                        , new String[]{id,Year});
+                if (c.moveToFirst()) {
+                    do {
+                        countOfDays++;
+                    } while (c.moveToNext());
+                } else
+                    Log.d(LOG_TAG, "Cursor is null");
+                c.close();
+                break;
+        }
+        return String.valueOf(countOfDays);
+    }
+
+
+    //Кол-во времени на работе в Месяц/Год
+    public String AvgHours(int mode,String peopleName,String Year,String Month){
+        String id = GetIdByName(peopleName);
+        String Hours = "";
+        String CameTime = "";
+        String LeaveTime = "";
+        int cameTime=0;
+        int leaveTime=0;
+        switch (mode){
+            case 0:
+                SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+
+                Cursor c = sqLiteDatabase.rawQuery("SELECT "
+                                + "MIN( "
+                                + CAME_TIME
+                                + " )"
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                                + " AND " + MONTH + " = ?"
+                        , new String[]{id,Year, Month});
+                if (c.moveToFirst()) {
+                    int index = c.getColumnIndex(CAME_TIME);
+                    do {
+                        CameTime = c.getString(index);
+                    } while (c.moveToNext());
+                } else
+                    Log.d(LOG_TAG, "Cursor is null");
+
+                c = sqLiteDatabase.rawQuery("SELECT "
+                                + "MAX( "
+                                + LEAVE_TIME
+                                + " )"
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                                + " AND " + MONTH + " = ?"
+                        , new String[]{id,Year, Month});
+                if (c.moveToFirst()) {
+                    int index = c.getColumnIndex(LEAVE_TIME);
+                    do {
+                        LeaveTime = c.getString(index);
+                    } while (c.moveToNext());
+                } else
+                    Log.d(LOG_TAG, "Cursor is null");
+                c.close();
+
+                cameTime = CameTime.charAt(0) + CameTime.charAt(1);
+                leaveTime = LeaveTime.charAt(0) + LeaveTime.charAt(1);
+                Hours = String.valueOf(leaveTime-cameTime);
+
+                break;
+
+            case 1:
+                sqLiteDatabase = getReadableDatabase();
+
+                c = sqLiteDatabase.rawQuery("SELECT "
+                                + "MIN( "
+                                + CAME_TIME
+                                + " )"
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                        , new String[]{id,Year});
+                if (c.moveToFirst()) {
+                    int index = c.getColumnIndex(CAME_TIME);
+                    do {
+                        CameTime = c.getString(index);
+                    } while (c.moveToNext());
+                } else
+                    Log.d(LOG_TAG, "Cursor is null");
+
+                c = sqLiteDatabase.rawQuery("SELECT "
+                                + "MAX( "
+                                + LEAVE_TIME
+                                + " )"
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                        , new String[]{id,Year});
+                if (c.moveToFirst()) {
+                    int index = c.getColumnIndex(LEAVE_TIME);
+                    do {
+                        LeaveTime = c.getString(index);
+                    } while (c.moveToNext());
+                } else
+                    Log.d(LOG_TAG, "Cursor is null");
+                c.close();
+
+                cameTime = CameTime.charAt(0) + CameTime.charAt(1);
+                leaveTime = LeaveTime.charAt(0) + LeaveTime.charAt(1);
+                Hours = String.valueOf(leaveTime-cameTime);
+                break;
+        }
+        return  Hours;
+    }
 }
