@@ -74,10 +74,10 @@ public class PeopleActivityFragment extends Fragment {
         floatingActionButton = v.findViewById(R.id.floatingActionButton);
 
         toolbar = v.findViewById(R.id.toolbar_all_people);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(null);
+       // ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+       // ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(null);
 
         if (people_list == null) {
             people_list = new ArrayList<>();

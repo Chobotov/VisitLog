@@ -3,6 +3,7 @@ package com.android.visitlog;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     GroupsActivityFragment groupsActivityFragment;
     FragmentManager fragmentManager;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    public Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         active = calendar;
 
+
+
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -80,20 +85,31 @@ public class MainActivity extends AppCompatActivity {
                     fragmentManager.beginTransaction().hide(active).show(calendar).commit();
                     calendar.update();
                     active = calendar;
+
                     return true;
                 case R.id.navPeoples:
                     fragmentManager.beginTransaction().hide(active).show(peopleActivityFragment).commit();
                     peopleActivityFragment.GetData(calendar.YEAR,calendar.MONTH,calendar.DAY);
                     peopleActivityFragment.updatePeople();
                     active = peopleActivityFragment;
+
+                    setSupportActionBar(peopleActivityFragment.toolbar);
+                    getSupportActionBar().setTitle(getResources().getString(R.string.People));
                     return true;
                 case R.id.navGroups:
                     fragmentManager.beginTransaction().hide(active).show(groupsActivityFragment).commit();
                     active = groupsActivityFragment;
+
+                    setSupportActionBar(groupsActivityFragment.toolbar);
+                    getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
+
                     return true;
             }
             return false;
         }
     };
+
+
+
 
 }
