@@ -36,26 +36,26 @@ import java.util.ArrayList;
 
 public class GroupsActivityFragment extends Fragment {
 
-    private View v;
+    View v;
 
-    private RecyclerView recyclerView;
-    private GroupsAdapter adapter;
-    private ArrayList<Group> groups;
-    private GroupsAdapter.ClickListener clickListener;
-    private TextView countGroup;
+    RecyclerView recyclerView;
+    GroupsAdapter adapter;
+    ArrayList<Group> groups;
+    GroupsAdapter.ClickListener clickListener;
+    TextView countGroup;
 
-    private MenuItem search;
-    private MenuItem edit;
-    private MenuItem itemCheckBox;
+    MenuItem search;
+    MenuItem edit;
+    MenuItem itemCheckBox;
 
 
-    public Toolbar toolbar;
+    Toolbar toolbar;
 
-    private boolean editMode = false;
+    boolean editMode = false;
 
-    private DBHelper helper;
+    DBHelper helper;
 
-    private String[] data;// day, month, year
+    String[] data;// day, month, year
 
     public GroupsActivityFragment() {
 
@@ -64,6 +64,7 @@ public class GroupsActivityFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -76,10 +77,10 @@ public class GroupsActivityFragment extends Fragment {
         recyclerView = v.findViewById(R.id.groups_recyclerView);
         countGroup = v.findViewById(R.id.countGroup);
 
-        //toolbar = v.findViewById(R.id.toolbar_main_group);
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar = v.findViewById(R.id.toolbar_main_group);
+      //  ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         //((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
 
 
@@ -213,8 +214,6 @@ public class GroupsActivityFragment extends Fragment {
         v.findViewById(R.id.temp).requestFocus();
         setCounterText(groups.size());
 
-
-
         //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
         return v;
@@ -265,7 +264,7 @@ public class GroupsActivityFragment extends Fragment {
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 
-        menuInflater.inflate(R.menu.groups_activity_menu, menu);
+        menuInflater.inflate(R.menu.people_activity_menu, menu);
         super.onCreateOptionsMenu(menu,menuInflater);
 
         search = menu.findItem(R.id.app_bar_search);
@@ -304,7 +303,7 @@ public class GroupsActivityFragment extends Fragment {
         });
 
         mSearchView.setOnCloseListener(() -> {
-            updateGroups();
+         //   updatePeople();
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -326,37 +325,18 @@ public class GroupsActivityFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.equals("")) {
-                    updateGroups();
+                  //  updatePeople();
                 } else {
-                    groups.clear();
-                    groups.addAll(helper.getGroupsFilter(newText));
+                   // people_list.clear();
+                   // people_list.addAll(helper.getPeopleFilter(newText));
                     update();
                 }
 
-                setCounterText(groups.size());
+               // setCounterText(people_list.size());
                 return false;
             }
         });
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-
-            if (editMode) {
-
-                setRemoveVisible(false);
-                //floatingActionButton.hide();
-                editMode = !editMode;
-                edit.setVisible(true);
-
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
 
     private void setRemoveVisible(boolean b) {
