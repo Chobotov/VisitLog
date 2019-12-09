@@ -26,6 +26,7 @@ public class ItemComment extends  RecyclerView.Adapter<ItemAdapter.ViewHolder>{
 
     @Override
     public int getItemCount() {
+        
         return 0;
     }
 }
