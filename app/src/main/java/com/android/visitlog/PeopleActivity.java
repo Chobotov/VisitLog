@@ -49,7 +49,7 @@ public class PeopleActivity extends AppCompatActivity {
     public String month;
     public String day;
 
-    boolean editMode = false;
+    //boolean editMode = false;
 
 
     @Override
@@ -80,6 +80,7 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public void onLongItemClick(People item) {
+                /*
                 if (editMode) {
                     helper.removePeople(item.Name);
 
@@ -90,11 +91,12 @@ public class PeopleActivity extends AppCompatActivity {
                             item.Name + " " + getResources().getString(R.string.hasRemoved),
                             Toast.LENGTH_SHORT).show();
                 }
+                 */
             }
 
             @Override
             public void onItemClick(People item) {
-                if (!editMode) {
+                //if (!editMode) {
                     if (!helper.containsDataPeople(item, year, month, day)) {
                         helper.SetDataInDataTable(item.Name, year, month, day);
 
@@ -105,7 +107,7 @@ public class PeopleActivity extends AppCompatActivity {
                         Toast.makeText(PeopleActivity.this,
                                 item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
                                 Toast.LENGTH_SHORT).show();
-                    }
+                  //  }
                 }
             }
 
@@ -125,13 +127,15 @@ public class PeopleActivity extends AppCompatActivity {
 
             @Override
             public void onLongItemClick(Group item) {
+                /*
                 if (editMode) {
                     helper.removeGroup(item.Name);
                     group_list.remove(item);
                     groupsFragment.update();
                     groupsFragment.setCounterText(group_list.size());
-
-                } else {
+                */
+                //}
+                //else {
                     ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
 
                     for (People i : peopleInGroup) {
@@ -147,12 +151,12 @@ public class PeopleActivity extends AppCompatActivity {
                                     + day + "." + month + "." + year
                             ,
                             Toast.LENGTH_SHORT).show();
-                }
+                //}
             }
 
             @Override
             public void onItemClick(Group item) {
-                if (!editMode) {
+                //if (!editMode) {
                     groupName = item.Name;
                     Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
                     intent.putExtra("name", String.valueOf(item.Name));
@@ -160,7 +164,7 @@ public class PeopleActivity extends AppCompatActivity {
                     intent.putExtra("month", String.valueOf(month));
                     intent.putExtra("day", String.valueOf(day));
                     startActivity(intent);
-                }
+                //}
             }
 
             @Override
@@ -243,26 +247,31 @@ public class PeopleActivity extends AppCompatActivity {
 
         search = menu.findItem(R.id.app_bar_search);
         edit = menu.findItem(R.id.editMod);
+
+        edit.setEnabled(false);
+        edit.setVisible(false);
+
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
 
         itemCheckBox.setOnMenuItemClickListener(item -> {
 
-
             return false;
         });
 
         edit.setOnMenuItemClickListener(menuItem -> {
-            if (editMode) {
+            //if (editMode) {
                 peopleFragment.setRemoveVisible(false);
                 floatingActionButton.hide();
-                editMode = !editMode;
+                //editMode = !editMode;
+            /*
             } else {
                 edit.setVisible(false);
                 peopleFragment.setRemoveVisible(true);
                 floatingActionButton.show();
                 editMode = !editMode;
             }
+            */
             return false;
         });
 
@@ -270,24 +279,27 @@ public class PeopleActivity extends AppCompatActivity {
 
         mSearchView.setOnSearchClickListener(view -> {
 
+            /*
             if (!editMode) {
                 edit.setVisible(false);
             }
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
-
+            */
         });
 
         mSearchView.setOnCloseListener(() -> {
             updateGroups();
             updatePeople();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+            /*
             if (!editMode) {
                 edit.setVisible(true);
                 edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            */
             return false;
         });
 
@@ -335,16 +347,16 @@ public class PeopleActivity extends AppCompatActivity {
 
         if (item.getItemId() == android.R.id.home) {
 
-            if (editMode) {
+            //if (editMode) {
 
                 peopleFragment.setRemoveVisible(false);
-                floatingActionButton.hide();
-                editMode = !editMode;
-                edit.setVisible(true);
+                //floatingActionButton.hide();
+                //editMode = !editMode;
+                //edit.setVisible(true);
 
-            } else {
+            //} else {
                 finish();
-            }
+            //}
             return true;
         }
         return super.onOptionsItemSelected(item);
