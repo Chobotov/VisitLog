@@ -64,13 +64,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             }
         });
 
+        holder.time.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                clr.ClearTime(peopleList.get(holder.getAdapterPosition()));
+                return true;
+            }
+        });
+
         holder.setComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clr.InsertCommentInData(peopleList.get(holder.getAdapterPosition()));
             }
         });
-
     }
 
     @Override
@@ -97,6 +104,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     interface ComeLeaveRemove{
         void RemovePeopleData(People people,int position);
         void InsertTimeInData(People people);
+        void ClearTime(People people);
         void InsertCommentInData(People people);
         void CheckTime(People people);
     }

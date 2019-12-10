@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.time.Year;
 import java.util.ArrayList;
 
 
@@ -107,7 +109,9 @@ public class PeopleActivityFragment extends Fragment {
             public void onItemClick(People item) {
 
                 Intent intent = new Intent(getContext(), PeopleInformation.class);
-                intent.putExtra("name", String.valueOf(item.Name));
+                intent.putExtra("NAME", String.valueOf(item.Name));
+                intent.putExtra("YEAR", year);
+                intent.putExtra("MONTH", month);
                 startActivity(intent);
                  /*
                 if (!editMode) {
