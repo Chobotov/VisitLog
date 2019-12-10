@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,11 @@ public class GroupActivity extends AppCompatActivity {
     MenuItem search;
     MenuItem edit;
     MenuItem itemSelectedMode;
+
+    MenuItem remove;
+    MenuItem rename;
+
+
 
     Toolbar toolbar;
 
@@ -86,7 +92,7 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
                 //&& !editMode
-                if (!selectMode ) {
+                if (!selectMode && !editMode ) {
 
                     selectMode = true;
                     peopleAdapter.setCheckBoxVisible(selectMode);
@@ -107,8 +113,6 @@ public class GroupActivity extends AppCompatActivity {
                         selectAll = true;
                     }
                     updateIconSelectAllBox();
-
-
                 }
             }
 
@@ -159,7 +163,7 @@ public class GroupActivity extends AppCompatActivity {
 
 
         peopleAdapter = new PeopleAdapter(this, clickListener, removeListener, people_list);
-        peopleAdapter.setRemoveVisible(true);
+        peopleAdapter.setRemoveVisible(false);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -261,7 +265,13 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
 
-       // floatingActionButton.show();
+        if(editMode){
+            floatingActionButton.setVisibility(Button.VISIBLE);
+        }else {
+            floatingActionButton.setVisibility(Button.INVISIBLE);
+
+        }
+
         update();
     }
 
@@ -292,17 +302,108 @@ public class GroupActivity extends AppCompatActivity {
         }
 
     }
+    private void RenameGroup(String name) {
 
+        if (!name.equals("")) {
+
+            if (!helper.containsGroup(new Group(name))) {
+
+                helper.RenameGroup(GroupName,name);
+
+            } else {
+
+                int counter = 2;
+
+                while (helper.containsGroup(new Group(name + counter))) {
+                    counter++;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setCancelable(true);
+
+                String newName = name + counter;
+
+                builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
+                builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                    helper.RenameGroup(GroupName, newName);
+
+                });
+                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        } else {
+            Toast.makeText(this,
+                    getResources().getString(R.string.AlertEmptyName),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.people_activity_menu, menu);
+        getMenuInflater().inflate(R.menu.groups_activity_menu, menu);
+
         search = menu.findItem(R.id.app_bar_search);
         edit = menu.findItem(R.id.editMod);
         itemSelectedMode = menu.findItem(R.id.itemCheckBox);
-        itemSelectedMode.setVisible(selectMode);
+        remove = menu.findItem(R.id.removeItem);
+        rename = menu.findItem(R.id.renameItem);
+
         edit.setVisible(false);
+
+        remove.setVisible(editMode);
+        rename.setVisible(editMode);
+
+
+        remove.setOnMenuItemClickListener(menuItem -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setCancelable(true);
+            builder.setMessage("Удалить группу " +'"' + GroupName + '"' + " ?");
+            builder.setPositiveButton("Нет", (dialogInterface, i) -> {
+                dialogInterface.cancel();
+            });
+            builder.setNegativeButton("Да", (dialogInterface, i) -> {
+                helper.removeGroup(GroupName);
+                finish();
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+            return false;
+        });
+
+        rename.setOnMenuItemClickListener(menuItem -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setCancelable(true);
+
+            View view1 = LayoutInflater.from(GroupActivity.this).inflate(R.layout.add_people_alert, null);
+
+            builder.setView(view1);
+
+            builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
+                EditText editText = view1.findViewById(R.id.text_edit_alertview);
+                RenameGroup(editText.getText().toString());
+
+            });
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
+        return false;
+        });
+
+        itemSelectedMode.setVisible(selectMode);
+
         itemSelectedMode.setOnMenuItemClickListener(menuItem -> {
 
             if(selectAll) {
@@ -326,19 +427,23 @@ public class GroupActivity extends AppCompatActivity {
             return false;
         });
 
-        edit.setOnMenuItemClickListener(menuItem -> {
-//            if (editMode) {
-//                peopleAdapter.setRemoveVisible(false);
-//                floatingActionButton.hide();
-//                editMode = !editMode;
-//            } else {
-//                edit.setVisible(false);
-//                peopleAdapter.setRemoveVisible(true);
-//                floatingActionButton.show();
-//                editMode = !editMode;
-//            }
-            return false;
-        });
+
+//
+//        edit.setOnMenuItemClickListener(menuItem -> {
+////            if (editMode) {
+////                peopleAdapter.setRemoveVisible(false);
+////                floatingActionButton.hide();
+////                editMode = !editMode;
+////            } else {
+////                edit.setVisible(false);
+////                peopleAdapter.setRemoveVisible(true);
+////                floatingActionButton.show();
+////                editMode = !editMode;
+////            }
+//            return false;
+//        });
+
+
 
         SearchView mSearchView = (SearchView) search.getActionView();
 

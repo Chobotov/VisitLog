@@ -25,4 +25,20 @@
         tools:icon="@drawable/ic_check_box_outline_blank_black_24dp" />
 
 
+    <group android:id="@+id/item_group1"
+        >
+        <item
+            android:id="@+id/renameItem"
+            android:title="@string/Rename"
+            app:showAsAction="never"
+            />
+        <item
+            android:id="@+id/removeItem"
+            android:title="@string/Remove"
+            app:showAsAction="never"
+            />
+
+    </group>
+
+
 </menu>

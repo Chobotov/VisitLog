@@ -194,7 +194,7 @@ public class GroupsActivityFragment extends Fragment {
             adapter = new GroupsAdapter(getContext(), null, groups);
 
         adapter.EmptyItemEnable = true;
-        adapter.MoreButtonEnable = true;
+        adapter.MoreButtonEnable = false;
 
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(),2));
         recyclerView.setAdapter(adapter);
@@ -206,12 +206,9 @@ public class GroupsActivityFragment extends Fragment {
 
         //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
-        return v;
-    }
 
-    //затычка
-    private String[] GetData() {
-        return new String[]{"00","00","0000"};
+
+        return v;
     }
 
 
@@ -242,15 +239,12 @@ public class GroupsActivityFragment extends Fragment {
     }
 
 
-
-
     public void onResume() {
         updateGroups();
         super.onResume();
 
 
     }
-
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 
@@ -262,6 +256,7 @@ public class GroupsActivityFragment extends Fragment {
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
         edit.setVisible(false);
+
         itemCheckBox.setOnMenuItemClickListener(item -> {
             return false;
         });
@@ -303,14 +298,6 @@ public class GroupsActivityFragment extends Fragment {
             }
         });
     }
-
-
-    private void setRemoveVisible(boolean b) {
-        ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(b);
-        ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(b);
-    }
-
-
 
     private void addNewGroup(String name) {
 

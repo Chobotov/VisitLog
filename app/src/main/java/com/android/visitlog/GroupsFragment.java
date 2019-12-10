@@ -71,8 +71,9 @@ public class GroupsFragment extends Fragment {
     }
 
     public void update(){
-        if(adapter!=null)
+        if(adapter!=null) {
             adapter.notifyDataSetChanged();
+        }
     }
 
 
