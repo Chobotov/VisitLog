@@ -1,5 +1,6 @@
 package com.android.visitlog;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -44,7 +45,7 @@ public class PeopleActivityFragment extends Fragment {
     public String month;
     public String day;
 
-    boolean editMode = false;
+    //boolean editMode = false;
 
     private RecyclerView recyclerView;
 
@@ -88,7 +89,8 @@ public class PeopleActivityFragment extends Fragment {
 
             @Override
             public void onLongItemClick(People item) {
-                if (editMode) {
+
+                //if (editMode) {
                     helper.removePeople(item.Name);
 
                     people_list.remove(item);
@@ -97,12 +99,17 @@ public class PeopleActivityFragment extends Fragment {
                     Toast.makeText(getContext(),
                             item.Name + " " + getResources().getString(R.string.hasRemoved),
                             Toast.LENGTH_SHORT).show();
-                }
+                //}
+
             }
 
             @Override
             public void onItemClick(People item) {
-                /*
+
+                Intent intent = new Intent(getContext(), PeopleInformation.class);
+                intent.putExtra("name", String.valueOf(item.Name));
+                startActivity(intent);
+                 /*
                 if (!editMode) {
                     if (!helper.containsDataPeople(item, year, month, day)) {
                         helper.SetDataInDataTable(item.Name, year, month, day);
@@ -186,6 +193,10 @@ public class PeopleActivityFragment extends Fragment {
 
         search = menu.findItem(R.id.app_bar_search);
         edit = menu.findItem(R.id.editMod);
+
+        edit.setEnabled(false);
+        edit.setVisible(false);
+
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
 
@@ -194,40 +205,41 @@ public class PeopleActivityFragment extends Fragment {
         });
 
         edit.setOnMenuItemClickListener(menuItem -> {
-            if (editMode) {
-                this.setRemoveVisible(false);
-                //floatingActionButton.hide();
-                editMode = !editMode;
-            } else {
-                edit.setVisible(false);
-                this.setRemoveVisible(true);
-                //floatingActionButton.show();
-                editMode = !editMode;
-            }
+//            if (editMode) {
+//                this.setRemoveVisible(false);
+//                //floatingActionButton.hide();
+//                editMode = !editMode;
+//            } else {
+//                edit.setVisible(false);
+//                this.setRemoveVisible(true);
+//                //floatingActionButton.show();
+//                editMode = !editMode;
+//            }
             return false;
         });
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
         mSearchView.setOnSearchClickListener(view -> {
-
+            /*
             if (!editMode) {
-                edit.setVisible(false);
-            }
+                //edit.setVisible(false);
+           }
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(false);
-
+            */
         });
 
         mSearchView.setOnCloseListener(() -> {
             updatePeople();
-            ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+            //((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            //((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            /*
             if (!editMode) {
-                edit.setVisible(true);
-                edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                //edit.setVisible(true);
+                //edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }
+            */
             return false;
         });
 
@@ -259,14 +271,15 @@ public class PeopleActivityFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-
+            /*
             if (editMode) {
 
                 setRemoveVisible(false);
                 editMode = !editMode;
-                edit.setVisible(true);
+                //edit.setVisible(true);
 
             }
+            */
             return true;
         }
         return super.onOptionsItemSelected(item);

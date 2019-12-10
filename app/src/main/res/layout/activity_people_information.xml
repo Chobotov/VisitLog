@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PeopleInformation">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/PpageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        app:layout_scrollFlags="scroll|enterAlways"
-        android:fillViewport="true"
-        >
-
-    </androidx.viewpager.widget.ViewPager>
 
     <com.google.android.material.appbar.AppBarLayout
 
         android:id="@+id/Pappbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
 
         <androidx.appcompat.widget.Toolbar
 
@@ -31,17 +23,16 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:layout_scrollFlags="scroll|enterAlways"
-            />
-
-        <com.google.android.material.tabs.TabLayout
-
-            android:id="@+id/Ptabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabMode="fixed"/>
-
+            app:layout_scrollFlags="scroll|enterAlways" />
     </com.google.android.material.appbar.AppBarLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <include
+        layout="@layout/info_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Pappbar"></include>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

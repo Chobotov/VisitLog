@@ -71,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.main_container, groupsActivityFragment, "groups").hide(groupsActivityFragment).commit();
 
         active = calendar;
-
-
-
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
