@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ public class GroupActivity extends AppCompatActivity {
 
     Toolbar toolbar;
 
-    FloatingActionButton floatingActionButton;
+    Button floatingActionButton;
 
     DBHelper helper;
 
@@ -45,6 +46,8 @@ public class GroupActivity extends AppCompatActivity {
     //boolean editMode;
     boolean selectMode = false;
     boolean selectAll = false;
+
+    boolean editMode = false;
 
     String year;
     String month;
@@ -56,13 +59,20 @@ public class GroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group);
 
         Intent intent = getIntent();
-        GroupName = intent.getStringExtra("name");
-        year = intent.getStringExtra("year");
-        month = intent.getStringExtra("month");
-        day = intent.getStringExtra("day");
 
+        editMode = intent.getBooleanExtra("edit", editMode);
+        if(!editMode) {
+            GroupName = intent.getStringExtra("name");
+            year = intent.getStringExtra("year");
+            month = intent.getStringExtra("month");
+            day = intent.getStringExtra("day");
+            Log.e("GroupeActivity"," 68 "+ editMode);
+        }
+        else{
+            GroupName = intent.getStringExtra("name");
+            Log.e("GroupeActivity"," 70 "+ editMode);
 
-
+        }
         recyclerView = findViewById(R.id.alert_people_recyclerView);
         textView = findViewById(R.id.countPeople);
 
@@ -85,7 +95,7 @@ public class GroupActivity extends AppCompatActivity {
                     peopleAdapter.setCheckBox(item);
                     selectedPeople.add(item);
 
-                    floatingActionButton.show();
+                    floatingActionButton.setVisibility(Button.VISIBLE);
 
                     search.setVisible(!selectMode);
 
@@ -124,17 +134,18 @@ public class GroupActivity extends AppCompatActivity {
 
                // }
                 else {
-                    if (!helper.containsDataPeople(item, year, month, day)) {
-                        helper.SetDataInDataTable(item.Name, year, month, day);
-                        Toast.makeText(GroupActivity.this,
-                                item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(GroupActivity
-                                        .this,
-                                item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
-                                Toast.LENGTH_SHORT).show();
+                    if(!editMode) {
+                        if (!helper.containsDataPeople(item, year, month, day)) {
+                            helper.SetDataInDataTable(item.Name, year, month, day);
+                            Toast.makeText(GroupActivity.this,
+                                    item.Name + " " + getResources().getString(R.string.AddData) + " " + day + "." + month + "." + year,
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(GroupActivity
+                                            .this,
+                                    item.Name + " " + getResources().getString(R.string.PeopleAlreadyHaveThisDate) + " " + day + "." + month + "." + year,
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
@@ -177,7 +188,8 @@ public class GroupActivity extends AppCompatActivity {
                 peopleAdapter.setCheckBoxVisible(selectMode);
                 itemSelectedMode.setVisible(selectMode);
 
-                floatingActionButton.hide();
+                floatingActionButton.setVisibility(Button.INVISIBLE);
+
                 edit.setVisible(true);
 
 
@@ -210,17 +222,19 @@ public class GroupActivity extends AppCompatActivity {
 
                     @Override
                     public void onItemClick(People item) {
-                        if (!newPeople.contains(item)) {
-                            newPeople.add(item);
 
-                            //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
-                        } else {
+                            if (!newPeople.contains(item)) {
+                                newPeople.add(item);
+
+                                //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.willHasAdd), Toast.LENGTH_SHORT).show();
+                            } else {
 
 
-                            newPeople.remove(item);
-                            //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
+                                newPeople.remove(item);
+                                //Toast.makeText(view1.getContext(), item.Name + " " + getResources().getString(R.string.hasRemoved), Toast.LENGTH_SHORT).show();
 
-                        }
+                            }
+
                     }
                 };
 
@@ -275,7 +289,6 @@ public class GroupActivity extends AppCompatActivity {
         }
         else{
             itemSelectedMode.setIcon(R.drawable.ic_check_box_outline_blank_black_24dp);
-
         }
 
     }
@@ -304,6 +317,7 @@ public class GroupActivity extends AppCompatActivity {
                 selectedPeople.clear();
                 selectedPeople.addAll(people_list);
                 peopleAdapter.setCheckBox(selectAll);
+
 
             }
             updateIconSelectAllBox();
@@ -399,7 +413,8 @@ public class GroupActivity extends AppCompatActivity {
                 peopleAdapter.setCheckBoxVisible(selectMode);
                 itemSelectedMode.setVisible(selectMode);
 
-                floatingActionButton.hide();
+                floatingActionButton.setVisibility(Button.INVISIBLE);
+
                 edit.setVisible(true);
             } else {
                 finish();
