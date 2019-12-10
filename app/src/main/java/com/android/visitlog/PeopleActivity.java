@@ -159,6 +159,7 @@ public class PeopleActivity extends AppCompatActivity {
                 //if (!editMode) {
                     groupName = item.Name;
                     Intent intent = new Intent(PeopleActivity.this, GroupActivity.class);
+                    intent.putExtra("edit",false);
                     intent.putExtra("name", String.valueOf(item.Name));
                     intent.putExtra("year", String.valueOf(year));
                     intent.putExtra("month", String.valueOf(month));
@@ -223,6 +224,8 @@ public class PeopleActivity extends AppCompatActivity {
 
         });
 
+
+
         Intent intent = getIntent();
 
         year = intent.getStringExtra("year");
@@ -283,16 +286,18 @@ public class PeopleActivity extends AppCompatActivity {
             if (!editMode) {
                 edit.setVisible(false);
             }
+
+            */
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
-            */
         });
 
         mSearchView.setOnCloseListener(() -> {
             updateGroups();
             updatePeople();
-            //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            //getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
 
             /*
             if (!editMode) {
@@ -457,6 +462,9 @@ public class PeopleActivity extends AppCompatActivity {
     private void updateGroups() {
         group_list.clear();
         group_list.addAll(helper.getAllGroups());
+        for (Group group : group_list) {
+            group.Count = helper.getGroupMembers(group.Name).size();
+        }
         if (groupsFragment != null) {
             groupsFragment.update();
             groupsFragment.setCounterText(group_list.size());
