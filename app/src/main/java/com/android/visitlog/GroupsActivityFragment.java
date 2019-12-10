@@ -53,7 +53,7 @@ public class GroupsActivityFragment extends Fragment {
 
     DBHelper helper;
 
-    String[] data;// day, month, year
+    // day, month, year
 
     public GroupsActivityFragment() {
 
@@ -79,7 +79,7 @@ public class GroupsActivityFragment extends Fragment {
 
         helper = new DBHelper(v.getContext());
 
-        data = GetData();
+
 
         if (groups == null) {
             groups = new ArrayList<>();
@@ -122,10 +122,12 @@ public class GroupsActivityFragment extends Fragment {
             public void onItemClick(Group item) {
                 //if (!editMode) {
                     Intent intent = new Intent(v.getContext(), GroupActivity.class);
+                    intent.putExtra("edit",true);
+
                     intent.putExtra("name", String.valueOf(item.Name));
-                    intent.putExtra("year", String.valueOf(data[0]));
-                    intent.putExtra("month", String.valueOf(data[1]));
-                    intent.putExtra("day", String.valueOf(data[2]));
+//                    intent.putExtra("year", String.valueOf(data[0]));
+//                    intent.putExtra("month", String.valueOf(data[1]));
+//                    intent.putExtra("day", String.valueOf(data[2]));
                     startActivity(intent);
                // }
             }
