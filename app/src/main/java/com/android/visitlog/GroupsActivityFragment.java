@@ -51,8 +51,6 @@ public class GroupsActivityFragment extends Fragment {
 
     Toolbar toolbar;
 
-    boolean editMode = false;
-
     DBHelper helper;
 
     String[] data;// day, month, year
@@ -78,11 +76,6 @@ public class GroupsActivityFragment extends Fragment {
         countGroup = v.findViewById(R.id.countGroup);
 
         toolbar = v.findViewById(R.id.toolbar_main_group);
-      //  ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
-
 
         helper = new DBHelper(v.getContext());
 
@@ -96,44 +89,45 @@ public class GroupsActivityFragment extends Fragment {
         clickListener = new GroupsAdapter.ClickListener() {
             @Override
             public void onLongItemClick(Group item) {
-                if (editMode) {
-                    helper.removeGroup(item.Name);
-                    groups.remove(item);
-                    update();
-                    setCounterText(groups.size());
 
-                } else {
-
-                    ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
-
-                    for (People i : peopleInGroup) {
-                        if (!helper.containsDataPeople(i, data[0], data[1], data[2])) {
-                            helper.SetDataInDataTable(i.Name,  data[0], data[1], data[2]);
-                        }
-                    }
+//                if (editMode) {
+//                    helper.removeGroup(item.Name);
+//                    groups.remove(item);
+//                    update();
+//                    setCounterText(groups.size());
 //
-//                    Toast.makeText(v.getContext(),
-//                            getResources().getString(R.string.addGroupDate1) + " "
-//                                    + item.Name + " "
-//                                    + getResources().getString(R.string.addGroupDate2) + " "
-//                                    + data[0] + "." + data[1] + "." + data[2]
-//                            ,
-//                            Toast.LENGTH_SHORT).show();
-
-                }
+//                } else {
+//
+//                    ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
+//
+//                    for (People i : peopleInGroup) {
+//                        if (!helper.containsDataPeople(i, data[0], data[1], data[2])) {
+//                            helper.SetDataInDataTable(i.Name,  data[0], data[1], data[2]);
+//                        }
+//                    }
+////
+////                    Toast.makeText(v.getContext(),
+////                            getResources().getString(R.string.addGroupDate1) + " "
+////                                    + item.Name + " "
+////                                    + getResources().getString(R.string.addGroupDate2) + " "
+////                                    + data[0] + "." + data[1] + "." + data[2]
+////                            ,
+////                            Toast.LENGTH_SHORT).show();
+//
+//                }
 
             }
 
             @Override
             public void onItemClick(Group item) {
-                if (!editMode) {
+                //if (!editMode) {
                     Intent intent = new Intent(v.getContext(), GroupActivity.class);
                     intent.putExtra("name", String.valueOf(item.Name));
                     intent.putExtra("year", String.valueOf(data[0]));
                     intent.putExtra("month", String.valueOf(data[1]));
                     intent.putExtra("day", String.valueOf(data[2]));
                     startActivity(intent);
-                }
+               // }
             }
 
             @Override
@@ -143,9 +137,6 @@ public class GroupsActivityFragment extends Fragment {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                     builder.setCancelable(true);
-
-
-
                     builder.setMessage("Удалить группу " +'"' + item.Name + '"' + " ?");
                     builder.setPositiveButton("Да", (dialogInterface, i) -> {
                         helper.removeGroup(item.Name);
@@ -162,9 +153,6 @@ public class GroupsActivityFragment extends Fragment {
 //                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Группа "+item.Name+" удалена", Snackbar.LENGTH_LONG)
 //                            .setAction("Отмена", (View.OnClickListener) v -> {
 //                            }).show();
-
-
-
 
 
 
@@ -271,46 +259,22 @@ public class GroupsActivityFragment extends Fragment {
         edit = menu.findItem(R.id.editMod);
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
-
+        edit.setVisible(false);
         itemCheckBox.setOnMenuItemClickListener(item -> {
             return false;
         });
 
         edit.setOnMenuItemClickListener(menuItem -> {
-            if (editMode) {
-                this.setRemoveVisible(false);
-                //floatingActionButton.hide();
-                editMode = !editMode;
-            } else {
-                edit.setVisible(false);
-                this.setRemoveVisible(true);
-                //floatingActionButton.show();
-                editMode = !editMode;
-            }
             return false;
         });
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
         mSearchView.setOnSearchClickListener(view -> {
-
-            if (!editMode) {
-                edit.setVisible(false);
-            }
-            ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(false);
-
         });
 
         mSearchView.setOnCloseListener(() -> {
-         //   updatePeople();
-            ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-            if (!editMode) {
-                edit.setVisible(true);
-                edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
+            updateGroups();
             return false;
         });
 
@@ -325,14 +289,14 @@ public class GroupsActivityFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.equals("")) {
-                  //  updatePeople();
+                    updateGroups();
                 } else {
-                   // people_list.clear();
-                   // people_list.addAll(helper.getPeopleFilter(newText));
+                    groups.clear();
+                    groups.addAll(helper.getGroupsFilter(newText));
                     update();
                 }
 
-               // setCounterText(people_list.size());
+                setCounterText(groups.size());
                 return false;
             }
         });
@@ -340,7 +304,8 @@ public class GroupsActivityFragment extends Fragment {
 
 
     private void setRemoveVisible(boolean b) {
-
+        ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayHomeAsUpEnabled(b);
+        ((AppCompatActivity)(getActivity())).getSupportActionBar().setDisplayShowHomeEnabled(b);
     }
 
 

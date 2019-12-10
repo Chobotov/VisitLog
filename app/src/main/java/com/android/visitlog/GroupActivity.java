@@ -42,7 +42,7 @@ public class GroupActivity extends AppCompatActivity {
 
     String GroupName;
 
-    boolean editMode;
+    //boolean editMode;
     boolean selectMode = false;
     boolean selectAll = false;
 
@@ -62,6 +62,7 @@ public class GroupActivity extends AppCompatActivity {
         day = intent.getStringExtra("day");
 
 
+
         recyclerView = findViewById(R.id.alert_people_recyclerView);
         textView = findViewById(R.id.countPeople);
 
@@ -74,7 +75,8 @@ public class GroupActivity extends AppCompatActivity {
         PeopleAdapter.ClickListener clickListener = new PeopleAdapter.ClickListener() {
             @Override
             public void onLongItemClick(People item) {
-                if (!selectMode && !editMode) {
+                //&& !editMode
+                if (!selectMode ) {
 
                     selectMode = true;
                     peopleAdapter.setCheckBoxVisible(selectMode);
@@ -118,9 +120,9 @@ public class GroupActivity extends AppCompatActivity {
                         updateIconSelectAllBox();
                     }
                 }
-                else if (editMode){
+                //else if (editMode){
 
-                }
+               // }
                 else {
                     if (!helper.containsDataPeople(item, year, month, day)) {
                         helper.SetDataInDataTable(item.Name, year, month, day);
@@ -146,7 +148,7 @@ public class GroupActivity extends AppCompatActivity {
 
 
         peopleAdapter = new PeopleAdapter(this, clickListener, removeListener, people_list);
-        peopleAdapter.setRemoveVisible(false);
+        peopleAdapter.setRemoveVisible(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -158,7 +160,7 @@ public class GroupActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setTitle(GroupName);
 
 
         floatingActionButton = findViewById(R.id.floatingActionButton);
@@ -245,7 +247,7 @@ public class GroupActivity extends AppCompatActivity {
             }
         });
 
-        floatingActionButton.hide();
+       // floatingActionButton.show();
         update();
     }
 
@@ -287,7 +289,7 @@ public class GroupActivity extends AppCompatActivity {
         edit = menu.findItem(R.id.editMod);
         itemSelectedMode = menu.findItem(R.id.itemCheckBox);
         itemSelectedMode.setVisible(selectMode);
-
+        edit.setVisible(false);
         itemSelectedMode.setOnMenuItemClickListener(menuItem -> {
 
             if(selectAll) {
@@ -311,26 +313,26 @@ public class GroupActivity extends AppCompatActivity {
         });
 
         edit.setOnMenuItemClickListener(menuItem -> {
-            if (editMode) {
-                peopleAdapter.setRemoveVisible(false);
-                floatingActionButton.hide();
-                editMode = !editMode;
-            } else {
-                edit.setVisible(false);
-                peopleAdapter.setRemoveVisible(true);
-                floatingActionButton.show();
-                editMode = !editMode;
-            }
+//            if (editMode) {
+//                peopleAdapter.setRemoveVisible(false);
+//                floatingActionButton.hide();
+//                editMode = !editMode;
+//            } else {
+//                edit.setVisible(false);
+//                peopleAdapter.setRemoveVisible(true);
+//                floatingActionButton.show();
+//                editMode = !editMode;
+//            }
             return false;
         });
 
         SearchView mSearchView = (SearchView) search.getActionView();
 
         mSearchView.setOnSearchClickListener(view -> {
-
-            if (!editMode) {
-                edit.setVisible(false);
-            }
+//
+//            if (!editMode) {
+//                edit.setVisible(false);
+//            }
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
 
@@ -342,10 +344,10 @@ public class GroupActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-            if (!editMode) {
-                edit.setVisible(true);
-                edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
+//            if (!editMode) {
+//                edit.setVisible(true);
+//                edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//            }
 
             return false;
         });
@@ -380,13 +382,14 @@ public class GroupActivity extends AppCompatActivity {
 
         if (item.getItemId() == android.R.id.home) {
 
-            if (editMode) {
-                peopleAdapter.setRemoveVisible(false);
-                floatingActionButton.hide();
-                editMode = !editMode;
-                edit.setVisible(true);
-
-            } else if (selectMode) {
+//            if (editMode) {
+//                peopleAdapter.setRemoveVisible(false);
+//                floatingActionButton.hide();
+//                editMode = !editMode;
+//                edit.setVisible(true);
+//
+//            } else
+            if (selectMode) {
                 selectMode = !selectMode;
                 selectAll = false;
                 search.setVisible(true);
@@ -398,9 +401,6 @@ public class GroupActivity extends AppCompatActivity {
 
                 floatingActionButton.hide();
                 edit.setVisible(true);
-
-
-
             } else {
                 finish();
             }
