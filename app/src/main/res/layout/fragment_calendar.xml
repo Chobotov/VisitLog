@@ -30,7 +30,7 @@
 
         android:id="@+id/Scroll_all_people"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fillViewport="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -50,6 +50,7 @@
 
             <Button
                 android:id="@+id/floatingActionButton"
+                android:layout_margin="10dp"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_add"
@@ -59,7 +60,6 @@
                 android:fontFamily="@font/rockb"
                 android:background="@drawable/itemstyle">
             </Button>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

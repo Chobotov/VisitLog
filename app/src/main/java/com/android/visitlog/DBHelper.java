@@ -203,8 +203,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(this.YEAR,YEAR);
         cv.put(this.MONTH,MONTH);
         cv.put(this.DAY,DAY);
-        cv.put(CAME_TIME,"Пришел");
-        cv.put(LEAVE_TIME,"Ушел");
+        cv.put(CAME_TIME,"__");
+        cv.put(LEAVE_TIME,"__");
 
         sqLiteDatabase.insert(DATA_PEOPLE,null,cv);
     }
