@@ -102,6 +102,7 @@ public class PeopleActivityFragment extends Fragment {
 
             @Override
             public void onItemClick(People item) {
+                /*
                 if (!editMode) {
                     if (!helper.containsDataPeople(item, year, month, day)) {
                         helper.SetDataInDataTable(item.Name, year, month, day);
@@ -115,6 +116,7 @@ public class PeopleActivityFragment extends Fragment {
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
+                */
             }
 
         };
@@ -261,7 +263,6 @@ public class PeopleActivityFragment extends Fragment {
             if (editMode) {
 
                 setRemoveVisible(false);
-                //floatingActionButton.hide();
                 editMode = !editMode;
                 edit.setVisible(true);
 

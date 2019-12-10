@@ -134,7 +134,7 @@ public class CalendarFragment extends Fragment{
                 builder.setView(view1);
 
                 EditText editText = view1.findViewById(R.id.text_edit_commentAlert);
-                editText.setText(commit);
+                editText.setText(people.commit);
 
                 builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
 
@@ -284,7 +284,6 @@ public class CalendarFragment extends Fragment{
             int index = cursor.getColumnIndex(dbHelper.CAME_TIME);
             do {
                 people.CameTime = (cursor.getString(index));
-                //Log.d("people:", "Came " + people.CameTime + " Leave " + people.LeaveTime);
             } while (cursor.moveToNext());
         }
 
@@ -299,7 +298,6 @@ public class CalendarFragment extends Fragment{
             int index = cursor.getColumnIndex(dbHelper.LEAVE_TIME);
             do {
                 people.LeaveTime = (cursor.getString(index));
-                //Log.d("people:", "Came " + people.CameTime + " Leave " + people.LeaveTime);
             } while (cursor.moveToNext());
         }
         cursor.close();

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
 
     android:background="@drawable/itemstyle"
     android:orientation="horizontal"
@@ -12,26 +13,35 @@
         android:id="@+id/setTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:text="7:00-8:00"
         android:textSize="14dp"
-        android:text="7:00-8:00">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     </TextView>
 
     <RelativeLayout
-        android:layout_width="320dp"
+        android:layout_width="0dp"
         android:layout_height="98dp"
+        android:layout_gravity="end|bottom"
         android:background="@color/colorPrimary"
-        android:layout_gravity="end|bottom">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/setTime"
+        app:layout_constraintTop_toBottomOf="@+id/setTime">
 
         <Button
             android:id="@+id/remove"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/vector_remove"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/vector_remove">
+
         </Button>
 
         <TextView
@@ -54,18 +64,25 @@
             android:layout_marginTop="5dp"
             android:text="БВТ-31"
             android:textSize="16sp">
+
         </TextView>
 
         <TextView
             android:id="@+id/comment"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:layout_alignLeft="@+id/name"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp">
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="15dp"
+            android:layout_toStartOf="@+id/time"
+            android:layout_toLeftOf="@+id/time">
+
         </TextView>
 
-       <ImageButton
+        <ImageButton
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,6 +94,7 @@
             android:layout_toLeftOf="@+id/setComment"
             android:background="@color/colorPrimary"
             android:src="@drawable/ic_clock">
+
         </ImageButton>
 
         <ImageButton
@@ -91,7 +109,8 @@
             android:layout_marginBottom="10dp"
             android:background="@color/colorPrimary"
             android:src="@drawable/ic_consulting_message">
+
         </ImageButton>
     </RelativeLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
