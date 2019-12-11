@@ -96,7 +96,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         cv.put(FULL_NAME,name);
         sqLiteDatabase.insert(PEOPLE, null, cv);
-
     }
 
     public String GetNameByID(String id){
@@ -769,51 +768,54 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //Кол-во времени на работе в Месяц/Год
     public String AvgHours(int mode,String peopleName,String Year,String Month){
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         String id = GetIdByName(peopleName);
-        String Hours = "";
-        String CameTime = "";
-        String LeaveTime = "";
+        String Hours = "0";
+        String CameTime =  "0";
+        String LeaveTime = "0";
         int cameTime=0;
         int leaveTime=0;
         switch (mode){
             case 0:
-                SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-
-                Cursor c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MIN( "
+                Cursor c = sqLiteDatabase.rawQuery("SELECT ("
                                 + CAME_TIME
-                                + " )"
+                                + ")"
                                 + " FROM " + DATA_PEOPLE
                                 + " WHERE " + ID_PEOPLE + " = ?"
                                 + " AND " + YEAR + " = ?"
                                 + " AND " + MONTH + " = ?"
                         , new String[]{id,Year, Month});
-                if (c.moveToFirst()) {
+                if (c != null) {
                     int index = c.getColumnIndex(CAME_TIME);
                     do {
-                        CameTime = c.getString(index);
+                    c.moveToFirst();
+                    Log.d("cameTime", c.getString(c.getColumnIndex(CAME_TIME)));
+                       CameTime = c.getString(c.getColumnIndex(CAME_TIME));
+                    Log.d("cameTime",String.valueOf(CameTime.charAt(1)));
                     } while (c.moveToNext());
-                } else
+                } else{
                     Log.d(LOG_TAG, "Cursor is null");
-
+                    break;
+                }
+/*
                 c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MAX( "
+                                + "MIN( "
                                 + LEAVE_TIME
-                                + " )"
+                                + ")"
                                 + " FROM " + DATA_PEOPLE
                                 + " WHERE " + ID_PEOPLE + " = ?"
                                 + " AND " + YEAR + " = ?"
                                 + " AND " + MONTH + " = ?"
                         , new String[]{id,Year, Month});
                 if (c.moveToFirst()) {
-                    int index = c.getColumnIndex(LEAVE_TIME);
-                    do {
-                        LeaveTime = c.getString(index);
-                    } while (c.moveToNext());
+                    //int index = c.getColumnIndex(LEAVE_TIME);
+                    //do {
+                        LeaveTime = c.getString(c.getColumnIndex(LEAVE_TIME));
+                   // } while (c.moveToNext());
                 } else
                     Log.d(LOG_TAG, "Cursor is null");
-                c.close();
 
+                c.close();
                 cameTime = CameTime.charAt(0) + CameTime.charAt(1);
                 leaveTime = LeaveTime.charAt(0) + LeaveTime.charAt(1);
                 Hours = String.valueOf(leaveTime-cameTime);
@@ -821,10 +823,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 break;
 
             case 1:
-                sqLiteDatabase = getReadableDatabase();
-
                 c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MIN( "
+                                + "MAX( "
                                 + CAME_TIME
                                 + " )"
                                 + " FROM " + DATA_PEOPLE
@@ -837,10 +837,13 @@ public class DBHelper extends SQLiteOpenHelper {
                         CameTime = c.getString(index);
                     } while (c.moveToNext());
                 } else
+                {
                     Log.d(LOG_TAG, "Cursor is null");
+                    break;
+                }
 
                 c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MAX( "
+                                + "MIN( "
                                 + LEAVE_TIME
                                 + " )"
                                 + " FROM " + DATA_PEOPLE
@@ -860,7 +863,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 leaveTime = LeaveTime.charAt(0) + LeaveTime.charAt(1);
                 Hours = String.valueOf(leaveTime-cameTime);
                 break;
+        */
         }
-        return  Hours;
+        return  String.valueOf(CameTime.charAt(0))+String.valueOf(CameTime.charAt(1));
     }
 }

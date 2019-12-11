@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navCalendar:
                     fragmentManager.beginTransaction().hide(active).show(calendar).commit();
                     calendar.update();
+                    calendar.updateDecorator();
                     active = calendar;
 
                     return true;

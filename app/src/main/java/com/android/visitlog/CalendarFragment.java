@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class CalendarFragment extends Fragment{
@@ -47,7 +48,7 @@ public class CalendarFragment extends Fragment{
     private ArrayList<People> peopleList;
     private DBHelper dbHelper;
 
-    private int whichTime;
+    //private int whichTime;
 
     final String LOG_TAG = "myLogs";
 
@@ -66,7 +67,8 @@ public class CalendarFragment extends Fragment{
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        whichTime = 1;
+        AtomicInteger cameHourDay = new AtomicInteger();
+        //whichTime = 1;
 
         commit = "";
 
@@ -104,23 +106,35 @@ public class CalendarFragment extends Fragment{
 
             @Override
             public void InsertTimeInData(People people) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        if(whichTime == 1){
-                            people.CameTime = hourOfDay + ":" + minute;
-                            dbHelper.InsertCameTime(people.Name, people.CameTime, YEAR, MONTH, DAY);
-                            whichTime = 2;
-                        }
-                        else{
-                            people.LeaveTime = hourOfDay + ":" + minute;
-                            dbHelper.InsertLeaveTime(people.Name, people.LeaveTime, YEAR, MONTH, DAY);
-                            whichTime = 1;
-                        }
-                        adapter.notifyDataSetChanged();
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), (view, hourOfDay, minute1) -> {
+                    if(people.CameTime.equals("__")){
+                        people.CameTime = hourOfDay + ":" + minute1;
+                        dbHelper.InsertCameTime(people.Name, people.CameTime, YEAR, MONTH, DAY);
+                        cameHourDay.set(hourOfDay);
+                        //whichTime = 2;
                     }
+                    else{
+                        if(hourOfDay < cameHourDay.get()){
+                            Toast.makeText(getContext(),"Время прибытия не может быть раньше времени ухода!",Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            people.LeaveTime = hourOfDay + ":" + minute1;
+                            dbHelper.InsertLeaveTime(people.Name, people.LeaveTime, YEAR, MONTH, DAY);
+                            //whichTime = 1;
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
                 },hour,minute,android.text.format.DateFormat.is24HourFormat(getContext()));
                 timePickerDialog.show();
+            }
+
+            @Override
+            public void ClearTime(People people) {
+                people.CameTime = "__";
+                people.LeaveTime = "__";
+                dbHelper.InsertCameTime(people.Name, people.CameTime, YEAR, MONTH, DAY);
+                dbHelper.InsertLeaveTime(people.Name, people.LeaveTime, YEAR, MONTH, DAY);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -134,11 +148,12 @@ public class CalendarFragment extends Fragment{
                 builder.setView(view1);
 
                 EditText editText = view1.findViewById(R.id.text_edit_commentAlert);
+
                 editText.setText(people.commit);
 
                 builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
 
-                    if(editText.getText().toString().length() >= 30){
+                    if(editText.getText().toString().length() > 30){
                         commit = editText.getText().toString();
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
 
@@ -188,6 +203,7 @@ public class CalendarFragment extends Fragment{
             @Override
             public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
                 MONTH = String.valueOf(date.getMonth());
+                YEAR = String.valueOf(date.getYear());
                 eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
                 mcv.invalidateDecorators();
             }
@@ -210,6 +226,11 @@ public class CalendarFragment extends Fragment{
     public void onResume() {
         super.onResume();
         update();
+        eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
+        mcv.invalidateDecorators();
+    }
+
+    public void updateDecorator(){
         eventDecorator.setDates(dbHelper.SelectAllNotEmptyDays(YEAR,MONTH));
         mcv.invalidateDecorators();
     }
