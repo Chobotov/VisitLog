@@ -6,7 +6,7 @@
     android:id="@+id/add_people_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/itemstyle"
+    android:background="@color/bg"
     >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -50,16 +50,14 @@
 
                 <View
                     android:id="@+id/view"
-                    android:layout_width="22dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_width="18dp"
+                    android:layout_height="20dp"
 
 
-                    android:layout_marginBottom="1dp"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/ic_people"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="@+id/scountPeople" />
 
                 <TextView
                     android:id="@+id/scountPeople"
@@ -71,8 +69,7 @@
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/view"
-                    app:layout_constraintTop_toTopOf="@+id/view" />
+                    app:layout_constraintStart_toEndOf="@+id/view" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

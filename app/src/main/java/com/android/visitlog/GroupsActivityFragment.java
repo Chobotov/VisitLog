@@ -218,8 +218,7 @@ public class GroupsActivityFragment extends Fragment {
 
 
     public void setCounterText(int text){
-        if(countGroup != null)
-            countGroup.setText(text + " "+ getResources().getString(R.string.Groups));
+            countGroup.setText(text+"");
     }
 
     private void updateGroups() {
@@ -229,10 +228,13 @@ public class GroupsActivityFragment extends Fragment {
         for (Group group : groups) {
             group.Count = helper.getGroupMembers(group.Name).size();
         }
+
         if (groups != null) {
             update();
-            setCounterText(groups.size());
         }
+
+        setCounterText(groups.size());
+
     }
 
 

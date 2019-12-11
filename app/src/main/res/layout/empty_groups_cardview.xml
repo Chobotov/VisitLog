@@ -10,21 +10,21 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="@color/floatingActionButton"
-        >
+        android:layout_height="match_parent"
+        android:background="@color/emtyCard">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_add_30dp"
-            tools:ignore="VectorDrawableCompat" />
+            android:src="@drawable/ic_add_emty_card_24dp"
+
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

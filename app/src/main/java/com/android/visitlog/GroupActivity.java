@@ -309,6 +309,7 @@ public class GroupActivity extends AppCompatActivity {
             if (!helper.containsGroup(new Group(name))) {
 
                 helper.RenameGroup(GroupName,name);
+                GroupName = name;
 
             } else {
 
@@ -327,6 +328,7 @@ public class GroupActivity extends AppCompatActivity {
                 builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
                 builder.setPositiveButton("Да", (dialogInterface, i) -> {
                     helper.RenameGroup(GroupName, newName);
+                    GroupName = newName;
 
                 });
                 builder.setNegativeButton("Нет", (dialogInterface, i) -> {
@@ -335,6 +337,7 @@ public class GroupActivity extends AppCompatActivity {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
+            getSupportActionBar().setTitle(GroupName);
         } else {
             Toast.makeText(this,
                     getResources().getString(R.string.AlertEmptyName),
