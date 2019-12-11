@@ -678,8 +678,8 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.update(DATA_PEOPLE,cv,ID_PEOPLE
                 + "=? "
                 + "AND " + YEAR + "=? "
-                + "AND " +  MONTH + "=? "
-                + "AND " +  DAY + "=? ",new String[]{id,Year,Month,Day});
+                + "AND " + MONTH + "=? "
+                + "AND " + DAY + "=? ",new String[]{id,Year,Month,Day});
     }
 
     public String GetCommentToPeople(People people,String Year,String Month,String Day){
@@ -718,8 +718,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(GROUP_NAME,newGroupName);
 
         sqLiteDatabase.update(GROUPS,cv,KEY_ID
-                + "=? "
-                + "AND " + GROUP_NAME + "=? ",new String[]{id,newGroupName});
+                + "=?"
+                + " AND " + GROUP_NAME + "=?",new String[]{id,GroupName});
     }
 
     //Кол-во дней посещений в Месяц/Год
@@ -767,104 +767,86 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     //Кол-во времени на работе в Месяц/Год
-    public String AvgHours(int mode,String peopleName,String Year,String Month){
+    public String AvgHours(int mode,String peopleName,String Year,String Month) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         String id = GetIdByName(peopleName);
-        String Hours = "0";
-        String CameTime =  "0";
-        String LeaveTime = "0";
-        int cameTime=0;
-        int leaveTime=0;
-        switch (mode){
+        int countOfDays = 0;
+        int cameTime = 0;
+        int leaveTime = 0;
+        switch (mode) {
             case 0:
-                Cursor c = sqLiteDatabase.rawQuery("SELECT ("
+                Cursor c = sqLiteDatabase.rawQuery("SELECT "
                                 + CAME_TIME
-                                + ")"
                                 + " FROM " + DATA_PEOPLE
                                 + " WHERE " + ID_PEOPLE + " = ?"
                                 + " AND " + YEAR + " = ?"
                                 + " AND " + MONTH + " = ?"
-                        , new String[]{id,Year, Month});
-                if (c != null) {
+                        , new String[]{id, Year, Month});
+                if (c.moveToFirst()) {
                     int index = c.getColumnIndex(CAME_TIME);
                     do {
-                    c.moveToFirst();
-                    Log.d("cameTime", c.getString(c.getColumnIndex(CAME_TIME)));
-                       CameTime = c.getString(c.getColumnIndex(CAME_TIME));
-                    Log.d("cameTime",String.valueOf(CameTime.charAt(1)));
+                        String time = c.getString(index);
+                        String [] times = time.split(":");
+                        if(!time.equals("__")){
+                            cameTime += Integer.valueOf(times[0]);
+                            countOfDays++;
+                        }
                     } while (c.moveToNext());
-                } else{
+                    if(countOfDays==0)
+                    {
+                        cameTime /= 1;
+                    }
+                    else {
+                        cameTime /= countOfDays;
+                    }
+                    countOfDays = 0;
+                } else {
                     Log.d(LOG_TAG, "Cursor is null");
-                    break;
+                    //break;
                 }
-/*
+
+                Log.d(LOG_TAG, String.valueOf(cameTime));
+                Log.d(LOG_TAG, String.valueOf(countOfDays));
+                Log.d(LOG_TAG, String.valueOf(cameTime));
+
                 c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MIN( "
                                 + LEAVE_TIME
-                                + ")"
                                 + " FROM " + DATA_PEOPLE
                                 + " WHERE " + ID_PEOPLE + " = ?"
                                 + " AND " + YEAR + " = ?"
                                 + " AND " + MONTH + " = ?"
-                        , new String[]{id,Year, Month});
-                if (c.moveToFirst()) {
-                    //int index = c.getColumnIndex(LEAVE_TIME);
-                    //do {
-                        LeaveTime = c.getString(c.getColumnIndex(LEAVE_TIME));
-                   // } while (c.moveToNext());
-                } else
-                    Log.d(LOG_TAG, "Cursor is null");
-
-                c.close();
-                cameTime = CameTime.charAt(0) + CameTime.charAt(1);
-                leaveTime = LeaveTime.charAt(0) + LeaveTime.charAt(1);
-                Hours = String.valueOf(leaveTime-cameTime);
-
-                break;
-
-            case 1:
-                c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MAX( "
-                                + CAME_TIME
-                                + " )"
-                                + " FROM " + DATA_PEOPLE
-                                + " WHERE " + ID_PEOPLE + " = ?"
-                                + " AND " + YEAR + " = ?"
-                        , new String[]{id,Year});
-                if (c.moveToFirst()) {
-                    int index = c.getColumnIndex(CAME_TIME);
-                    do {
-                        CameTime = c.getString(index);
-                    } while (c.moveToNext());
-                } else
-                {
-                    Log.d(LOG_TAG, "Cursor is null");
-                    break;
-                }
-
-                c = sqLiteDatabase.rawQuery("SELECT "
-                                + "MIN( "
-                                + LEAVE_TIME
-                                + " )"
-                                + " FROM " + DATA_PEOPLE
-                                + " WHERE " + ID_PEOPLE + " = ?"
-                                + " AND " + YEAR + " = ?"
-                        , new String[]{id,Year});
+                        , new String[]{id, Year, Month});
                 if (c.moveToFirst()) {
                     int index = c.getColumnIndex(LEAVE_TIME);
                     do {
-                        LeaveTime = c.getString(index);
+                        String time = c.getString(index);
+                        String [] times = time.split(":");
+                        if(!time.equals("__")){
+                            leaveTime += Integer.valueOf(times[0]);
+                            countOfDays++;
+                        }
                     } while (c.moveToNext());
-                } else
+                    if(countOfDays==0)
+                    {
+                        leaveTime /= 1;
+                    }
+                    else {
+                        leaveTime /= countOfDays;
+                    }
+                } else {
                     Log.d(LOG_TAG, "Cursor is null");
-                c.close();
-
-                cameTime = CameTime.charAt(0) + CameTime.charAt(1);
-                leaveTime = LeaveTime.charAt(0) + LeaveTime.charAt(1);
-                Hours = String.valueOf(leaveTime-cameTime);
+                }
+                Log.d(LOG_TAG, String.valueOf(leaveTime));
+                Log.d(LOG_TAG, String.valueOf(leaveTime));
+                Log.d(LOG_TAG, String.valueOf(countOfDays));
                 break;
-        */
         }
-        return  String.valueOf(CameTime.charAt(0))+String.valueOf(CameTime.charAt(1));
+        int AvgHours = leaveTime - cameTime;
+        if(AvgHours < 0){
+            return "0";
+        }
+        else {
+            return String.valueOf(AvgHours);
+        }
     }
 }
