@@ -179,8 +179,6 @@ public class GroupsActivityFragment extends Fragment {
 
                     EditText editText = view1.findViewById(R.id.text_edit_alertview);
                     addNewGroup(editText.getText().toString());
-                    updateGroups();
-
                 });
                 AlertDialog alertDialog = builder.create();
 
@@ -204,7 +202,6 @@ public class GroupsActivityFragment extends Fragment {
         v.findViewById(R.id.temp).requestFocus();
         setCounterText(groups.size());
 
-        //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
 
 
@@ -299,6 +296,8 @@ public class GroupsActivityFragment extends Fragment {
         });
     }
 
+
+
     private void addNewGroup(String name) {
 
         if (!name.equals("")) {
@@ -325,7 +324,6 @@ public class GroupsActivityFragment extends Fragment {
                 builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
                 builder.setPositiveButton("Да", (dialogInterface, i) -> {
                     helper.addGroup(newName);
-                    groups.add(new Group(name));
 
                 });
                 builder.setNegativeButton("Нет", (dialogInterface, i) -> {
@@ -334,6 +332,7 @@ public class GroupsActivityFragment extends Fragment {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
+            updateGroups();
         } else {
             Toast.makeText(v.getContext(),
                     getResources().getString(R.string.AlertEmptyName),

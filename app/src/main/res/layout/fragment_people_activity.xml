@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/add_people_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,19 +40,47 @@
             android:layout_marginRight="16dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/scountPeople"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="15dp"
-                android:text="@string/app_name"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="7dp"
+                >
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="22dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="1dp"
+
+
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/ic_people"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/scountPeople"
+                    android:layout_width="0dp"
+                    android:layout_height="26dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/app_name"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/view"
+                    app:layout_constraintTop_toTopOf="@+id/view" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/alert_people_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
             <Button
                 android:id="@+id/floatingActionButton"
@@ -63,7 +92,9 @@
                 android:fontFamily="@font/rockb"
                 android:text="Add people"
                 android:layout_margin="10dp"
-                android:textColor="#9B9B9B"></Button>
+                android:textColor="#9B9B9B">
+
+            </Button>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
