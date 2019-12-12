@@ -28,9 +28,26 @@
     <string name="addGroupDate2">были добавлены на</string>
     <string name="PeopleAlreadyHaveThisDate">уже записан(а) на выбранную дату.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- А чё это за строка снизу ? -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="Remove">Remove</string>
     <string name="Rename">Rename</string>
+    <string name="SaveData">Save Data</string>
+
+
+    <string name="None">None</string>
+
+
+
+
+    <!-- Содержимое текстовых полей и подписей кнопок (Layout: act_dir_picker) -->
+    <string name="actLabel_filePicker">Выбор файла</string>
+    <string name="actLabel_dirPicker">Выбор каталога</string>
+    <string name="dirPicker_dirUnreadable">Нет доступа в текущий каталог</string>
+    <string name="dirPicker_fsRootUnreadable">Не удалось открыть корневой каталог, открываю sdcard</string>
+    <string name="tvText_dirPicker_empty">Пусто</string>
+    <string name="btnText_dirPicker_go">Выбрать</string>
+    <string name="dirPicker_levelUp">На уровень выше</string>
 
 </resources>

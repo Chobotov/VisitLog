@@ -10,15 +10,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PeopleInformation"></activity>
-        <activity android:name=".People_Information"></activity>
+        tools:ignore="GoogleAppIndexingWarning"
+        android:screenOrientation="portrait"
+        >
+
+
+
+        <activity android:name=".PeopleInformation"
+            android:screenOrientation="portrait"
+       />
+
+        <activity
+            android:name=".DialogFileMenu.DirPickerActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".GroupActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <activity
             android:name=".PeopleActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

@@ -93,14 +93,25 @@ public class PeopleActivityFragment extends Fragment {
             public void onLongItemClick(People item) {
 
                 //if (editMode) {
-                    helper.removePeople(item.Name);
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setCancelable(true);
+                builder.setMessage("Удалить " +'"' + item.Name + '"' + " ?");
+                builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                    helper.removeGroup(item.Name);
                     people_list.remove(item);
-                    update();
                     setCounterText(people_list.size());
                     Toast.makeText(getContext(),
                             item.Name + " " + getResources().getString(R.string.hasRemoved),
                             Toast.LENGTH_SHORT).show();
+                    update();
+                });
+                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 //}
 
             }
@@ -146,7 +157,7 @@ public class PeopleActivityFragment extends Fragment {
 
         this.removeListener = removeListener;
 
-        recyclerView = v.findViewById(R.id.alert_people_recyclerView);
+        recyclerView = v.findViewById(R.id.main_people_recyclerView);
         countPeople = v.findViewById(R.id.scountPeople);
 
         if (clickListener != null && removeListener!= null) {
@@ -161,10 +172,6 @@ public class PeopleActivityFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 
-        recyclerView.setFocusable(false);
-        v.findViewById(R.id.stemp).requestFocus();
-
-        setCounterText(people_list.size());
 
         floatingActionButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -186,6 +193,16 @@ public class PeopleActivityFragment extends Fragment {
             alertDialog.show();
 
         });
+
+
+        recyclerView.setFocusable(false);
+        recyclerView.setNestedScrollingEnabled(true);
+
+
+      //  v.findViewById(R.id.stemp).requestFocus();
+        v.findViewById(R.id.Scroll_all_people).setFocusable(true);
+
+        setCounterText(people_list.size());
 
         return  v;
     }
@@ -367,4 +384,10 @@ public class PeopleActivityFragment extends Fragment {
         }
 
     }
+
+    public void onResume() {
+        updatePeople();
+        super.onResume();
+    }
+
 }

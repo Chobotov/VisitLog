@@ -67,18 +67,12 @@ public class GroupActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         editMode = intent.getBooleanExtra("edit", editMode);
-        if(!editMode) {
-            GroupName = intent.getStringExtra("name");
-            year = intent.getStringExtra("year");
-            month = intent.getStringExtra("month");
-            day = intent.getStringExtra("day");
-            Log.e("GroupeActivity"," 68 "+ editMode);
-        }
-        else{
-            GroupName = intent.getStringExtra("name");
-            Log.e("GroupeActivity"," 70 "+ editMode);
 
-        }
+        GroupName = intent.getStringExtra("name");
+        year = intent.getStringExtra("year");
+        month = intent.getStringExtra("month");
+        day = intent.getStringExtra("day");
+
         recyclerView = findViewById(R.id.alert_people_recyclerView);
         textView = findViewById(R.id.countPeople);
 
@@ -134,6 +128,13 @@ public class GroupActivity extends AppCompatActivity {
                         updateIconSelectAllBox();
                     }
                 }
+                else if(editMode){
+                    Intent intent = new Intent(GroupActivity.this, PeopleInformation.class);
+                    intent.putExtra("NAME", item.Name);
+                    intent.putExtra("YEAR", year);
+                    intent.putExtra("MONTH", month);
+                    startActivity(intent);
+                }
                 //else if (editMode){
 
                // }
@@ -163,7 +164,8 @@ public class GroupActivity extends AppCompatActivity {
 
 
         peopleAdapter = new PeopleAdapter(this, clickListener, removeListener, people_list);
-        peopleAdapter.setRemoveVisible(false);
+
+        peopleAdapter.setRemoveVisible(editMode);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -194,16 +196,12 @@ public class GroupActivity extends AppCompatActivity {
 
                 floatingActionButton.setVisibility(Button.INVISIBLE);
 
-                edit.setVisible(true);
-
-
                 for (People i: selectedPeople) {
                     if(!helper.containsDataPeople(i,year,month,day)){
                         helper.SetDataInDataTable(i.Name, year, month, day);
                     }
                 }
                 updateIconSelectAllBox();
-
                 Toast.makeText(GroupActivity.this,"Добавлены на"+ " " + day + "." + month + "." + year,Toast.LENGTH_SHORT).show();
 
             } else {
@@ -357,6 +355,8 @@ public class GroupActivity extends AppCompatActivity {
         itemSelectedMode = menu.findItem(R.id.itemCheckBox);
         remove = menu.findItem(R.id.removeItem);
         rename = menu.findItem(R.id.renameItem);
+
+        menu.findItem(R.id.save_data).setVisible(false);
 
         edit.setVisible(false);
 

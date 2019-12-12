@@ -90,6 +90,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //Запись нового имени
     public void addPeople(String name){
+
         ContentValues cv = new ContentValues();
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -766,6 +767,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
+
     //Кол-во времени на работе в Месяц/Год
     public String AvgHours(int mode,String peopleName,String Year,String Month) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
@@ -849,4 +851,14 @@ public class DBHelper extends SQLiteOpenHelper {
             return String.valueOf(AvgHours);
         }
     }
+
+
+
+
+    public String getPath()
+    {
+        return getReadableDatabase().getPath();
+    }
+
+
 }

@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navGroups:
                     fragmentManager.beginTransaction().hide(active).show(groupsActivityFragment).commit();
                     active = groupsActivityFragment;
-
+                    groupsActivityFragment.GetData(calendar.YEAR,calendar.MONTH,calendar.DAY);
+                    groupsActivityFragment.updateGroups();
                     setSupportActionBar(groupsActivityFragment.toolbar);
                     getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
 

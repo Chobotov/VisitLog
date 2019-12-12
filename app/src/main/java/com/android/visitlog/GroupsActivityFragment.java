@@ -1,19 +1,15 @@
 package com.android.visitlog;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,17 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
-
+import com.android.visitlog.DialogFileMenu.DirPickerActivity;
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class GroupsActivityFragment extends Fragment {
@@ -45,15 +38,15 @@ public class GroupsActivityFragment extends Fragment {
     TextView countGroup;
 
     MenuItem search;
-    MenuItem edit;
     MenuItem itemCheckBox;
+    MenuItem save;
 
 
     Toolbar toolbar;
 
     DBHelper helper;
 
-    // day, month, year
+    String day, month, year;
 
     public GroupsActivityFragment() {
 
@@ -125,9 +118,9 @@ public class GroupsActivityFragment extends Fragment {
                     intent.putExtra("edit",true);
 
                     intent.putExtra("name", String.valueOf(item.Name));
-//                    intent.putExtra("year", String.valueOf(data[0]));
-//                    intent.putExtra("month", String.valueOf(data[1]));
-//                    intent.putExtra("day", String.valueOf(data[2]));
+                    intent.putExtra("year", String.valueOf(year));
+                    intent.putExtra("month", String.valueOf(month));
+                    intent.putExtra("day", String.valueOf(day));
                     startActivity(intent);
                // }
             }
@@ -198,8 +191,8 @@ public class GroupsActivityFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         recyclerView.setFocusable(false);
-
         v.findViewById(R.id.temp).requestFocus();
+
         setCounterText(groups.size());
 
 
@@ -221,7 +214,7 @@ public class GroupsActivityFragment extends Fragment {
             countGroup.setText(text+"");
     }
 
-    private void updateGroups() {
+    public void updateGroups() {
         groups.clear();
         groups.addAll(helper.getAllGroups());
 
@@ -241,33 +234,30 @@ public class GroupsActivityFragment extends Fragment {
     public void onResume() {
         updateGroups();
         super.onResume();
-
-
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 
-        menuInflater.inflate(R.menu.people_activity_menu, menu);
+        menuInflater.inflate(R.menu.groups_activity_menu, menu);
         super.onCreateOptionsMenu(menu,menuInflater);
 
+        menu.findItem(R.id.removeItem).setVisible(false);
+        menu.findItem(R.id.renameItem).setVisible(false);
+        menu.findItem(R.id.editMod).setVisible(false);
+
+        save = menu.findItem(R.id.save_data);
         search = menu.findItem(R.id.app_bar_search);
-        edit = menu.findItem(R.id.editMod);
+
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
-        edit.setVisible(false);
 
-        itemCheckBox.setOnMenuItemClickListener(item -> {
-            return false;
-        });
+        save.setOnMenuItemClickListener( x->{
+            openFile();
 
-        edit.setOnMenuItemClickListener(menuItem -> {
             return false;
         });
 
         SearchView mSearchView = (SearchView) search.getActionView();
-
-        mSearchView.setOnSearchClickListener(view -> {
-        });
 
         mSearchView.setOnCloseListener(() -> {
             updateGroups();
@@ -298,7 +288,27 @@ public class GroupsActivityFragment extends Fragment {
         });
     }
 
+    private static final int REQUEST_GET_TEXTURE = 1;
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent i) {
+        if (requestCode == REQUEST_GET_TEXTURE && resultCode == RESULT_OK) {
+            Uri data = i.getData();
+            if (data != null) {
+                String path = data.getPath();
+                if (path != null) {
+                    // TODO: Do something...
+                }
+            }
+        }
+    }
+
+    private void openFile() {
+        Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
+        intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.FILE);
+       // DirPickerActivity.setDefaultPath(v.getContext(),helper.getPath());
+        startActivityForResult(intent, REQUEST_GET_TEXTURE);
+    }
 
     private void addNewGroup(String name) {
 
@@ -334,14 +344,18 @@ public class GroupsActivityFragment extends Fragment {
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
-            updateGroups();
+
         } else {
             Toast.makeText(v.getContext(),
                     getResources().getString(R.string.AlertEmptyName),
                     Toast.LENGTH_SHORT).show();
         }
-
-
+        updateGroups();
     }
 
+    public void GetData(String year, String month, String day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
 }
