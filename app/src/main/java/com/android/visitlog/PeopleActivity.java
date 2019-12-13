@@ -126,7 +126,7 @@ public class PeopleActivity extends AppCompatActivity {
         GroupsAdapter.ClickListener clickItemGroups = new GroupsAdapter.ClickListener() {
 
             @Override
-            public void onLongItemClick(Group item) {
+            public void onLongItemClick(Group item, GroupsAdapter.ItemViewHolder holder) {
                 /*
                 if (editMode) {
                     helper.removeGroup(item.Name);

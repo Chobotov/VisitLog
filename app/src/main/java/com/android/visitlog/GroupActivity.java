@@ -357,6 +357,7 @@ public class GroupActivity extends AppCompatActivity {
         rename = menu.findItem(R.id.renameItem);
 
         menu.findItem(R.id.save_data).setVisible(false);
+        menu.findItem(R.id.open_data).setVisible(false);
 
         edit.setVisible(false);
 

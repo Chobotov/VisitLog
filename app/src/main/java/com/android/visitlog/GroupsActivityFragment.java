@@ -1,5 +1,6 @@
 package com.android.visitlog;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +25,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.visitlog.DialogFileMenu.DirPickerActivity;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
 
 public class GroupsActivityFragment extends Fragment {
+
+    private static final int RESULT_OUT_CODE = 1;
+    private static final int RESULT_IN_CODE = 2;
 
     View v;
 
@@ -40,6 +65,7 @@ public class GroupsActivityFragment extends Fragment {
     MenuItem search;
     MenuItem itemCheckBox;
     MenuItem save;
+    MenuItem open;
 
 
     Toolbar toolbar;
@@ -81,34 +107,15 @@ public class GroupsActivityFragment extends Fragment {
 
         clickListener = new GroupsAdapter.ClickListener() {
             @Override
-            public void onLongItemClick(Group item) {
+            public void onLongItemClick(Group item, GroupsAdapter.ItemViewHolder holder) {
 
-//                if (editMode) {
-//                    helper.removeGroup(item.Name);
-//                    groups.remove(item);
-//                    update();
-//                    setCounterText(groups.size());
-//
-//                } else {
-//
-//                    ArrayList<People> peopleInGroup = helper.getGroupMembers(item.Name);
-//
-//                    for (People i : peopleInGroup) {
-//                        if (!helper.containsDataPeople(i, data[0], data[1], data[2])) {
-//                            helper.SetDataInDataTable(i.Name,  data[0], data[1], data[2]);
-//                        }
-//                    }
-////
-////                    Toast.makeText(v.getContext(),
-////                            getResources().getString(R.string.addGroupDate1) + " "
-////                                    + item.Name + " "
-////                                    + getResources().getString(R.string.addGroupDate2) + " "
-////                                    + data[0] + "." + data[1] + "." + data[2]
-////                            ,
-////                            Toast.LENGTH_SHORT).show();
-//
-//                }
 
+                holder.showPopup(holder.itemView,
+                        x->{
+                            onMoreItemClick(item,x);
+                            return false;
+                        }
+                );
             }
 
             @Override
@@ -153,7 +160,24 @@ public class GroupsActivityFragment extends Fragment {
 
                 }
                 else if(menuItem.getItemId() == R.id.renameItem){
-                    Toast.makeText(getContext(),"Ещё не готово",Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                    builder.setCancelable(true);
+
+                    View view1 = LayoutInflater.from(v.getContext()).inflate(R.layout.add_people_alert, null);
+
+                    builder.setView(view1);
+
+                    builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
+                        EditText editText = view1.findViewById(R.id.text_edit_alertview);
+                        RenameGroup(editText.getText().toString(),item.Name);
+                        updateGroups();
+
+                    });
+                    AlertDialog alertDialog = builder.create();
+
+                    alertDialog.show();
                 }
             }
 
@@ -201,6 +225,50 @@ public class GroupsActivityFragment extends Fragment {
         return v;
     }
 
+    private void RenameGroup(String name , String groupName) {
+
+        final  String GroupName = groupName;
+        if (!name.equals("")) {
+
+            if (!helper.containsGroup(new Group(name))) {
+
+                helper.RenameGroup(GroupName,name);
+
+            } else {
+
+                int counter = 2;
+
+                while (helper.containsGroup(new Group(name + counter))) {
+                    counter++;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                builder.setCancelable(true);
+
+                String newName = name + counter;
+
+                builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
+                builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                    helper.RenameGroup(GroupName, newName);
+
+
+                });
+                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+
+        } else {
+            Toast.makeText(v.getContext(),
+                    getResources().getString(R.string.AlertEmptyName),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 
     public void update(){
         if(adapter!=null) {
@@ -245,15 +313,30 @@ public class GroupsActivityFragment extends Fragment {
         menu.findItem(R.id.renameItem).setVisible(false);
         menu.findItem(R.id.editMod).setVisible(false);
 
+        open = menu.findItem(R.id.open_data);
         save = menu.findItem(R.id.save_data);
         search = menu.findItem(R.id.app_bar_search);
+
 
         itemCheckBox = menu.findItem(R.id.itemCheckBox);
         itemCheckBox.setVisible(false);
 
         save.setOnMenuItemClickListener( x->{
-            openFile();
+            //openFile();
+//            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+//            intent.setType("file/*");
+//            startActivityForResult(intent, REQUEST_GET_TEXTURE);
+            Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
+            intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.DIRECTORY);
+            startActivityForResult(intent, RESULT_OUT_CODE);
+            return false;
+        });
 
+        open.setOnMenuItemClickListener( x->{
+
+            Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
+            intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.FILE);
+            startActivityForResult(intent, RESULT_IN_CODE);
             return false;
         });
 
@@ -288,27 +371,80 @@ public class GroupsActivityFragment extends Fragment {
         });
     }
 
-    private static final int REQUEST_GET_TEXTURE = 1;
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent i) {
-        if (requestCode == REQUEST_GET_TEXTURE && resultCode == RESULT_OK) {
+        if (requestCode == RESULT_OUT_CODE && resultCode == RESULT_OK) {
             Uri data = i.getData();
             if (data != null) {
+
                 String path = data.getPath();
+
                 if (path != null) {
-                    // TODO: Do something...
+//                    String fileDataString = readFromFile(helper.getPath());
+//                    saveToFile(data.getPath(),fileDataString);//helper.getPath()
+
+
+                    try {
+
+                        copyFile(helper.getPath(), path+"/VisitLog"+helper.DATABASE_VERSION);
+                        Snackbar.make(v,"База данных была сохранена!",Snackbar.LENGTH_LONG).show();
+
+                    }
+                    catch (Exception e){
+                        Log.e("Keliz",e.getMessage());
+                    }
+                 //newFile
+                    Log.e("Keliz",data.getPath());
+                }
+            }
+        }
+        else if(requestCode == RESULT_IN_CODE &&  resultCode == RESULT_OK) {
+            Uri data = i.getData();
+            if (data != null) {
+
+                String path = data.getPath();
+
+                if (path != null) {
+
+                    try {
+                        //helper.getPath(
+                       // path+"/VisitLog"+helper.DATABASE_VERSION
+                        copyFile(path, helper.getPath());
+                        Snackbar.make(v,"База данных была презаписана!",Snackbar.LENGTH_LONG).show();
+                    }
+                    catch (Exception e){
+                        Log.e("Keliz",e.getMessage());
+                    }
+
+
+                    //newFile
+                    Log.e("Keliz",data.getPath());
                 }
             }
         }
     }
 
-    private void openFile() {
-        Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
-        intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.FILE);
-       // DirPickerActivity.setDefaultPath(v.getContext(),helper.getPath());
-        startActivityForResult(intent, REQUEST_GET_TEXTURE);
+
+    public static void copyFile(String srcName, String targetName)
+            throws IOException {
+        if (srcName.equals(targetName))
+            return;
+        if (new File(targetName).isDirectory()) {
+            if (!targetName.endsWith("/"))
+                targetName = targetName.concat("/");
+            targetName = targetName.concat(new File(srcName).getName());
+        }
+        Log.d("Keliz", "Copying file: " + srcName + "\n  to: " + targetName);
+        FileChannel src = new FileInputStream(srcName).getChannel();
+        FileChannel out = new FileOutputStream(targetName).getChannel();
+        src.transferTo(0, src.size(), out);
+        src.close();
+        out.close();
     }
+
+
 
     private void addNewGroup(String name) {
 

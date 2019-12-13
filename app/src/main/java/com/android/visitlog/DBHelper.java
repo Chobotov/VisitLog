@@ -13,8 +13,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String LOG_TAG = "MyLogs";
 
-    private static  final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "mydb";
+    public static  final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "mydb";
 
     public static final String DATA_PEOPLE = "data";
     public static final String PEOPLE = "people";
@@ -33,7 +33,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static String CAME_TIME = "cameTime";
     public static String LEAVE_TIME = "leaveTime";
     public static String COMMENT = "comment";
-
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -852,13 +851,9 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-
-
-
     public String getPath()
     {
         return getReadableDatabase().getPath();
     }
-
 
 }

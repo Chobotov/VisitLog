@@ -73,7 +73,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             item.itemView.setOnLongClickListener(view -> {
                 if (listener != null)
-                    listener.onLongItemClick(groups.get(holder.getAdapterPosition()));
+                    listener.onLongItemClick(groups.get(holder.getAdapterPosition()),item);
                 return true;
             });
 
@@ -173,7 +173,7 @@ public class GroupsAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     interface ClickListener {
-        void onLongItemClick(Group item);
+        void onLongItemClick(Group item,ItemViewHolder holder);
         void onItemClick(Group item);
         void onMoreItemClick(Group item, MenuItem menuItem);
         void onAddItemClick();
