@@ -26,25 +26,25 @@
             android:theme="?attr/actionBarTheme"
             app:layout_scrollFlags="scroll|enterAlways" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-        <Spinner
-            android:id="@+id/spinnerMonth"
-            android:layout_weight = "0.5"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"></Spinner>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Spinner
+                android:id="@+id/spinnerMonth"
+                android:layout_weight = "0.5"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"></Spinner>
 
-        <EditText
-            android:id="@+id/inputYear"
-            android:layout_weight="0.5"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:inputType="number"
-            android:layout_toEndOf="@+id/spinnerMonth"
-            android:layout_toRightOf="@+id/spinnerMonth"
-            android:hint="Год"></EditText>
-</LinearLayout>
+            <EditText
+                android:id="@+id/inputYear"
+                android:layout_weight="0.5"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:inputType="number"
+                android:layout_toEndOf="@+id/spinnerMonth"
+                android:layout_toRightOf="@+id/spinnerMonth"
+                android:hint="Год"></EditText>
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -56,6 +56,39 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/infoGroups"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+                <View
+                    android:id="@+id/groupIcon"
+                    android:layout_width="70dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@drawable/ic_groups">
+                </View>
+
+                <TextView
+                    android:id="@+id/groupNames"
+                    android:layout_toEndOf="@+id/groupIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/groupIcon"
+                    android:textSize="35sp"
+                    android:text="БВТ">
+                </TextView>
+
+            </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/otherInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/infoGroups">
 
             <RelativeLayout
                 android:id="@+id/cameDays"
@@ -140,6 +173,7 @@
                 android:layout_marginBottom="65dp"
                 android:layout_alignParentEnd="true">
             </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
 
         </RelativeLayout>
 

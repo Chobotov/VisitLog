@@ -94,26 +94,24 @@ public class PeopleActivityFragment extends Fragment {
             @Override
             public void onLongItemClick(People item) {
 
-                //if (editMode) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                builder.setCancelable(true);
-                builder.setMessage("Удалить " +'"' + item.Name + '"' + " ?");
-                builder.setPositiveButton("Да", (dialogInterface, i) -> {
-                    helper.removePeople(item.Name);
-                    people_list.remove(item);
-                    setCounterText(people_list.size());
-                    Snackbar.make(v,item.Name + " " + getResources().getString(R.string.hasRemoved),Snackbar.LENGTH_LONG).show();
-
-                    update();
-                });
-                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
-                    dialogInterface.cancel();
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-                //}
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//
+//                builder.setCancelable(true);
+//                builder.setMessage("Удалить " +'"' + item.Name + '"' + " ?");
+//                builder.setPositiveButton("Да", (dialogInterface, i) -> {
+//                    helper.removePeople(item.Name);
+//                    people_list.remove(item);
+//                    setCounterText(people_list.size());
+//                    Snackbar.make(v,item.Name + " " + getResources().getString(R.string.hasRemoved),Snackbar.LENGTH_LONG).show();
+//
+//                    update();
+//                });
+//                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+//                    dialogInterface.cancel();
+//                });
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
 
             }
 

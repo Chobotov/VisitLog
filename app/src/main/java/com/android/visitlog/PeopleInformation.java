@@ -1,5 +1,6 @@
 package com.android.visitlog;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -12,12 +13,17 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -35,13 +41,18 @@ public class PeopleInformation extends AppCompatActivity {
     Spinner spinnerMonth;
     GraphView graphView;
     ArrayList<Integer>datas;
-    TextView days,hours;
+    TextView days,hours,groupNames;
     EditText inputYear;
     DBHelper helper;
     String Year,Month,Name;
     ItemCommentAdapter itemCommentAdapter;
     RecyclerView recyclerView;
 
+    MenuItem remove;
+    MenuItem rename;
+    MenuItem search;
+    MenuItem edit;
+    MenuItem itemSelectedMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +64,7 @@ public class PeopleInformation extends AppCompatActivity {
 
         days = findViewById(R.id.valueOfDays);
         hours = findViewById(R.id.valueOfHours);
+        groupNames = findViewById(R.id.groupNames);
 
         spinnerMonth = findViewById(R.id.spinnerMonth);
         inputYear = findViewById(R.id.inputYear);
@@ -68,6 +80,8 @@ public class PeopleInformation extends AppCompatActivity {
         toolbar = findViewById(R.id.infoToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(Name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         datas = new ArrayList<>();
 
@@ -129,7 +143,121 @@ public class PeopleInformation extends AppCompatActivity {
                 UpdateData();
             }
         });
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.groups_activity_menu, menu);
+        remove = menu.findItem(R.id.removeItem);
+        rename = menu.findItem(R.id.renameItem);
+
+        search = menu.findItem(R.id.app_bar_search);
+        edit = menu.findItem(R.id.editMod);
+        itemSelectedMode = menu.findItem(R.id.itemCheckBox);
+
+        search.setEnabled(false);
+        search.setVisible(false);
+        edit.setEnabled(false);
+        edit.setVisible(false);
+        itemSelectedMode.setEnabled(false);
+        itemSelectedMode.setVisible(false);
+
+        menu.findItem(R.id.save_data).setVisible(false);
+        menu.findItem(R.id.open_data).setVisible(false);
+
+        remove.setOnMenuItemClickListener(menuItem -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setCancelable(true);
+            builder.setMessage("Удалить человека " +'"' + Name + '"' + " ?");
+            builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                helper.removePeople(Name);
+                finish();
+            });
+            builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                dialogInterface.cancel();
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+            return false;
+        });
+
+        rename.setOnMenuItemClickListener(menuItem -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setCancelable(true);
+
+            View view1 = LayoutInflater.from(this).inflate(R.layout.add_people_alert, null);
+
+            builder.setView(view1);
+
+            EditText editText = view1.findViewById(R.id.text_edit_alertview);
+            editText.setText(Name);
+
+            builder.setPositiveButton(R.string.Add, (dialogInterface, i) -> {
+
+                RenamePeople(editText.getText().toString());
+
+            });
+            AlertDialog alertDialog = builder.create();
+
+            alertDialog.show();
+
+            return false;
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return true;
+    }
+
+    private void RenamePeople(String name) {
+
+        if (!name.equals("")) {
+
+            if (!helper.containsPeople(new People(name))) {
+
+                helper.RenamePeople(Name,name);
+                Name = name;
+
+            } else {
+
+                int counter = 2;
+
+                while (helper.containsPeople(new People(name + counter))) {
+                    counter++;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setCancelable(true);
+
+                String newName = name + counter;
+
+                builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
+                builder.setPositiveButton("Да", (dialogInterface, i) -> {
+                    helper.RenamePeople(Name, newName);
+                    Name = newName;
+
+                });
+                builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+                    dialogInterface.cancel();
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+            getSupportActionBar().setTitle(Name);
+        } else {
+            Toast.makeText(this,
+                    getResources().getString(R.string.AlertEmptyGroupName),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void DrawGraph(){
@@ -166,6 +294,7 @@ public class PeopleInformation extends AppCompatActivity {
     private void UpdateData(){
         days.setText(helper.CameDaysInMonth(0,Name,Year,Month));
         hours.setText(helper.AvgHours(0,Name,Year,Month));
+        groupNames.setText(helper.FindGroupThisPeople(new People(Name)));
         DrawGraph();
     }
 }

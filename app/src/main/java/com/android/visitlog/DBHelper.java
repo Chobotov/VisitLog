@@ -709,6 +709,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return commit;
     }
 
+    //Переименование человека
+    public void RenamePeople(String PeopleName,String newPeopleName){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        String id = GetIdByName(PeopleName);
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(FULL_NAME,newPeopleName);
+
+        sqLiteDatabase.update(PEOPLE,cv,KEY_ID
+                + "=?"
+                + " AND " + FULL_NAME + "=?",new String[]{id,PeopleName});
+    }
+
     //Переименование группы
     public void RenameGroup(String GroupName,String newGroupName){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();

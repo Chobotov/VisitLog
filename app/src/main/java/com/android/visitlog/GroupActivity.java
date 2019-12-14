@@ -340,10 +340,7 @@ public class GroupActivity extends AppCompatActivity {
             Toast.makeText(this,
                     getResources().getString(R.string.AlertEmptyGroupName),
                     Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
 
     @Override
