@@ -213,7 +213,10 @@ public class PeopleInformation extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        finish();
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
         return true;
     }
 
