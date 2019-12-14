@@ -13,33 +13,39 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class ItemComment extends  RecyclerView.Adapter<ItemComment.ViewHolder>{
+public class ItemCommentAdapter extends  RecyclerView.Adapter<ItemCommentAdapter.ViewHolder>{
 
-    private ArrayList<People> peopleList;
+    public static String Year,Month;
+    private People people;
+    private ArrayList<Integer> datas;
     private LayoutInflater inflater;
+    private DBHelper helper;
 
-    public ItemComment(Context context, ArrayList<People> people) {
+    public ItemCommentAdapter(Context context,String PeopleName,String Year,String Month,ArrayList<Integer> datas) {
         this.inflater = LayoutInflater.from(context);
-        this.peopleList = people;
+        this.datas = datas;
+        this.Year = Year;
+        this.Month = Month;
+        people = new People(PeopleName);
+        helper = new DBHelper(context);
     }
 
     @NonNull
     @Override
-    public ItemComment.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemCommentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.fragment_item_comment,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemComment.ViewHolder holder, int position) {
-        final People people = peopleList.get(position);
-        holder.commit.setText(people.commit);
-        holder.data.setText("");
+    public void onBindViewHolder(@NonNull ItemCommentAdapter.ViewHolder holder, int position) {
+        holder.commit.setText(helper.GetCommentToPeople(people,Year,Month,String.valueOf(datas.get(position))));
+        holder.data.setText(datas.get(position)+"/"+Month+"/"+Year);
     }
 
     @Override
     public int getItemCount() {
-        return peopleList.size();
+        return datas.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

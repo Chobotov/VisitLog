@@ -14,6 +14,7 @@
 
     <color name="floatingButtonBG">#CE3333</color>
     <color name="floatingButtonPlus">#FEFEFE</color>
+    <color name="itemCommentBackground">#FDFDFD</color>
 
 
     <color name="dirPicker_divider">#606060</color>

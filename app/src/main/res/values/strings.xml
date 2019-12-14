@@ -28,9 +28,6 @@
     <string name="addGroupDate2">были добавлены на</string>
     <string name="PeopleAlreadyHaveThisDate">уже записан(а) на выбранную дату.</string>
 
-    <!-- А чё это за строка снизу ? -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="Remove">Remove</string>
     <string name="Rename">Rename</string>
     <string name="SaveData">Save Data</string>
@@ -51,6 +48,6 @@
     <string name="dirPicker_levelUp">На уровень выше</string>
     <string name="EmptyPeopleNameAlert">Не удалось добавить пустое наименование</string>
     <string name="DataSaveAlert">База данных была сохранена!</string>
-    <string name="DataOpenAlert">База данных была презаписана!</string>
+    <string name="DataOpenAlert">База данных загружена!</string>
 
 </resources>

@@ -1,57 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PeopleInformation">
+    android:background="@color/bg"
+    tools:context=".PeopleInformation"
+    android:focusableInTouchMode="true">
 
 
     <com.google.android.material.appbar.AppBarLayout
 
-        android:id="@+id/Pappbar"
+        android:id="@+id/infoBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-
-            android:id="@+id/Ptoolbar_all_people"
+            android:id="@+id/infoToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:layout_scrollFlags="scroll|enterAlways" />
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <!--<include
-        layout="@layout/info_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Pappbar"></include>-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <Spinner
+            android:id="@+id/spinnerMonth"
+            android:layout_weight = "0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"></Spinner>
+
+        <EditText
+            android:id="@+id/inputYear"
+            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:layout_toEndOf="@+id/spinnerMonth"
+            android:layout_toRightOf="@+id/spinnerMonth"
+            android:hint="Год"></EditText>
+</LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/Pappbar">
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <RelativeLayout
+                android:id="@+id/cameDays"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/mr_cast_progressbar_background_light">
+                android:background="@color/colorPrimary">
 
                 <TextView
+                    android:id="@+id/titleDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -63,6 +79,7 @@
                     android:id="@+id/valueOfDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/titleDays"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
                     android:text="19 days"
@@ -77,9 +94,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@color/mr_cast_progressbar_background_light">
+                android:background="@color/colorPrimary">
 
                 <TextView
+                    android:id="@+id/hoursTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -91,36 +109,41 @@
                     android:id="@+id/valueOfHours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/hoursTitle"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
                     android:text="12 hours"
                     android:textSize="30sp"></TextView>
             </RelativeLayout>
 
-            <RelativeLayout
+
+            <com.jjoe64.graphview.GraphView
                 android:id="@+id/graph"
-                android:layout_width="400dp"
-                android:layout_height="250dp"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
                 android:layout_below="@+id/hours"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@color/mr_cast_progressbar_background_light"></RelativeLayout>
+                android:background="@color/colorPrimary">
+            </com.jjoe64.graphview.GraphView>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewInfo"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/graph"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="65dp"
-                android:background="@color/mr_cast_progressbar_background_light"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_alignParentEnd="true">
+            </androidx.recyclerview.widget.RecyclerView>
 
         </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

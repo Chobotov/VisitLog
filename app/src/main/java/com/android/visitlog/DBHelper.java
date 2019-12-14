@@ -1,6 +1,7 @@
 package com.android.visitlog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -682,6 +683,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "AND " + DAY + "=? ",new String[]{id,Year,Month,Day});
     }
 
+    //Получить коммент человека по дате
     public String GetCommentToPeople(People people,String Year,String Month,String Day){
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
 
@@ -702,7 +704,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 commit = (c.getString(index));
             } while (c.moveToNext());
         } else
-            Log.d(LOG_TAG, "Cursor is null");
+            Log.d(LOG_TAG, "No comments");
         c.close();
         return commit;
     }
@@ -765,8 +767,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return String.valueOf(countOfDays);
     }
 
-
-
     //Кол-во времени на работе в Месяц/Год
     public String AvgHours(int mode,String peopleName,String Year,String Month) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
@@ -806,9 +806,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     //break;
                 }
 
-                Log.d(LOG_TAG, String.valueOf(cameTime));
-                Log.d(LOG_TAG, String.valueOf(countOfDays));
-                Log.d(LOG_TAG, String.valueOf(cameTime));
+//                Log.d(LOG_TAG, String.valueOf(cameTime));
+//                Log.d(LOG_TAG, String.valueOf(countOfDays));
+//                Log.d(LOG_TAG, String.valueOf(cameTime));
 
                 c = sqLiteDatabase.rawQuery("SELECT "
                                 + LEAVE_TIME
@@ -837,9 +837,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 } else {
                     Log.d(LOG_TAG, "Cursor is null");
                 }
-                Log.d(LOG_TAG, String.valueOf(leaveTime));
-                Log.d(LOG_TAG, String.valueOf(leaveTime));
-                Log.d(LOG_TAG, String.valueOf(countOfDays));
+//                Log.d(LOG_TAG, String.valueOf(leaveTime));
+//                Log.d(LOG_TAG, String.valueOf(leaveTime));
+//                Log.d(LOG_TAG, String.valueOf(countOfDays));
                 break;
         }
         int AvgHours = leaveTime - cameTime;
@@ -856,4 +856,105 @@ public class DBHelper extends SQLiteOpenHelper {
         return getReadableDatabase().getPath();
     }
 
+    //Получить все дни данного человека
+    public ArrayList<Integer> GetAllDatas(int mode,String PeopleName,String Month,String Year){
+        ArrayList<Integer>datas= new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor c;
+        String id = GetIdByName(PeopleName);
+        switch (mode){
+            case 0:
+                c = sqLiteDatabase.rawQuery(
+                        " SELECT " + DAY
+                        + " FROM " + DATA_PEOPLE
+                        + " WHERE " + ID_PEOPLE + " =?"
+                        + " AND " + MONTH + " =?"
+                        + " AND " + YEAR + " =?",new String[]{id,Month,Year}
+                );
+                if(c.moveToFirst()){
+                    do{
+                        int index = c.getColumnIndex(DAY);
+                        datas.add(Integer.valueOf(c.getString(index)));
+                    }while (c.moveToNext());
+                }
+                else
+                    Log.d(LOG_TAG, "Cursor is null");
+                c.close();
+                break;
+            case 1:
+                c = sqLiteDatabase.rawQuery(
+                        " SELECT " + DAY
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " =?"
+                                + " AND " + YEAR + " =?",new String[]{id,Year}
+                );
+                if(c.moveToFirst()){
+                    do{
+                        int index = c.getColumnIndex(DAY);
+                        datas.add(Integer.valueOf(c.getString(index)));
+                    }while (c.moveToNext());
+                }
+                else
+                    Log.d(LOG_TAG, "Cursor is null");
+                c.close();
+                break;
+        }
+        return datas;
+    }
+
+    public Double getHoursByDay(String PeopleName,String Day,String Month,String Year){
+        String id = GetIdByName(PeopleName);
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        Cursor c;
+        String cameHours = "";
+        String leaveHours = "";
+        Double hours = 0.0;
+
+        c= sqLiteDatabase.rawQuery(
+                " SELECT " + CAME_TIME
+                        + " FROM " + DATA_PEOPLE
+                        + " WHERE " + ID_PEOPLE +" =?"
+                        + " AND " + DAY + " =?"
+                        + " AND " + MONTH + " =?"
+                        + " AND " + YEAR + " =?",
+                new String[]{id,Day,Month,Year}
+        );
+
+        if(c.moveToFirst()){
+            do {
+                int index = c.getColumnIndex(CAME_TIME);
+                cameHours = c.getString(index);
+            }while (c.moveToNext());
+        }
+        else
+            Log.d(LOG_TAG, "Cursor is null");
+
+        c= sqLiteDatabase.rawQuery(
+                " SELECT " + LEAVE_TIME
+                        + " FROM " + DATA_PEOPLE
+                        + " WHERE " + ID_PEOPLE +" =?"
+                        + " AND " + DAY + " =?"
+                        + " AND " + MONTH + " =?"
+                        + " AND " + YEAR + " =?",
+                new String[]{id,Day,Month,Year}
+        );
+
+        if(c.moveToFirst()){
+            do {
+                int index = c.getColumnIndex(LEAVE_TIME);
+                leaveHours = c.getString(index);
+            }while (c.moveToNext());
+        }
+        else
+            Log.d(LOG_TAG, "Cursor is null");
+
+        c.close();
+
+        cameHours = cameHours.split(":")[0];
+        leaveHours = leaveHours.split(":")[0];
+
+        hours = Double.valueOf(leaveHours)-Double.valueOf(cameHours);
+
+        return hours;
+    }
 }
