@@ -1,6 +1,5 @@
 package com.android.visitlog;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,29 +20,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.visitlog.DialogFileMenu.DirPickerActivity;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -262,9 +247,8 @@ public class GroupsActivityFragment extends Fragment {
             }
 
         } else {
-            Toast.makeText(v.getContext(),
-                    getResources().getString(R.string.AlertEmptyName),
-                    Toast.LENGTH_SHORT).show();
+            Snackbar.make(v,getResources().getString(R.string.AlertEmptyGroupName),Snackbar.LENGTH_LONG).show();
+
         }
 
 
@@ -388,8 +372,8 @@ public class GroupsActivityFragment extends Fragment {
 
                     try {
 
-                        copyFile(helper.getPath(), path+"/VisitLog"+helper.DATABASE_VERSION);
-                        Snackbar.make(v,"База данных была сохранена!",Snackbar.LENGTH_LONG).show();
+                        copyFile(helper.getPath(), path+"/"+ helper.DATABASE_NAME+ helper.DATABASE_VERSION);
+                        Snackbar.make(v,getResources().getString(R.string.DataSaveAlert),Snackbar.LENGTH_LONG).show();
 
                     }
                     catch (Exception e){
@@ -412,7 +396,7 @@ public class GroupsActivityFragment extends Fragment {
                         //helper.getPath(
                        // path+"/VisitLog"+helper.DATABASE_VERSION
                         copyFile(path, helper.getPath());
-                        Snackbar.make(v,"База данных была презаписана!",Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v,getResources().getString(R.string.DataOpenAlert),Snackbar.LENGTH_LONG).show();
                     }
                     catch (Exception e){
                         Log.e("Keliz",e.getMessage());
@@ -482,9 +466,7 @@ public class GroupsActivityFragment extends Fragment {
             }
 
         } else {
-            Toast.makeText(v.getContext(),
-                    getResources().getString(R.string.AlertEmptyName),
-                    Toast.LENGTH_SHORT).show();
+            Snackbar.make(v,getResources().getString(R.string.AlertEmptyGroupName),Snackbar.LENGTH_LONG).show();
         }
         updateGroups();
     }

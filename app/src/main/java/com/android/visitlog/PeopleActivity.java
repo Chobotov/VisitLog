@@ -2,7 +2,6 @@ package com.android.visitlog;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -440,7 +437,7 @@ public class PeopleActivity extends AppCompatActivity {
             groupsFragment.setCounterText(group_list.size());
         } else {
             Toast.makeText(PeopleActivity.this,
-                    getResources().getString(R.string.AlertEmptyName),
+                    getResources().getString(R.string.AlertEmptyGroupName),
                     Toast.LENGTH_SHORT).show();
         }
 

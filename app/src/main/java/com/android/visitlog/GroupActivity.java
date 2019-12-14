@@ -19,7 +19,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -338,8 +338,9 @@ public class GroupActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(GroupName);
         } else {
             Toast.makeText(this,
-                    getResources().getString(R.string.AlertEmptyName),
+                    getResources().getString(R.string.AlertEmptyGroupName),
                     Toast.LENGTH_SHORT).show();
+
         }
 
 

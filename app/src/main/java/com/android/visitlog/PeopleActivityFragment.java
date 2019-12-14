@@ -24,6 +24,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.time.Year;
 import java.util.ArrayList;
 
@@ -102,9 +104,8 @@ public class PeopleActivityFragment extends Fragment {
                     helper.removeGroup(item.Name);
                     people_list.remove(item);
                     setCounterText(people_list.size());
-                    Toast.makeText(getContext(),
-                            item.Name + " " + getResources().getString(R.string.hasRemoved),
-                            Toast.LENGTH_SHORT).show();
+                    Snackbar.make(v,item.Name + " " + getResources().getString(R.string.hasRemoved),Snackbar.LENGTH_LONG).show();
+
                     update();
                 });
                 builder.setNegativeButton("Нет", (dialogInterface, i) -> {
@@ -150,9 +151,8 @@ public class PeopleActivityFragment extends Fragment {
             people_list.remove(item);
             update();
             setCounterText(people_list.size());
-            Toast.makeText(getContext(),
-                    item.Name + " " + getResources().getString(R.string.hasRemoved),
-                    Toast.LENGTH_SHORT).show();
+            Snackbar.make(v,item.Name + " " + getResources().getString(R.string.hasRemoved),Snackbar.LENGTH_LONG).show();
+
         };
 
         this.removeListener = removeListener;
@@ -368,9 +368,8 @@ public class PeopleActivityFragment extends Fragment {
             }
             setCounterText(people_list.size());
         } else {
-            Toast.makeText(getContext(),
-                    "Не удалось добавить пустое наименование",
-                    Toast.LENGTH_SHORT).show();
+            Snackbar.make(v,getResources().getString(R.string.EmptyPeopleNameAlert),Snackbar.LENGTH_LONG).show();
+
         }
     }
 

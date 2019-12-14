@@ -19,7 +19,7 @@
     <string name="AllGroups">All Groups</string>
     <string name="AllPeople">All People</string>
     <string name="in">in</string>
-    <string name="AlertEmptyName">Не удалось добавить пустое наименование</string>
+    <string name="AlertEmptyGroupName">Не удалось добавить пустое наименование</string>
     <string name="RenameAlertEmptyName">Не удалось переименовать в пустое наименование</string>
 
     <string name="hasRemoved">был удалён</string>
@@ -49,5 +49,8 @@
     <string name="tvText_dirPicker_empty">Пусто</string>
     <string name="btnText_dirPicker_go">Выбрать</string>
     <string name="dirPicker_levelUp">На уровень выше</string>
+    <string name="EmptyPeopleNameAlert">Не удалось добавить пустое наименование</string>
+    <string name="DataSaveAlert">База данных была сохранена!</string>
+    <string name="DataOpenAlert">База данных была презаписана!</string>
 
 </resources>
