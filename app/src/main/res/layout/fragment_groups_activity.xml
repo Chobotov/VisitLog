@@ -76,7 +76,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/groups_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                style="?android:attr/borderlessButtonStyle"
+                >
 
 
             </androidx.recyclerview.widget.RecyclerView>

@@ -87,7 +87,9 @@
                 android:drawableLeft="@drawable/ic_add"
                 android:fontFamily="@font/rockb"
                 android:text="Add people"
-                android:textColor="#9B9B9B">
+                android:textColor="#9B9B9B"
+                style="?android:attr/borderlessButtonStyle"
+                >
 
             </Button>
 

@@ -58,7 +58,9 @@
                 android:layout_gravity="center"
                 android:textColor="#9B9B9B"
                 android:fontFamily="@font/rockb"
-                android:background="@drawable/itemstyle">
+                android:background="@drawable/itemstyle"
+                style="?android:attr/borderlessButtonStyle"
+                >
             </Button>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

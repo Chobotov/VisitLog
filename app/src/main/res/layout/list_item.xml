@@ -27,6 +27,8 @@
         android:layout_width="0dp"
         android:layout_height="98dp"
         android:layout_gravity="end|bottom"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/setTime"
@@ -34,6 +36,7 @@
 
         <Button
             android:id="@+id/remove"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentEnd="true"
@@ -46,11 +49,21 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/group"
-            android:layout_marginLeft="10dp"
-            android:text="Чеботов Никита Алексеевич"
+            android:layout_alignStart="@+id/group"
+            android:layout_alignLeft="@+id/group"
+            android:layout_alignEnd="@+id/group"
+            android:layout_alignRight="@+id/group"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/app_name"
             android:textColor="@android:color/black"
             android:textSize="18sp">
 
@@ -58,10 +71,19 @@
 
         <TextView
             android:id="@+id/group"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:layout_toStartOf="@+id/remove"
+            android:layout_toLeftOf="@+id/remove"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
             android:text="БВТ-31"
             android:textSize="16sp">
 
@@ -78,7 +100,10 @@
             android:layout_marginTop="13dp"
             android:layout_marginBottom="15dp"
             android:layout_toStartOf="@+id/time"
-            android:layout_toLeftOf="@+id/time">
+            android:layout_toLeftOf="@+id/time"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true">
 
         </TextView>
 
