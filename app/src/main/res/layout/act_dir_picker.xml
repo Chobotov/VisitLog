@@ -12,7 +12,7 @@
       android:orientation="horizontal">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/back"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="24dp"
         android:layout_height="24dp"

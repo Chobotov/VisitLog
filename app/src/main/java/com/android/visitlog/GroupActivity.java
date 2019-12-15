@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GroupActivity extends AppCompatActivity {
 
@@ -86,49 +87,52 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onLongItemClick(People item) {
                 //&& !editMode
-                if (!selectMode && !editMode ) {
-
-                    selectMode = true;
-                    peopleAdapter.setCheckBoxVisible(selectMode);
-                    peopleAdapter.setCheckBox(selectAll);
-
-                    peopleAdapter.setCheckBox(item);
-                    selectedPeople.add(item);
-
-                    floatingActionButton.setVisibility(Button.VISIBLE);
-
-                    search.setVisible(!selectMode);
-
-                    edit.setVisible(!selectMode);
-
-                    itemSelectedMode.setVisible(selectMode);
-
-                    if (selectedPeople.size() == people_list.size()) {
-                        selectAll = true;
-                    }
-                    updateIconSelectAllBox();
-                }
+//                if (!selectMode && !editMode ) {
+//
+//                    selectMode = true;
+//                    peopleAdapter.setCheckBoxVisible(selectMode);
+//                    peopleAdapter.setCheckBox(selectAll);
+//
+//                    peopleAdapter.setCheckBox(item);
+//                    selectedPeople.add(item);
+//
+//                    floatingActionButton.setVisibility(Button.VISIBLE);
+//
+//                    search.setVisible(!selectMode);
+//
+//                    itemSelectedMode.setVisible(selectMode);
+//
+//                    if (selectedPeople.size() == people_list.size()) {
+//                        selectAll = true;
+//                    }
+//                    updateIconSelectAllBox();
+//                }
             }
 
             @Override
             public void onItemClick(People item) {
-                if (selectMode) {
-                    if (!selectedPeople.contains(item)) {
-                        selectedPeople.add(item);
-
-                        if (selectedPeople.size() == people_list.size()) {
-                            selectAll = true;
-                        }
-                        updateIconSelectAllBox();
-
-                    } else {
-
-                        selectedPeople.remove(item);
-                        selectAll = false;
-                        updateIconSelectAllBox();
-                    }
-                }
-                else if(editMode){
+//                if (selectMode) {
+//                    if (Contains(item)) {
+//                      //  Log.e("Keliz",item.Name + " - contains - true");
+//
+//                        selectedPeople.remove(item);
+//                        selectAll = false;
+//
+//                    } else {
+//                       // Log.e("Keliz",item.Name + " - contains - false");
+//
+//                        selectedPeople.add(item);
+//
+//                        if (selectedPeople.size() == people_list.size())
+//                            selectAll = true;
+//
+//                    }
+//                    for (People people: selectedPeople)
+//                        Log.e("Keliz",people.Name + " - selectAll - " + selectAll);
+//
+//                    updateIconSelectAllBox();
+//                }
+                 if(editMode){
                     Intent intent = new Intent(GroupActivity.this, PeopleInformation.class);
                     intent.putExtra("NAME", item.Name);
                     intent.putExtra("YEAR", year);
@@ -358,6 +362,8 @@ public class GroupActivity extends AppCompatActivity {
         menu.findItem(R.id.open_data).setVisible(false);
 
         edit.setVisible(false);
+        itemSelectedMode.setVisible(false);
+
 
         remove.setVisible(editMode);
         rename.setVisible(editMode);
@@ -369,12 +375,13 @@ public class GroupActivity extends AppCompatActivity {
 
             builder.setCancelable(true);
             builder.setMessage("Удалить группу " +'"' + GroupName + '"' + " ?");
-            builder.setPositiveButton("Нет", (dialogInterface, i) -> {
-                dialogInterface.cancel();
-            });
-            builder.setNegativeButton("Да", (dialogInterface, i) -> {
+            builder.setPositiveButton("Да", (dialogInterface, i) -> {
                 helper.removeGroup(GroupName);
                 finish();
+            });
+            builder.setNegativeButton("Нет", (dialogInterface, i) -> {
+
+                dialogInterface.cancel();
             });
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
@@ -404,30 +411,6 @@ public class GroupActivity extends AppCompatActivity {
         return false;
         });
 
-        itemSelectedMode.setVisible(selectMode);
-
-        itemSelectedMode.setOnMenuItemClickListener(menuItem -> {
-
-            if(selectAll) {
-                selectAll = !selectAll;
-                selectedPeople.clear();
-                peopleAdapter.setCheckBox(selectAll);
-
-            }
-            else{
-
-                selectAll = !selectAll;
-                selectedPeople.clear();
-                selectedPeople.addAll(people_list);
-                peopleAdapter.setCheckBox(selectAll);
-
-
-            }
-            updateIconSelectAllBox();
-            update();
-
-            return false;
-        });
 
 
 //
@@ -497,7 +480,6 @@ public class GroupActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -514,6 +496,7 @@ public class GroupActivity extends AppCompatActivity {
                 selectMode = !selectMode;
                 selectAll = false;
                 search.setVisible(true);
+                selectedPeople.clear();
                 updateIconSelectAllBox();
 
                 peopleAdapter.setCheckBox(selectMode);
@@ -521,8 +504,6 @@ public class GroupActivity extends AppCompatActivity {
                 itemSelectedMode.setVisible(selectMode);
 
                 floatingActionButton.setVisibility(Button.INVISIBLE);
-
-                edit.setVisible(true);
             } else {
                 finish();
             }
@@ -530,4 +511,13 @@ public class GroupActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public boolean Contains(People people){
+        for (People item : selectedPeople ) {
+            if(item.Name == people.Name)
+                return true;
+        }
+        return false;
+    }
+
 }

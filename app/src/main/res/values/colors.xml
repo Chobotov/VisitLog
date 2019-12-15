@@ -19,6 +19,9 @@
 
     <color name="dirPicker_divider">#606060</color>
 
+    <color name="Icon">#BF616161</color>
+    <color name="SelectIcon">#222222</color>
+
     <!-- DirPickerActivity
 
     <color name="dirPicker_textActive">#ffffff</color>

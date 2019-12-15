@@ -45,7 +45,7 @@ public class DirPickerActivity extends AppCompatActivity
   private int mode;
 
 
-
+  private Button back;
 
 
 
@@ -63,6 +63,7 @@ public class DirPickerActivity extends AppCompatActivity
     tvPath = findViewById(R.id.dirPicker_tvPath);
     tvEmpty = findViewById(R.id.dirPicker_tvEmpty);
     btnGo = findViewById(R.id.dirPicker_go);
+    back = findViewById(R.id.back);
     btnGo.setOnClickListener(v -> onClickGo(null));
     adapter = new DirListAdapter(this, this, arrayDir);
     listDir = findViewById(R.id.dirPicker_listDir);
@@ -90,6 +91,11 @@ public class DirPickerActivity extends AppCompatActivity
     }
 
     updateListDir();
+
+
+    back.setOnClickListener(x->{
+      finish();
+    });
   }
 
   @Override
