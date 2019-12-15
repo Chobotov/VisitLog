@@ -68,18 +68,24 @@
                     android:layout_marginLeft="15dp"
                     android:background="@drawable/ic_groups">
                 </View>
-
-                <TextView
-                    android:id="@+id/groupNames"
-                    android:layout_toEndOf="@+id/groupIcon"
+                <HorizontalScrollView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingTop="10dp"
-                    android:layout_marginLeft="15dp"
+                    android:layout_toEndOf="@+id/groupIcon"
                     android:layout_toRightOf="@+id/groupIcon"
-                    android:textSize="35sp"
-                    android:text="БВТ">
-                </TextView>
+                    android:layout_marginLeft="15dp">
+
+                    <TextView
+                        android:id="@+id/groupNames"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingTop="10dp"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="35sp"
+                        android:text="БВТпавпваоповашопвоашпошваозпошваоп">
+                    </TextView>
+                </HorizontalScrollView>
 
             </RelativeLayout>
 

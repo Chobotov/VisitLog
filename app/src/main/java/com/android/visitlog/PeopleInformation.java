@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -65,6 +66,7 @@ public class PeopleInformation extends AppCompatActivity {
         days = findViewById(R.id.valueOfDays);
         hours = findViewById(R.id.valueOfHours);
         groupNames = findViewById(R.id.groupNames);
+        //groupNames.setMovementMethod(new ScrollingMovementMethod());
 
         spinnerMonth = findViewById(R.id.spinnerMonth);
         inputYear = findViewById(R.id.inputYear);

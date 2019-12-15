@@ -938,7 +938,11 @@ public class DBHelper extends SQLiteOpenHelper {
         if(c.moveToFirst()){
             do {
                 int index = c.getColumnIndex(CAME_TIME);
-                cameHours = c.getString(index);
+                if(c.getString(index).equals("__")){
+                    cameHours = "0";
+                }
+                else
+                    cameHours = c.getString(index);
             }while (c.moveToNext());
         }
         else
@@ -957,7 +961,11 @@ public class DBHelper extends SQLiteOpenHelper {
         if(c.moveToFirst()){
             do {
                 int index = c.getColumnIndex(LEAVE_TIME);
-                leaveHours = c.getString(index);
+                if(c.getString(index).equals("__")){
+                    leaveHours = "0";
+                }
+                else
+                    leaveHours = c.getString(index);
             }while (c.moveToNext());
         }
         else
