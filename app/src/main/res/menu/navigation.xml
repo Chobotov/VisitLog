@@ -3,16 +3,22 @@
     <item
         android:id="@+id/navPeoples"
         android:icon="@drawable/ic_people"
-        android:title="People"></item>
+        android:title="@string/People">
+
+    </item>
 
     <item
         android:id="@+id/navCalendar"
         android:icon="@drawable/ic_calendarbutton"
-        android:title="Calendar"
-        ></item>
+        android:title="@string/calendar"
+        >
+
+    </item>
 
     <item
         android:id="@+id/navGroups"
         android:icon="@drawable/ic_groups"
-        android:title="Groups"></item>
+        android:title="@string/Groups">
+
+    </item>
 </menu>

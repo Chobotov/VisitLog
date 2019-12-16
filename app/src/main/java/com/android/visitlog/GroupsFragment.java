@@ -79,6 +79,6 @@ public class GroupsFragment extends Fragment {
 
     public void setCounterText(int text){
         if(countGroup != null)
-            countGroup.setText(text + " "+ getResources().getString(R.string.Groups));
+            countGroup.setText(text + "");
     }
 }

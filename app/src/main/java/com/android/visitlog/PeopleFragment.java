@@ -83,7 +83,7 @@ public class PeopleFragment extends Fragment {
 
     public void setCounterText(int text){
         if(countPeople!=null)
-            countPeople.setText(text + " "+ getResources().getString(R.string.People));
+            countPeople.setText(text+"");
     }
 
 

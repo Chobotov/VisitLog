@@ -33,7 +33,9 @@
                 android:id="@+id/spinnerMonth"
                 android:layout_weight = "0.5"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp"></Spinner>
+                android:layout_height="50dp">
+
+            </Spinner>
 
             <EditText
                 android:id="@+id/inputYear"
@@ -43,7 +45,9 @@
                 android:inputType="number"
                 android:layout_toEndOf="@+id/spinnerMonth"
                 android:layout_toRightOf="@+id/spinnerMonth"
-                android:hint="Год"></EditText>
+                android:hint="Год">
+
+            </EditText>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -61,29 +65,37 @@
                 android:id="@+id/infoGroups"
                 android:layout_width="match_parent"
                 android:layout_height="60dp">
+
                 <View
                     android:id="@+id/groupIcon"
                     android:layout_width="70dp"
-                    android:layout_height="60dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
                     android:background="@drawable/ic_groups">
+
                 </View>
+
                 <HorizontalScrollView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
                     android:layout_toEndOf="@+id/groupIcon"
-                    android:layout_toRightOf="@+id/groupIcon"
-                    android:layout_marginLeft="15dp">
+                    android:layout_toRightOf="@+id/groupIcon">
 
                     <TextView
                         android:id="@+id/groupNames"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:paddingTop="10dp"
                         android:maxLines="1"
+                        android:paddingTop="10dp"
                         android:singleLine="true"
-                        android:textSize="35sp"
-                        android:text="БВТпавпваоповашопвоашпошваозпошваоп">
+                        android:text="БВТпавпваоповашопвоашпошваозпошваоп"
+                        android:textSize="28sp">
+
                     </TextView>
                 </HorizontalScrollView>
 
@@ -111,8 +123,11 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="CAME DAYS"
-                    android:textSize="20sp"></TextView>
+                    android:text="@string/came_days"
+                    android:textAlignment="center"
+                    android:textSize="20sp">
+
+                </TextView>
 
                 <TextView
                     android:id="@+id/valueOfDays"
@@ -122,7 +137,11 @@
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
                     android:text="19 days"
-                    android:textSize="30sp"></TextView>
+                    android:textSize="30sp"
+                    android:textAlignment="center"
+                    >
+
+                </TextView>
 
             </RelativeLayout>
 
@@ -141,8 +160,13 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Hours Avg."
-                    android:textSize="20sp"></TextView>
+                    android:text="@string/hours_avg"
+                    android:textSize="20sp"
+                    android:textAlignment="center"
+
+                    >
+
+                </TextView>
 
                 <TextView
                     android:id="@+id/valueOfHours"
@@ -152,7 +176,11 @@
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
                     android:text="12 hours"
-                    android:textSize="30sp"></TextView>
+                    android:textSize="30sp"
+                    android:textAlignment="center"
+                    >
+
+                </TextView>
             </RelativeLayout>
 
 

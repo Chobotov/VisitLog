@@ -44,7 +44,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="12dp"
                 android:orientation="horizontal">
 
@@ -52,10 +52,12 @@
                     android:id="@+id/view"
                     android:layout_width="18dp"
                     android:layout_height="20dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
                     android:background="@drawable/ic_people"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/scountPeople" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/scountPeople"
@@ -86,7 +88,7 @@
                 android:background="@drawable/itemstyle"
                 android:drawableLeft="@drawable/ic_add"
                 android:fontFamily="@font/rockb"
-                android:text="Add people"
+                android:text="@string/add_people"
                 android:textColor="#9B9B9B"
                 style="?android:attr/borderlessButtonStyle"
                 >

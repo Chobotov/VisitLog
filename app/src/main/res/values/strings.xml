@@ -1,23 +1,23 @@
 <resources>
     <string name="app_name">VisitLog</string>
 
-    <string name="Groups">Groups</string>
-    <string name="People">People</string>
-    <string name="SearchString">item</string>
-    <string name="NameTextLayout">Name</string>
-    <string name="Add">Add</string>
-    <string name="Cancel">Cancel</string>
-    <string name="SelectAll">Select All</string>
+    <string name="Groups">Группы</string>
+    <string name="People">Люди</string>
+    <string name="SearchString">Пасхалка</string>
+    <string name="NameTextLayout">Имя</string>
+    <string name="Add">Добавить</string>
+    <string name="Cancel">Отмена</string>
+    <string name="SelectAll">Выделить всех</string>
 
-    <string name="Search">Search</string>
-    <string name="Edit">Edit</string>
+    <string name="Search">Поиск</string>
+    <string name="Edit">Изменить</string>
     <string name="RepeatAlert">Такое наименование уже есть. Создать новый контакт под названием </string>
     <string name="RenameAlert">Такое наименование уже есть. Переименовать контакт под названием </string>
 
-    <string name="Members">Members</string>
+    <string name="Members">Участники</string>
     <string name="AddData"> был добавлен на </string>
-    <string name="AllGroups">All Groups</string>
-    <string name="AllPeople">All People</string>
+    <string name="AllGroups">Все группы</string>
+    <string name="AllPeople">Все люди</string>
     <string name="in">in</string>
     <string name="AlertEmptyGroupName">Не удалось добавить пустое наименование</string>
     <string name="RenameAlertEmptyName">Не удалось переименовать в пустое наименование</string>
@@ -28,10 +28,10 @@
     <string name="addGroupDate2">были добавлены на</string>
     <string name="PeopleAlreadyHaveThisDate">уже записан(а) на выбранную дату.</string>
 
-    <string name="Remove">Remove</string>
-    <string name="Rename">Rename</string>
-    <string name="SaveData">Save Data</string>
-    <string name="OpenData">Open Data</string>
+    <string name="Remove">Удалить</string>
+    <string name="Rename">Переименовать</string>
+    <string name="SaveData">Сохранить базу</string>
+    <string name="OpenData">Открыть базу</string>
 
     <string name="None">None</string>
 
@@ -49,5 +49,9 @@
     <string name="EmptyPeopleNameAlert">Не удалось добавить пустое наименование</string>
     <string name="DataSaveAlert">База данных была сохранена!</string>
     <string name="DataOpenAlert">База данных загружена!</string>
+    <string name="came_days">ДНИ ПОСЕЩЕНИЯ</string>
+    <string name="hours_avg">РАБОЧЕЕ ВРЕМЯ</string>
+    <string name="add_people">Добавить человека</string>
+    <string name="calendar">Календарь</string>
 
 </resources>

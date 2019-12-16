@@ -456,7 +456,7 @@ public class GroupsActivityFragment extends Fragment {
                 builder.setMessage(getResources().getString(R.string.RepeatAlert) + " " + '"' + newName + '"' + " ?");
                 builder.setPositiveButton("Да", (dialogInterface, i) -> {
                     helper.addGroup(newName);
-
+                    updateGroups();
                 });
                 builder.setNegativeButton("Нет", (dialogInterface, i) -> {
                     dialogInterface.cancel();
@@ -469,6 +469,7 @@ public class GroupsActivityFragment extends Fragment {
             Snackbar.make(v,getResources().getString(R.string.AlertEmptyGroupName),Snackbar.LENGTH_LONG).show();
         }
         updateGroups();
+        update();
     }
 
     public void GetData(String year, String month, String day) {
