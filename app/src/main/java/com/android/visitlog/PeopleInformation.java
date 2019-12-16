@@ -297,8 +297,8 @@ public class PeopleInformation extends AppCompatActivity {
     }
 
     private void UpdateData(){
-        days.setText(helper.CameDaysInMonth(0,Name,Year,Month));
-        hours.setText(helper.AvgHours(0,Name,Year,Month));
+        days.setText(helper.CameDaysInMonth(0,Name,Year,Month) +" "+ getResources().getString(R.string.informationDay));
+        hours.setText(helper.AvgHours(0,Name,Year,Month)+" "+ getResources().getString(R.string.informationHours));
         groupNames.setText(helper.FindGroupThisPeople(new People(Name)));
         DrawGraph();
     }

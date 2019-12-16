@@ -55,4 +55,10 @@
     <string name="day">День</string>
     <string name="peopleActivityTitle">Добавление</string>
 
+
+    <string name="informationDay">д.</string>
+    <string name="informationHours">ч.</string>
+
+
+
 </resources>

@@ -122,10 +122,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/came_days"
                     android:textAlignment="center"
-                    android:textSize="20sp">
+                    android:textSize="16sp">
 
                 </TextView>
 
@@ -133,13 +133,12 @@
                     android:id="@+id/valueOfDays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/titleDays"
+                    android:layout_below="@id/titleDays"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="10dp"
-                    android:text="19 days"
-                    android:textSize="30sp"
+                    android:layout_marginTop="20dp"
+                    android:text="19 д."
                     android:textAlignment="center"
-                    >
+                    android:textSize="36sp">
 
                 </TextView>
 
@@ -159,10 +158,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/hours_avg"
-                    android:textSize="20sp"
                     android:textAlignment="center"
+                    android:textSize="16sp"
 
                     >
 
@@ -172,13 +171,12 @@
                     android:id="@+id/valueOfHours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/hoursTitle"
+                    android:layout_below="@id/hoursTitle"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="10dp"
-                    android:text="12 hours"
-                    android:textSize="30sp"
+                    android:layout_marginTop="20dp"
+                    android:text="12 ч."
                     android:textAlignment="center"
-                    >
+                    android:textSize="36sp">
 
                 </TextView>
             </RelativeLayout>
