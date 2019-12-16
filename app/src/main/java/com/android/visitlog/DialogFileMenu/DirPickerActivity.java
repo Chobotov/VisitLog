@@ -1,8 +1,10 @@
 package com.android.visitlog.DialogFileMenu;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,6 +56,38 @@ public class DirPickerActivity extends AppCompatActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.act_dir_picker);
+
+    if (ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+      // Permission is not granted
+      // Should we show an explanation?
+      if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+              Manifest.permission.READ_EXTERNAL_STORAGE) &&
+              ActivityCompat.shouldShowRequestPermissionRationale(this,
+                      Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        // Show an explanation to the user *asynchronously* -- don't block
+        // this thread waiting for the user's response! After the user
+        // sees the explanation, try again to request the permission.
+      } else {
+        // No explanation needed; request the permission
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                1);
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                2);
+
+        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+        // app-defined int constant. The callback method gets the
+        // result of the request.
+      }
+    }
+
     appContext = getApplicationContext();
     arrayDir = new ArrayList<>();
 
@@ -88,6 +124,9 @@ public class DirPickerActivity extends AppCompatActivity
       path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
       //save new start path in SharedPreferences
       settings.edit().putString(KEY_LAST_PATH, path).apply();
+
+
+
     }
 
     updateListDir();
@@ -192,4 +231,37 @@ public class DirPickerActivity extends AppCompatActivity
       this.path = path;
     }
   }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         String permissions[], int[] grantResults) {
+    switch (requestCode) {
+      case 1: {
+
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED
+        ) {
+
+          // permission was granted, yay! Do the
+          // contacts-related task you need to do.
+        } else {
+          Toast.makeText(this, "Не удалось получить разрешение на работу с файловой системой. Проверте разрешение приложения.", Toast.LENGTH_LONG
+          ).show();
+          finish();
+        }
+        return;
+      }
+
+      // other 'case' lines to check for other
+      // permissions this app might request
+    }
+  }
+
+
+
+
 }
+
+
