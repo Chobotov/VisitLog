@@ -1,7 +1,6 @@
 package com.android.visitlog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATA_PEOPLE = "data";
     public static final String PEOPLE = "people";
-    public static final String PEOPLES_GROUP = "peoplesGroup";
+    public static final String PEOPLE_GROUP = "peoplesGroup";
     public static final String GROUPS = "groups";
 
     public static String KEY_ID = "_id";
@@ -61,7 +60,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + PEOPLE + " (" + KEY_ID + ")"
                 + ")");
 
-        db.execSQL("create table " + PEOPLES_GROUP +
+        db.execSQL("create table " + PEOPLE_GROUP +
                 "(" +
                 ID_PEOPLE + " integer,"
                 + ID_GROUP + " integer,"
@@ -83,7 +82,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("drop table if exists " + PEOPLE);
         sqLiteDatabase.execSQL("drop table if exists " + DATA_PEOPLE);
-        sqLiteDatabase.execSQL("drop table if exists " + PEOPLES_GROUP);
+        sqLiteDatabase.execSQL("drop table if exists " + PEOPLE_GROUP);
         sqLiteDatabase.execSQL("drop table if exists " + GROUPS);
         onCreate(sqLiteDatabase);
     }
@@ -213,14 +212,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public void removePeople(String name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.delete(DATA_PEOPLE,ID_PEOPLE + " = ?" , new String[]{GetIdByName(name)});
-        sqLiteDatabase.delete(PEOPLES_GROUP,ID_PEOPLE + " = ?" , new String[]{GetIdByName(name)});
+        sqLiteDatabase.delete(PEOPLE_GROUP,ID_PEOPLE + " = ?" , new String[]{GetIdByName(name)});
         sqLiteDatabase.delete(PEOPLE,FULL_NAME + " = ?" , new String[]{name});
     }
 
     //Удаление имени группы из таблицы GROUPS
     public void removeGroup(String name){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        sqLiteDatabase.delete(PEOPLES_GROUP,ID_GROUP + " = ?" , new String[]{GetIdGroupByName(name)});
+        sqLiteDatabase.delete(PEOPLE_GROUP,ID_GROUP + " = ?" , new String[]{GetIdGroupByName(name)});
         sqLiteDatabase.delete(GROUPS,GROUP_NAME + " = ?" , new String[]{name});
     }
 
@@ -413,7 +412,7 @@ public class DBHelper extends SQLiteOpenHelper {
                "SELECT "
                + ID_PEOPLE
                + " FROM "
-               + PEOPLES_GROUP
+               + PEOPLE_GROUP
                + " WHERE "
                + ID_GROUP
                + " =? ",
@@ -463,7 +462,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
-        sqLiteDatabase.delete(PEOPLES_GROUP,
+        sqLiteDatabase.delete(PEOPLE_GROUP,
                 ID_PEOPLE + " =?" + " and " + ID_GROUP + " =?",
                 new String[]{PeopleId,GroupId});
         Log.e("delete",PeopleId + " " + GroupId);
@@ -481,7 +480,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(ID_PEOPLE,PeopleId);
         cv.put(ID_GROUP,GroupId);
 
-        sqLiteDatabase.insert(PEOPLES_GROUP,null,cv);
+        sqLiteDatabase.insert(PEOPLE_GROUP,null,cv);
     }
 
     // Возвращает всех людей, что ещё не состоят в группе
@@ -517,7 +516,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "SELECT "
                         + ID_PEOPLE
                         + " FROM "
-                        + PEOPLES_GROUP
+                        + PEOPLE_GROUP
                         + " WHERE "
                         + ID_GROUP
                         + " =?",
@@ -554,7 +553,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "SELECT "
                         + ID_PEOPLE
                         + " FROM "
-                        + PEOPLES_GROUP
+                        + PEOPLE_GROUP
                         + " WHERE "
                         + ID_GROUP
                         + " =?",
@@ -637,7 +636,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 " SELECT "
                 + ID_GROUP
                 + " FROM "
-                + PEOPLES_GROUP
+                + PEOPLE_GROUP
                 + " WHERE "
                 + ID_PEOPLE
                 + " =?",

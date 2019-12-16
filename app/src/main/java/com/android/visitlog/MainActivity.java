@@ -82,17 +82,17 @@ public class MainActivity extends AppCompatActivity {
                     calendar.update();
                     calendar.updateDecorator();
                     active = calendar;
-
                     return true;
+
                 case R.id.navPeoples:
                     fragmentManager.beginTransaction().hide(active).show(peopleActivityFragment).commit();
                     peopleActivityFragment.GetData(calendar.YEAR,calendar.MONTH,calendar.DAY);
                     peopleActivityFragment.updatePeople();
                     active = peopleActivityFragment;
-
                     setSupportActionBar(peopleActivityFragment.toolbar);
                     getSupportActionBar().setTitle(getResources().getString(R.string.People));
                     return true;
+
                 case R.id.navGroups:
                     fragmentManager.beginTransaction().hide(active).show(groupsActivityFragment).commit();
                     active = groupsActivityFragment;
@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                     groupsActivityFragment.updateGroups();
                     setSupportActionBar(groupsActivityFragment.toolbar);
                     getSupportActionBar().setTitle(getResources().getString(R.string.Groups));
-
                     return true;
+
             }
             return false;
         }
