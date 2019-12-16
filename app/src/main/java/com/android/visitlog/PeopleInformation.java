@@ -277,7 +277,7 @@ public class PeopleInformation extends AppCompatActivity {
         }
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoint);
-        series.setTitle("Hours/Day");
+        series.setTitle(getResources().getString(R.string.hours)+"/"+getResources().getString(R.string.day));
         graphView.getLegendRenderer().setVisible(true);
         graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graphView.addSeries(series);

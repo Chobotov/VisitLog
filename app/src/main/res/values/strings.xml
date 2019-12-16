@@ -36,8 +36,6 @@
     <string name="None">None</string>
 
 
-
-
     <!-- Содержимое текстовых полей и подписей кнопок (Layout: act_dir_picker) -->
     <string name="actLabel_filePicker">Выбор файла</string>
     <string name="actLabel_dirPicker">Выбор каталога</string>
@@ -53,5 +51,8 @@
     <string name="hours_avg">РАБОЧЕЕ ВРЕМЯ</string>
     <string name="add_people">Добавить человека</string>
     <string name="calendar">Календарь</string>
+    <string name="hours">Время</string>
+    <string name="day">День</string>
+    <string name="peopleActivityTitle">Добавление</string>
 
 </resources>

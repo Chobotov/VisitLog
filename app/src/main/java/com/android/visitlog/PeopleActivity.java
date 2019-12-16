@@ -191,7 +191,7 @@ public class PeopleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Add People");
+        getSupportActionBar().setTitle(getResources().getString(R.string.peopleActivityTitle));
 
         floatingActionButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(PeopleActivity.this);
