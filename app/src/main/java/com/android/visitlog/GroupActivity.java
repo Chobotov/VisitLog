@@ -469,8 +469,7 @@ public class GroupActivity extends AppCompatActivity {
                 people_list.addAll(helper.getFilterGroupPeople(newText, GroupName));
                 peopleAdapter.notifyDataSetChanged();
 
-                textView.setText(people_list.size() + " " + getResources().getString(R.string.People) + " "
-                        + getResources().getString(R.string.in) + " " + GroupName);
+                textView.setText(people_list.size()+"");
 
                 return false;
             }
