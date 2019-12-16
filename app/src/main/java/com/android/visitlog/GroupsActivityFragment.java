@@ -254,12 +254,7 @@ public class GroupsActivityFragment extends Fragment {
 
     }
 
-    public void update(){
-        if(adapter!=null) {
-            adapter.notifyDataSetChanged();
-            setCounterText(groups.size());
-        }
-    }
+
 
 
     public void setCounterText(int text){
@@ -280,6 +275,14 @@ public class GroupsActivityFragment extends Fragment {
 
         setCounterText(groups.size());
 
+    }
+
+
+    public void update(){
+        if(adapter!=null) {
+            adapter.notifyDataSetChanged();
+            setCounterText(groups.size());
+        }
     }
 
 
@@ -346,6 +349,9 @@ public class GroupsActivityFragment extends Fragment {
                 } else {
                     groups.clear();
                     groups.addAll(helper.getGroupsFilter(newText));
+                    for (Group group : groups) {
+                        group.Count = helper.getGroupMembers(group.Name).size();
+                    }
                     update();
                 }
 
