@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,7 +29,9 @@ import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -275,13 +278,25 @@ public class PeopleInformation extends AppCompatActivity {
             Log.d("day",String.valueOf(datas.get(i)));
             Log.d("hours",String.valueOf(helper.getHoursByDay(Name,String.valueOf(datas.get(i)),Month,Year)));
         }
-
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(dataPoint);
+        BarGraphSeries<DataPoint> series = new BarGraphSeries<DataPoint>(dataPoint);
         series.setTitle(getResources().getString(R.string.hours)+"/"+getResources().getString(R.string.day));
         graphView.getLegendRenderer().setVisible(true);
         graphView.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graphView.addSeries(series);
         graphView.getViewport().setScalable(true);
+
+        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+            @Override
+            public int get(DataPoint data) {
+                return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
+            }
+        });
+
+        series.setSpacing(50);
+
+// draw values on top
+        series.setDrawValuesOnTop(true);
+        series.setValuesOnTopColor(Color.RED);
     }
 
     public void update() {
@@ -298,7 +313,7 @@ public class PeopleInformation extends AppCompatActivity {
 
     private void UpdateData(){
         days.setText(helper.CameDaysInMonth(0,Name,Year,Month) +" "+ getResources().getString(R.string.informationDay));
-        hours.setText(helper.AvgHours(0,Name,Year,Month)+" "+ getResources().getString(R.string.informationHours));
+        hours.setText(helper.AvgHours(1,Name,Year,Month) + " " + getResources().getString(R.string.informationHours) + "/"  + (helper.AvgHours(0,Name,Year,Month)+" " + getResources().getString(R.string.informationHours)));
         groupNames.setText(helper.FindGroupThisPeople(new People(Name)));
         DrawGraph();
     }

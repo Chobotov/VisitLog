@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -28,6 +29,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -47,6 +49,8 @@ public class CalendarFragment extends Fragment{
     public String YEAR, MONTH, DAY;
     private ArrayList<People> peopleList;
     private DBHelper dbHelper;
+    private TimePicker mTimePicker;
+    private int hour,minutes;
 
     //private int whichTime;
 
@@ -68,12 +72,10 @@ public class CalendarFragment extends Fragment{
         v = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         AtomicInteger cameHourDay = new AtomicInteger();
-        //whichTime = 1;
 
         commit = "";
 
-        final int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        final int minute = Calendar.getInstance().get(Calendar.MINUTE);
+        setCurrentTime();
 
         dbHelper = new DBHelper(v.getContext());
         YEAR = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
@@ -106,6 +108,7 @@ public class CalendarFragment extends Fragment{
 
             @Override
             public void InsertTimeInData(People people) {
+                setCurrentTime();
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), (view, hourOfDay, minute1) -> {
                     if(people.CameTime.equals("__")){
                         people.CameTime = hourOfDay + ":" + minute1;
@@ -124,7 +127,7 @@ public class CalendarFragment extends Fragment{
                         }
                     }
                     adapter.notifyDataSetChanged();
-                },hour,minute,android.text.format.DateFormat.is24HourFormat(getContext()));
+                },hour,minutes,android.text.format.DateFormat.is24HourFormat(getContext()));
                 timePickerDialog.show();
             }
 
@@ -241,6 +244,12 @@ public class CalendarFragment extends Fragment{
         {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void setCurrentTime(){
+        final Calendar calendar = Calendar.getInstance();
+        hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        minutes = Calendar.getInstance().get(Calendar.MINUTE);
     }
 
 

@@ -820,10 +820,6 @@ public class DBHelper extends SQLiteOpenHelper {
                     //break;
                 }
 
-//                Log.d(LOG_TAG, String.valueOf(cameTime));
-//                Log.d(LOG_TAG, String.valueOf(countOfDays));
-//                Log.d(LOG_TAG, String.valueOf(cameTime));
-
                 c = sqLiteDatabase.rawQuery("SELECT "
                                 + LEAVE_TIME
                                 + " FROM " + DATA_PEOPLE
@@ -851,18 +847,62 @@ public class DBHelper extends SQLiteOpenHelper {
                 } else {
                     Log.d(LOG_TAG, "Cursor is null");
                 }
-//                Log.d(LOG_TAG, String.valueOf(leaveTime));
-//                Log.d(LOG_TAG, String.valueOf(leaveTime));
-//                Log.d(LOG_TAG, String.valueOf(countOfDays));
+                break;
+
+            case 1:
+                c = sqLiteDatabase.rawQuery("SELECT "
+                                + CAME_TIME
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                                + " AND " + MONTH + " = ?"
+                        , new String[]{id, Year, Month});
+                if (c.moveToFirst()) {
+                    int index = c.getColumnIndex(CAME_TIME);
+                    do {
+                        String time = c.getString(index);
+                        String [] times = time.split(":");
+                        if(!time.equals("__")){
+                            cameTime += Integer.valueOf(times[0]);
+                        }
+                    } while (c.moveToNext());
+                } else {
+                    Log.d(LOG_TAG, "Cursor is null");
+                    //break;
+                }
+
+                c = sqLiteDatabase.rawQuery("SELECT "
+                                + LEAVE_TIME
+                                + " FROM " + DATA_PEOPLE
+                                + " WHERE " + ID_PEOPLE + " = ?"
+                                + " AND " + YEAR + " = ?"
+                                + " AND " + MONTH + " = ?"
+                        , new String[]{id, Year, Month});
+                if (c.moveToFirst()) {
+                    int index = c.getColumnIndex(LEAVE_TIME);
+                    do {
+                        String time = c.getString(index);
+                        String [] times = time.split(":");
+                        if(!time.equals("__")){
+                            leaveTime += Integer.valueOf(times[0]);
+                        }
+                    } while (c.moveToNext());
+                } else {
+                    Log.d(LOG_TAG, "Cursor is null");
+                }
                 break;
         }
-        int AvgHours = leaveTime - cameTime;
-        if(AvgHours < 0){
-            return "0";
+        if(mode == 0) {
+            int AvgHours = leaveTime - cameTime;
+            if (AvgHours < 0) {
+                return "0";
+            } else {
+                return String.valueOf(AvgHours);
+            }
         }
-        else {
-            return String.valueOf(AvgHours);
-        }
+         else {
+             return String.valueOf(leaveTime - cameTime);
+            }
     }
 
     public String getPath()
