@@ -48,7 +48,7 @@
     <string name="DataSaveAlert">База данных была сохранена!</string>
     <string name="DataOpenAlert">База данных загружена!</string>
     <string name="came_days">ДНИ ПОСЕЩЕНИЯ</string>
-    <string name="hours_avg">РАБОЧЕЕ ВРЕМЯ</string>
+    <string name="hours_avg">ВРЕМЯ МЕСЯЦ/ДЕНЬ</string>
     <string name="add_people">Добавить человека</string>
     <string name="calendar">Календарь</string>
     <string name="hours">Время</string>
