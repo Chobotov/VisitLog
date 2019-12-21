@@ -1,11 +1,15 @@
 package com.android.visitlog;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.visitlog.DialogFileMenu.DirPickerActivity;
 import com.google.android.material.snackbar.Snackbar;
@@ -309,21 +314,14 @@ public class GroupsActivityFragment extends Fragment {
         itemCheckBox.setVisible(false);
 
         save.setOnMenuItemClickListener( x->{
-            //openFile();
-//            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-//            intent.setType("file/*");
-//            startActivityForResult(intent, REQUEST_GET_TEXTURE);
-            Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
-            intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.DIRECTORY);
-            startActivityForResult(intent, RESULT_OUT_CODE);
+
+            request(2);
             return false;
         });
 
         open.setOnMenuItemClickListener( x->{
 
-            Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
-            intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.FILE);
-            startActivityForResult(intent, RESULT_IN_CODE);
+            request(1);
             return false;
         });
 
@@ -361,6 +359,114 @@ public class GroupsActivityFragment extends Fragment {
         });
     }
 
+
+    private void openData()
+    {
+        Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
+        intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.FILE);
+        startActivityForResult(intent, RESULT_IN_CODE);
+    }
+
+    private void saveData()
+    {
+
+        Intent intent = new Intent(v.getContext(), DirPickerActivity.class);
+        intent.putExtra(DirPickerActivity.KEY_MODE, DirPickerActivity.Mode.DIRECTORY);
+        startActivityForResult(intent, RESULT_OUT_CODE);
+    }
+
+
+
+    private void request(int requestCode){
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE ) &&
+                    ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                Log.e("Keliz","78");
+
+
+            } else {
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},requestCode);
+
+
+            }
+        }
+        else {
+            if(requestCode == 1){
+                openData();
+            }
+            else if(requestCode == 2){
+                saveData();
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+
+        Log.e("Keliz","case 1");
+        switch (requestCode) {
+
+            case 1: {
+                Log.e("Keliz","case 1");
+                if (grantResults.length > 0
+                ) {
+                    if(  grantResults[0] == PackageManager.PERMISSION_GRANTED
+                            && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        Log.e("Keliz","1");
+                        openData();
+                    }
+                    else {
+                        Snackbar.make(v, "Не удалось получить разрешение на работу с файловой системой. Проверте разрешение приложения.", Snackbar.LENGTH_LONG
+                        ).show();
+                    }
+                } else {
+                    Snackbar.make(v, "Не удалось получить разрешение на работу с файловой системой. Проверте разрешение приложения.", Snackbar.LENGTH_LONG
+                    ).show();
+                }
+                return;
+            }
+
+            case 2: {
+
+                Log.e("Keliz","case 2");
+                if (grantResults.length > 0
+                ) {
+                    if(  grantResults[0] == PackageManager.PERMISSION_GRANTED
+                            && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        Log.e("Keliz","2");
+                        saveData();
+                    }
+                    else {
+                        Snackbar.make(v, "Не удалось получить разрешение на работу с файловой системой. Проверте разрешение приложения.", Snackbar.LENGTH_LONG
+                        ).show();
+                    }
+                } else {
+                    Snackbar.make(v, "Не удалось получить разрешение на работу с файловой системой. Проверте разрешение приложения.", Snackbar.LENGTH_LONG
+                    ).show();
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
 
     @Override

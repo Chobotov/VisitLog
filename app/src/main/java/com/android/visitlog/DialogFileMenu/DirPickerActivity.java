@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DirPickerActivity extends AppCompatActivity
-  implements DirListAdapter.OnItemClickListener {
+  implements DirListAdapter.OnItemClickListener  {
 
   public static final class Mode {
     public static final int DIRECTORY = 1;
@@ -57,85 +58,59 @@ public class DirPickerActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.act_dir_picker);
 
-    if (ContextCompat.checkSelfPermission(this,
-            Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED) {
+      startListDir();
 
-      // Permission is not granted
-      // Should we show an explanation?
-      if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-              Manifest.permission.READ_EXTERNAL_STORAGE) &&
-              ActivityCompat.shouldShowRequestPermissionRationale(this,
-                      Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-        // Show an explanation to the user *asynchronously* -- don't block
-        // this thread waiting for the user's response! After the user
-        // sees the explanation, try again to request the permission.
-      } else {
-        // No explanation needed; request the permission
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                1);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                2);
-
-        // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-        // app-defined int constant. The callback method gets the
-        // result of the request.
-      }
-    }
-
-    appContext = getApplicationContext();
-    arrayDir = new ArrayList<>();
-
-    //loading saved instance
-    State savedState = (State) getLastCustomNonConfigurationInstance();
-    if (savedState != null) path = savedState.path;
-
-    //View components init
-    tvPath = findViewById(R.id.dirPicker_tvPath);
-    tvEmpty = findViewById(R.id.dirPicker_tvEmpty);
-    btnGo = findViewById(R.id.dirPicker_go);
-    back = findViewById(R.id.back);
-    btnGo.setOnClickListener(v -> onClickGo(null));
-    adapter = new DirListAdapter(this, this, arrayDir);
-    listDir = findViewById(R.id.dirPicker_listDir);
-    listDir.setLayoutManager(new LinearLayoutManager(this));
-    listDir.setHasFixedSize(true);
-    listDir.setAdapter(adapter);
-
-    mode = getIntent().getIntExtra(KEY_MODE, Mode.UNDEFINED);
-    if (mode == Mode.FILE) {
-      setTitle(R.string.actLabel_filePicker);
-      btnGo.setVisibility(View.GONE);
-      btnGo.setOnClickListener(null);
-    }
-
-    SharedPreferences settings = PreferenceManager
-      .getDefaultSharedPreferences(appContext);
-    if (path == null) path = settings.getString(KEY_LAST_PATH, SEP);
-    // Checking access to file system root directory
-    if (path.equals(SEP) && !isDirOpened(path)) {
-      Toast.makeText(appContext,
-        R.string.dirPicker_fsRootUnreadable, Toast.LENGTH_LONG).show();
-      path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
-      //save new start path in SharedPreferences
-      settings.edit().putString(KEY_LAST_PATH, path).apply();
-
-
-
-    }
-
-    updateListDir();
-
-
-    back.setOnClickListener(x->{
-      finish();
-    });
   }
+
+  private void startListDir(){
+      appContext = getApplicationContext();
+      arrayDir = new ArrayList<>();
+
+      //loading saved instance
+      State savedState = (State) getLastCustomNonConfigurationInstance();
+      if (savedState != null) path = savedState.path;
+
+      //View components init
+      tvPath = findViewById(R.id.dirPicker_tvPath);
+      tvEmpty = findViewById(R.id.dirPicker_tvEmpty);
+      btnGo = findViewById(R.id.dirPicker_go);
+      back = findViewById(R.id.back);
+      btnGo.setOnClickListener(v -> onClickGo(null));
+      adapter = new DirListAdapter(this, this, arrayDir);
+      listDir = findViewById(R.id.dirPicker_listDir);
+      listDir.setLayoutManager(new LinearLayoutManager(this));
+      listDir.setHasFixedSize(true);
+      listDir.setAdapter(adapter);
+
+      back.setOnClickListener(x->{
+          finish();
+      });
+
+      mode = getIntent().getIntExtra(KEY_MODE, Mode.UNDEFINED);
+      if (mode == Mode.FILE) {
+          setTitle(R.string.actLabel_filePicker);
+          btnGo.setVisibility(View.GONE);
+          btnGo.setOnClickListener(null);
+      }
+
+      SharedPreferences settings = PreferenceManager
+              .getDefaultSharedPreferences(appContext);
+      if (path == null) path = settings.getString(KEY_LAST_PATH, SEP);
+      // Checking access to file system root directory
+      if (path.equals(SEP) && !isDirOpened(path)) {
+          Toast.makeText(appContext,
+                  R.string.dirPicker_fsRootUnreadable, Toast.LENGTH_LONG).show();
+          path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+          //save new start path in SharedPreferences
+          settings.edit().putString(KEY_LAST_PATH, path).apply();
+      }
+
+      updateListDir();
+
+  }
+
+
+
 
   @Override
   public Object onRetainCustomNonConfigurationInstance() {
@@ -176,7 +151,8 @@ public class DirPickerActivity extends AppCompatActivity
   }
 
   private void updateListDir() {
-    arrayDir.clear();
+
+      arrayDir.clear();
 
     if (!path.equals(SEP)) arrayDir.add(new DirEntry());
     ArrayList<DirEntry> arrayFiles = new ArrayList<>();
@@ -232,32 +208,7 @@ public class DirPickerActivity extends AppCompatActivity
     }
   }
 
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         String permissions[], int[] grantResults) {
-    switch (requestCode) {
-      case 1: {
 
-        // If request is cancelled, the result arrays are empty.
-        if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED
-        ) {
-
-          // permission was granted, yay! Do the
-          // contacts-related task you need to do.
-        } else {
-          Toast.makeText(this, "Не удалось получить разрешение на работу с файловой системой. Проверте разрешение приложения.", Toast.LENGTH_LONG
-          ).show();
-          finish();
-        }
-        return;
-      }
-
-      // other 'case' lines to check for other
-      // permissions this app might request
-    }
-  }
 
 
 
